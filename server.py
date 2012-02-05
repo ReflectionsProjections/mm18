@@ -17,11 +17,14 @@ from SocketServer import ThreadingMixIn
 from urlparse import urlparse
 from urlparse import parse_qs
 
+
+#TODO: Delete all three of these imports
 import Constants
-
 from validate import handle_input
-
 from game_instance import game, game_map
+
+#TODO: And replace them with this class
+from game_controller import GameController
 
 class MMHandler(BaseHTTPRequestHandler):
 	"""
