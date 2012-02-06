@@ -17,9 +17,6 @@ from SocketServer import ThreadingMixIn
 from urlparse import urlparse
 from urlparse import parse_qs
 
-#TODO: Delete all three of these imports
-from game_instance import game, game_map
-
 #TODO: And replace them with this class
 from game_controller import GameController
 
@@ -63,7 +60,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		"""
 
 		# TODO: Proper GameController system
-		gameStatus = game.game_avail_info(params['auth'][0])
+		gameStatus = GameController.get_from_game("status", self.game)
 		self.respond()
 		self.wfile.write(json.dumps(gameStatus))
 
@@ -94,7 +91,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		"""
 
 		# TODO: Proper GameController system
-		gameStatus = game.game_visualizer(params['auth'][0])
+		gameStatus = GameController.get_from_game("status", self.game)
 		self.respond()
 		self.wfile.write(json.dumps(gameStatus))
 
@@ -109,11 +106,13 @@ class MMHandler(BaseHTTPRequestHandler):
 		"""
 		self.respond()
 		# TODO: Proper GameController system
-		output = json.dumps(game.turn_number())
+		game_turn = GameController.get_game_info(self.game)['turn_number']
+		output = json.dumps(game_turn)
 		self.wfile.write(output)
 
 	def game_turn_wait(self, params):
 		# TODO: Proper GameController system
+		# TODO: Figure out how this will work this year
 		game.wait_for_next(params['turn'][0])
 		self.respond()
 		output = json.dumps(game.turn_number())
@@ -132,7 +131,8 @@ class MMHandler(BaseHTTPRequestHandler):
 		parsedURL = urlparse(self.path)
 		requested_turn = int(self.explode_path(parsedURL)[-2])
 		# TODO: Proper GameController system
-		if requested_turn != game.turn:
+		game_turn = GameController.get_game_info(self.game)['turn_number']
+		if requested_turn != game_turn:
 			output = {"success":False, 
 					  "message":"must request current turn"}
 		else:
