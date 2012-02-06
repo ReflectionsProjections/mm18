@@ -330,11 +330,15 @@ def Main():
 		unittest.main()
 
 	# Set up the game
-	port = opts.port
-	game_map.max_players = opts.num_players
-	game.viz_auth = raw_input()
+	game_info = {}
+	game_info['port'] = opts.port
+	game_info['max_players'] = opts.num_players
+	game_info['visualizer'] = raw_input()
+	allowed_auths = []
 	for i in range(0,opts.num_players):
-		game.allowed_auths.append(raw_input())
+		allowed_auths.append(raw_input())
+	game_info['allowed_auths'] = allowed_auths
+	GameControler.init_game(game_info)
 
 
 	server = ThreadedHTTPServer(('', port), MMHandler)
