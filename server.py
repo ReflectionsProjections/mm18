@@ -25,7 +25,7 @@ from game_controller import GameController
 
 class MMHandler(BaseHTTPRequestHandler):
 	"""
-	Server request handler for Mechmania 17.
+	Server request handler for Mechmania
 	"""
 
 	def __init__(self):
@@ -329,7 +329,7 @@ def start_timeout(game):
 		return
 
 def Main():
-	argsys = optparse.OptionParser(description="Mechmania 17 Main Server")
+	argsys = optparse.OptionParser(description="Mechmania 18 Main Server")
 	argsys.add_option('-p', '--port', metavar='PORT', nargs=1, type='int',
 			default=7000, dest='port', help='Port to listen on')
 	argsys.add_option('-n', '--num-players', metavar='PLAYERNUM', nargs=1,
