@@ -47,6 +47,7 @@ class MMHandler(BaseHTTPRequestHandler):
 				to operate.
 		"""
 
+		# TODO: Proper GameController system
 		gameStatus = GameController.get_from_game("status", self.game)
 		self.respond()
 		self.wfile.write(json.dumps(gameStatus))
@@ -61,6 +62,7 @@ class MMHandler(BaseHTTPRequestHandler):
 				with valid user authentication id.
 		"""
 
+		# TODO: Proper GameController system
 		gameStatus = game.game_avail_info(params['auth'][0])
 		self.respond()
 		self.wfile.write(json.dumps(gameStatus))
@@ -90,6 +92,8 @@ class MMHandler(BaseHTTPRequestHandler):
 		@param params: URL paramater string. Must contain 'auth' field
 				with valid user authentication id.
 		"""
+
+		# TODO: Proper GameController system
 		gameStatus = game.game_visualizer(params['auth'][0])
 		self.respond()
 		self.wfile.write(json.dumps(gameStatus))
@@ -104,10 +108,12 @@ class MMHandler(BaseHTTPRequestHandler):
 				to operate.
 		"""
 		self.respond()
+		# TODO: Proper GameController system
 		output = json.dumps(game.turn_number())
 		self.wfile.write(output)
 
 	def game_turn_wait(self, params):
+		# TODO: Proper GameController system
 		game.wait_for_next(params['turn'][0])
 		self.respond()
 		output = json.dumps(game.turn_number())
@@ -125,6 +131,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		"""
 		parsedURL = urlparse(self.path)
 		requested_turn = int(self.explode_path(parsedURL)[-2])
+		# TODO: Proper GameController system
 		if requested_turn != game.turn:
 			output = {"success":False, 
 					  "message":"must request current turn"}
@@ -158,6 +165,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		authCode = params['auth'][0]
 		name = params['name'][0]
 
+		# TODO: Proper GameController system
 		successObj = game.add_player(name, authCode)
 		self.respond()
 		self.wfile.write(json.dumps(successObj))
@@ -308,6 +316,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer): pass
 
 def start_timeout(game):
 	time.sleep(5)
+	# TODO: Proper GameController system
 	if not game.active:
 		if len(game.players) == 0:
 			print "No players"
