@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-# vim: tabstop=4 shiftwidth=4 noexpandtab
 
-from encodings import aliases
-from encodings import hex_codec
 import os
 import sys
 import optparse
@@ -12,15 +9,15 @@ import time
 import thread
 import signal
 
+from encodings import aliases
+from encodings import hex_codec
+
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from urlparse import urlparse
 from urlparse import parse_qs
 
-
 #TODO: Delete all three of these imports
-import Constants
-from validate import handle_input
 from game_instance import game, game_map
 
 #TODO: And replace them with this class
@@ -30,6 +27,9 @@ class MMHandler(BaseHTTPRequestHandler):
 	"""
 	Server request handler for Mechmania 17.
 	"""
+
+	def __init__(self):
+		self.game = None
 
 	# URI Handling Functions
 
@@ -47,7 +47,7 @@ class MMHandler(BaseHTTPRequestHandler):
 				to operate.
 		"""
 
-		gameStatus = game.game_status()
+		gameStatus = GameController.get_from_game("status", self.game)
 		self.respond()
 		self.wfile.write(json.dumps(gameStatus))
 
@@ -129,7 +129,7 @@ class MMHandler(BaseHTTPRequestHandler):
 			output = {"success":False, 
 					  "message":"must request current turn"}
 		else:
-			output = handle_input(input, requested_turn)
+			output = GameController.send_to_game(input, self.game)
 
 		self.respond()
 		output = json.dumps(output)
@@ -137,7 +137,8 @@ class MMHandler(BaseHTTPRequestHandler):
 
 	def game_constants(self, params):
 		self.respond()
-		self.wfile.write(json.dumps(Constants.to_dict()))
+		out = json.dumps(GameController.get_game_constants(self.game))
+		self.wfile.write(out)
 
 	def game_join(self, params):
 		"""
