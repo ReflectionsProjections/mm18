@@ -1,2 +1,5 @@
 # Compiled/derivable data ignores
 *.py[co]
+
+# Virtual environments
+venv
