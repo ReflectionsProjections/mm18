@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit" and place it in
+# your .git/hooks directory
+
+branch=`git rev-parse --abbrev-ref HEAD`
+
+# Test that tests run if you're on one of the working branches
+
+#python test/test_suite.py
+#if [ $? -ne 0 ]; then
+#	echo "Error in pre-commit stage"
+#	echo
+#	echo "Failed tests should appear above message"
+#	echo "If they don't, test_suite.py may have been deleted"
+#	echo "Fix test cases before comitting"
+#	echo "That means you, Cole"
+#	exit 1
+#fi
+
+echo $branch
+
+if [ "$branch" = "master" ]; then
+	echo "Error in pre-commit state"
+	echo
+	echo "Do not directly commit to the master branch."
+	echo "Commit to a main development stream, and use a pull request"
+	exit 1
+fi
