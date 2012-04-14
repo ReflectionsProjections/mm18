@@ -38,7 +38,7 @@ class MMHandler(BaseHTTPRequestHandler):
 			match = re.match(url[0], self.path)
 			if match:
 				# TODO: Figure out how to get JSON data to functions
-				self.respond(url[1](**match.groupdict()))
+				self.respond(url[2](**match.groupdict()))
 				matched_url = True
 				break
 		if not matched_url:

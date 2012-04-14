@@ -47,3 +47,27 @@ class GameController(object):
 		"""
 
 		pass
+
+	@staticmethod
+	def get_object(self, **args):
+		"""
+		Returns a representation of the specified object
+		"""
+
+		if args['obj'] == 'towers':
+			return 1
+		else:
+			return -1
+
+	@staticmethod
+	def upgrade_object(self, **args):
+		"""
+		Upgrade the specified object (i.e. upgrade a tower)
+
+		Returns a representation of the upgraded version of the object
+		"""
+
+		if get_object(self, **args) == 1:
+			return args['id']
+		else:
+			return -1

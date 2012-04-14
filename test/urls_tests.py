@@ -2,7 +2,7 @@ import unittest
 
 class TestServer(unittest.TestCase):
     """
-    Empty test file for testing future sever implementation
+    Test urls.py to ensure regular expressions work
     """
     def setUp(self):
         pass

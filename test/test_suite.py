@@ -1,5 +1,6 @@
 from server_tests import *
 from random_tests import *
+from urls_tests import *
 import unittest
 
 
