@@ -11,18 +11,12 @@ class MMHandler(BaseHTTPRequestHandler):
 
 	## Server Startup Functions
 
-	def __init__(self):
-		"""
-		Initialize the MMHandler with needed default values.
-		"""
-		pass
-
-	def respond(self, data):
+	def respond(self, status_code, data):
 		"""
 		Responds by sending JSON data back.
 		"""
-		self.send_response(data['status_code'])
-		output = json.encode(data)
+		self.send_response(int(status_code))
+		output = json.dumps(data)
 		self.send_header("Content-type", "application/json")
 		self.end_headers()
 		self.wfile.write(output)
@@ -37,7 +31,11 @@ class MMHandler(BaseHTTPRequestHandler):
 		for url in urlpatterns:
 			match = re.match(url[0], self.path)
 			if match and method == url[1]:
-				self.respond(url[2](match.groupdict(), json.loads(self.rfile.read())
+				if method == 'POST':
+					data =  json.loads(self.rfile.read())
+				else:
+					data = {}
+				self.respond(*url[2](match.groupdict(), **data))
 				matched_url = True
 				break
 		if not matched_url:
@@ -65,4 +63,3 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	# Inheriting from ThreadingMixIn automatically gives us the default
 	# functions we need for a threaded server.
 	pass
-
