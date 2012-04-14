@@ -6,7 +6,7 @@
 
 from mm18.server.api import *
 
-urlpatterns = patterns('',
+urlpatters = patterns('',
 		# Example:
-		# (r'^api/shoot', shoot),
+		# (r'^api/shoot', POST, shoot),
 )

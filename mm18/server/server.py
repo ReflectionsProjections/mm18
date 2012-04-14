@@ -27,7 +27,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		self.end_headers()
 		self.wfile.write(output)
 
-	def match_path(self):
+	def match_path(self, method):
 		"""
 		Tries to match a path with every url in urlpatterns.
 		If it finds one, it tries to call it.  Then it breaks out, 
@@ -36,9 +36,8 @@ class MMHandler(BaseHTTPRequestHandler):
 		matched_url = False
 		for url in urlpatterns:
 			match = re.match(url[0], self.path)
-			if match:
-				# TODO: Figure out how to get JSON data to functions
-				self.respond(url[1](**match.groupdict()))
+			if match and method == url[1]:
+				self.respond(url[2](match.groupdict(), json.loads(self.rfile.read())
 				matched_url = True
 				break
 		if not matched_url:
@@ -49,14 +48,14 @@ class MMHandler(BaseHTTPRequestHandler):
 		Handle all GET requests here by parsing URLs and mapping them
 		to the API calls.
 		"""
-		self.match_path()
+		self.match_path("GET")
 
 	def do_POST(self):
 		"""
 		Handle all POST requests here by parsing URLs and mapping them
 		to the API calls.
 		"""
-		self.match_path()
+		self.match_path("POST")
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""
