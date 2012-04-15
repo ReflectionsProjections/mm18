@@ -1,5 +1,7 @@
-from server_tests import *
-from random_tests import *
+#! /usr/bin/env python
+
+from mm18.tests.server_tests import *
+from mm18.tests.random_tests import *
 import unittest
 
 
