@@ -12,16 +12,18 @@ branch=`git rev-parse --abbrev-ref HEAD`
 
 # Test that tests run if you're on one of the working branches
 
-#python test/test_suite.py
-#if [ $? -ne 0 ]; then
-#	echo "Error in pre-commit stage"
-#	echo
-#	echo "Failed tests should appear above message"
-#	echo "If they don't, test_suite.py may have been deleted"
-#	echo "Fix test cases before comitting"
-#	echo "That means you, Cole"
-#	exit 1
-#fi
+if [ "$branch" = "server-dev" ]; then
+	python test/test_suite.py
+	if [ $? -ne 0 ]; then
+		echo "Error in pre-commit stage"
+		echo
+		echo "Failed tests should appear above message"
+		echo "If they don't, test_suite.py may have been deleted"
+		echo "Fix test cases before comitting"
+		echo "That means you, Cole"
+		exit 1
+	fi
+fi
 
 echo $branch
 
