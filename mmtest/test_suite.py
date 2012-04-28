@@ -5,13 +5,14 @@ from mmtest.random_tests import *
 import unittest
 
 
-def run_suite():
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestServer)
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(RandomTests))
-    return suite
+def get_suite():
+	suite = unittest.TestLoader().loadTestsFromTestCase(TestServer)
+	return suite
 
+def run_suite():
+	runner = unittest.TextTestRunner()
+	suite = get_suite()
+	return runner.run(suite)
 
 if __name__ == '__main__':
-    runner = unittest.TextTestRunner()
-    test_suite = run_suite()
-    runner.run(test_suite)
+	run_suite()
