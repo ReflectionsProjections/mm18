@@ -6,6 +6,3 @@ class RandomTests(unittest.TestCase):
     """
     def setUp(self):
         pass
-
-    def test_random(self):
-        self.assertTrue(False)

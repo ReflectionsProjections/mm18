@@ -10,4 +10,5 @@ urlpatterns = [
 		# Example:
 		# (r'^api/shoot', POST, shoot),
 		(r'/api/tests/echo/(?P<code>\d+)', 'GET', echo_code),
+		(r'/api/tests/post', 'POST', POST_method),
 ]
