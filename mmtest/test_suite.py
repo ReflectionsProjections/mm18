@@ -4,7 +4,6 @@ from mmtest.server_tests import *
 from mmtest.random_tests import *
 import unittest
 
-
 def get_suite():
 	suite = unittest.TestLoader().loadTestsFromTestCase(TestServer)
 	return suite
