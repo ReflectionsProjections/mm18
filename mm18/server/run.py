@@ -4,6 +4,11 @@ import server
 import logging
 
 def Main():
+	"""Run the MechMania server
+
+	Contains settings for the server logging function. Starts server logging
+	function. Starts server on port 6969 and serves forever.
+	"""
 	
 	# LOG SETTINGS
 	# log_file - the filename to output logging to. Saved to the same directory as this file.
