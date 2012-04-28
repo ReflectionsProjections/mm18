@@ -4,7 +4,7 @@
 #
 ####
 
-from mm18.server.api import *
+from mm18.server.server_test_api import *
 
 urlpatterns = [
 		# Example:
