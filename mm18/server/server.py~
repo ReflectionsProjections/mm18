@@ -39,11 +39,17 @@ class MMHandler(BaseHTTPRequestHandler):
 			self.send_error(404)
 
 	def do_GET(self):
-		"""Handle all GET requests here by parsing URLs and mapping them to the API calls."""
+		"""
+		Handle all GET requests here by parsing URLs and mapping them
+		to the API calls.
+		"""
 		self.match_path("GET")
 
 	def do_POST(self):
-		"""Handle all POST requests here by parsing URLs and mapping them to the API calls."""
+		"""
+		Handle all POST requests here by parsing URLs and mapping them
+		to the API calls.
+		"""
 		self.match_path("POST")
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
