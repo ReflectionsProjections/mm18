@@ -5,9 +5,7 @@ import re, json
 from urls import urlpatterns
 
 class MMHandler(BaseHTTPRequestHandler):
-	"""
-	HTTP request handler for Mechmania
-	"""
+	"""HTTP request handler for Mechmania"""
 
 	## Server Startup Functions
 
@@ -25,9 +23,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		self.wfile.write(output)
 
 	def match_path(self, method):
-		"""Calls and executes functions based on URL path and request data.
-
-		Tries to match a path with every url in urlpatterns.
+		"""Tries to match a path with every url in urlpatterns.
 		If it finds one, it tries to call it.  Then it breaks out, 
 		so it will only call the first pattern it matches.  This method
 		calls the corresponding function in urlpatterns from urls.py, so
@@ -84,23 +80,15 @@ class MMHandler(BaseHTTPRequestHandler):
 			self.send_error(400)
 
 	def do_GET(self):
-		"""
-		Handle all GET requests here by parsing URLs and mapping them
-		to the API calls.
-		"""
+		"""Handle all GET requests here by parsing URLs and mapping them to the API calls."""
 		self.match_path("GET")
 
 	def do_POST(self):
-		"""
-		Handle all POST requests here by parsing URLs and mapping them
-		to the API calls.
-		"""
+		"""Handle all POST requests here by parsing URLs and mapping them to the API calls."""
 		self.match_path("POST")
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-	"""
-	A basic threaded HTTP server.
-	"""
+	"""A basic threaded HTTP server."""
 
 	# Inheriting from ThreadingMixIn automatically gives us the default
 	# functions we need for a threaded server.
