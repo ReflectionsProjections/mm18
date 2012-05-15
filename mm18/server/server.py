@@ -26,6 +26,7 @@ class MMHandler(BaseHTTPRequestHandler):
 	def match_path(self, method):
 		"""Tries to match a path with every url in urlpatterns.
 
+		Searches through the urlpatterns to find a URL matching the given path.
 		If it finds one, it tries to call it.  Then it breaks out, so it will
 		only call the first pattern it matches.  This method calls the
 		corresponding function in urlpatterns from urls.py, so expect side
