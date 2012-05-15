@@ -1,5 +1,8 @@
 # Compiled/derivable data ignores
 *.py[co]
 
+# Reports and logs
+*.log
+
 # Virtual environments
 venv

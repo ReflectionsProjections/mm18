@@ -1,16 +1,21 @@
 import unittest
 import urllib, urllib2
 import thread
+import logging
 from mm18.server.run import Main
 
 class TestServer(unittest.TestCase):
 	"""
-	Tests for the server.  Validation of HTTP/REST and JSON should all 
+	Tests for the server.  Validation of HTTP/REST and JSON should all
 	go here
 	"""
 
 	@classmethod
 	def setUpClass(cls):
+		args = ()
+		kwargs = {'log_file': 'Server.log',
+				'log_format': '%(levelname)s: %(message)s',
+				'log_level': logging.INFO}
 		server_thread = thread.start_new_thread(Main, ())
 
 	def testEcho(self):
