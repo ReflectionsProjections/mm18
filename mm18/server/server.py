@@ -118,6 +118,8 @@ class MMHandler(BaseHTTPRequestHandler):
 			# GET method, so empty dictionary
 			data = {}
 
+		return data
+
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""
 

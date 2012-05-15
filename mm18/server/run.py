@@ -31,8 +31,8 @@ if __name__ == '__main__':
 	# log_format - format to write log messages in
 	# log_level - threshold for logging. Options are logging.DEBUG, logging.INFO, logging.WARNING, logging.ERROR, logging.CRITICAL
 	
-	log_file = 'Server.log'
-	log_format = '%(levelname)s: %(message)s'
-	log_level = logging.INFO
+	log_file_name = 'Server.log'
+	log_format_str = '%(levelname)s: %(message)s'
+	log_level_flag = logging.INFO
 
-	Main(log_file=log_file, log_format=log_format, log_level=log_level)
+	Main(log_file=log_file_name, log_format=log_format_str, log_level=log_level_flag)

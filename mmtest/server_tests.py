@@ -16,7 +16,7 @@ class TestServer(unittest.TestCase):
 		kwargs = {'log_file': 'Server.log',
 				'log_format': '%(levelname)s: %(message)s',
 				'log_level': logging.INFO}
-		server_thread = thread.start_new_thread(Main, ())
+		server_thread = thread.start_new_thread(Main, args, kwargs)
 
 	def testEcho(self):
 		"""Iterates through the different HTTP codes and tests the server's
@@ -80,7 +80,6 @@ class TestServer(unittest.TestCase):
 		self.assertEqual(400, code)
 
 	def testEcho(self):
-		server_thread = thread.start_new_thread(Main, ())
 		http_codes = [200, 400, 401, 403, 404, 405, 418, 429, 500, 501]
 		for code in http_codes:
 			try:
