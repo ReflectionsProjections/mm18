@@ -39,43 +39,35 @@ class MMHandler(BaseHTTPRequestHandler):
 
 		matched_url = False
 		invalid_method = False
-		invalid_JSON = False
 
 		for url in urlpatterns:
 			match = re.match(url[0], self.path)
 
 			# check if match is found
 			if match:
+				matched_url = True
+
 				# if method is same, process
 				if method == url[1]:
+					invalid_method = False
 
-					if method == 'POST':
-						# POST data should be catured
-						try:
-							length = int(self.headers['Content-Length'])
-							input = self.rfile.read(length)
-							data = json.loads(input)
-						except ValueError:
-							# invalid JSON, send 400 error
-							invalid_JSON = True
+					try:
+						data = self._process_POST_data(method)
+					except ValueError:
+						self.send_error(400)
+						return
 
-					else:
-						# GET method, so empty dictionary
-						data = {}
-
+					# TODO: What does this comment even mean? Someone who knows,
+					# fix it
 					# Send a response based on return from function first arg to
 					# url[2] is the matches pulled from url second arg is
 					# unrolled data dictionary
-					if not invalid_JSON:
-						self.respond(*url[2](match.groupdict(), **data))
-					# We found a URL, used for 404s later
-					matched_url = True
-					# It has a valid method, used for 405s later
-					invalid_method = False
+					self.respond(*url[2](match.groupdict(), **data))
+
 					break
-				# Bad method, but valid URL, used for sending 405s
+
 				else:
-					matched_url = True
+					# Bad method, but valid URL, used for sending 405s
 					invalid_method = True
 
 		# Error Handling Below
@@ -85,20 +77,42 @@ class MMHandler(BaseHTTPRequestHandler):
 		# URL found, but not for that method, sending 405 error
 		if matched_url and invalid_method:
 			self.send_error(405)
-		if invalid_JSON:
-			self.send_error(400)
 
 	def do_GET(self):
 		"""Handle all GET requests.
 		
 		On GET request, parse URLs and map them to the API calls."""
+
 		self.match_path("GET")
 
 	def do_POST(self):
 		"""Handle all POST requests.
 		
 		On POST request, parse URLs and map them to the API calls."""
+
 		self.match_path("POST")
+
+	def _process_POST_data(self, method):
+		"""Processes the POST data from a request. Private method.
+
+		Reads in a request and returns a dictionary based on whether or not the
+		request is a POST request and what POST data the request contains if it
+		is.
+		
+		Throws ValueError on invalid JSON.
+
+		Returns POST data in a dictionary, or empty dictionary on GET.
+		"""
+
+		if method == 'POST':
+			# POST data should be catured
+			length = int(self.headers['Content-Length'])
+			input = self.rfile.read(length)
+			data = json.loads(input)
+
+		else:
+			# GET method, so empty dictionary
+			data = {}
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""
