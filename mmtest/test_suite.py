@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
 from mmtest.server_tests import *
-from mmtest.random_tests import *
 import unittest
 
 def get_suite():
