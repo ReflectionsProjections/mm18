@@ -54,6 +54,7 @@ class MMHandler(BaseHTTPRequestHandler):
 					try:
 						data = self._process_POST_data(method)
 					except ValueError:
+						# Invalid JSON
 						self.send_error(400)
 						return
 
@@ -75,7 +76,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		if not matched_url:
 			self.send_error(404)
 		# URL found, but not for that method, sending 405 error
-		if matched_url and invalid_method:
+		if invalid_method:
 			self.send_error(405)
 
 	def do_GET(self):
