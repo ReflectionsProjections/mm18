@@ -16,6 +16,8 @@ class GameController(object):
 		game_info - Dictionary of game setup data
 		"""
 
+		pass
+
 	@staticmethod
 	def send_to_game(self, message, game):
 		"""Process a message and send it to the active game
