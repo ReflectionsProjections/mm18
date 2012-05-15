@@ -75,9 +75,11 @@ class MMHandler(BaseHTTPRequestHandler):
 		# no url match found, send 404
 		if not matched_url:
 			self.send_error(404)
+			return
 		# URL found, but not for that method, sending 405 error
 		if invalid_method:
 			self.send_error(405)
+			return
 
 	def do_GET(self):
 		"""Handle all GET requests.
