@@ -16,7 +16,7 @@ def Main():
 	# log_level - threshold for logging. Options are logging.DEBUG, logging.INFO, logging.WARNING, logging.ERROR, logging.CRITICAL
 	
 	log_file = 'Server.log'
-	log_format = '%(levelname)s: %(message)s'	
+	log_format = '%(levelname)s: %(message)s'
 	log_level = logging.INFO
 
 	# Starts logging function
