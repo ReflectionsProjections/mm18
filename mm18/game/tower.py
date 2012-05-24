@@ -48,4 +48,10 @@ class Tower:
         else:
             print "Sommat fucked up"
 
+    def specialise(self,spec):
+        if self.upgrade == 0 & spec >= -1 & spec <= 1:
+            self.specialisation = spec
+            print "New specialisation is:", self.specialisation
+        else:
+            print "Either spec is not valid or object is already upgraded"
 
