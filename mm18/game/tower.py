@@ -11,10 +11,6 @@ All towers need:
     -A position
     -A specialisation (or lack)
     -Tower upgrade level
-
-Class contents:
-    -init
-    -upgrad
 """
 
 class Tower:
