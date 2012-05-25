@@ -44,7 +44,13 @@ class Tower:
         else:
             print "Sommat fucked up"
 
-    def specialise(self,spec):
+    """
+    Specialises the towers provided the towers have not been upgraded and specialisation input is valid.
+    Currently using 0 for no specialisation and 1, -1 for the different ones.
+
+    @param spec: either 1, 0 or -1.  Indicates a specialisation.
+    """
+   def specialise(self,spec):
         if self.upgrade == 0 & spec >= -1 & spec <= 1:
             self.specialisation = spec
             print "New specialisation is:", self.specialisation
