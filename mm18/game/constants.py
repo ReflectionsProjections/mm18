@@ -4,6 +4,7 @@
 
 """TOWERS & UNITS"""
 BASE_DAMAGE = 1 #this is currently for both towers and units.  May need to create separate ones for towers and units.
+TOWER_MAX_UPGRADE = 3 #max upgrade level for towers
 
 """Costs"""
 TOWER_BASE_COST = 1

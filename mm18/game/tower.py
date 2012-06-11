@@ -35,7 +35,7 @@ class Tower:
     """
     def upgrade(self):
         PLAYER_RESOURCES = 10
-        if self.upgrade == 3:
+        if self.upgrade == constants.TOWER_MAX_UPGRADE:
             print "Fully upgraded"
         elif PLAYER_RESOURCES >= constants.UPGRADE_COST[self.upgrade + 1]:
             self.upgrade += 1
