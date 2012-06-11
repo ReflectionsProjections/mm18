@@ -3,6 +3,7 @@
 import constants
 
 """
+TEST
 This is the tower class
 Towers get created here.
 I'm thinking have this as a superclass and make the specialised classes from this?
