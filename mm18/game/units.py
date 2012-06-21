@@ -18,7 +18,10 @@ class Units:
 	"""
 
 	def __init__(self, level, spec, player):
-		if player.allowedUpgrade <= level & player.purchase(constants.UNIT_BASE_COST):
+		if player.allowedUpgrade <= level and player.purchase(constants.UNIT_BASE_COST):
 			self.level = level
 			self.specialisation = spec
 			self.health = constants.BASE_UNIT_HEALTH*constants.UPGRADE_MULTIPLIER[self.level]
+			self.owner = player.name
+			player.sentUnits += 1
+			player.increaseUpgrade()

@@ -38,7 +38,7 @@ class Tower:
 	def upgradeTower(self, player):
 		if self.upgrade == constants.MAX_UPGRADE:
 			print "Fully upgraded"
-		elif player.purchase(constants.UPGRADE_COST[self.upgrade + 1]):
+		elif player.allowedUpgrade > self.upgrade and player.purchase(constants.UPGRADE_COST[self.upgrade + 1]):
 			self.upgrade += 1
 			print "Tower level is now:", self.upgrade, "\nPlayer resources are now:", player.resources
 		else:

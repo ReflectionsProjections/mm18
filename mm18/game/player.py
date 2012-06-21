@@ -7,7 +7,8 @@ import constants
 class Player:
 
 	"""
-	Creates a player with a base number of resources
+	Creates a player with a base number of resources.
+	Each player cannot upgrade their towers/units past their allowed upgrade.
 
 	name -- player name
 	"""
@@ -16,6 +17,17 @@ class Player:
 		self.resources = constants.BASE_RESOURCES
 		self.name = name
 		self.allowedUpgrade = 0
+		self.sentUnits = 0
+
+	"""
+	Increases the allowed upgrade level of the player
+	"""
+
+	def increaseUpgrade(self):
+		if self.sentUnits >= constants.BOOP:
+			allowedUpgrade += 1
+
+
 
 
 	"""
