@@ -18,14 +18,23 @@ class Tower:
 	"""
 	Creates a new Tower.
 	All towers start with 0 upgrades, no specialisation and no position.
-
-	player -- The player creating the tower
 	"""
-	def __init__ (self, player):
-		if player.purchaseCheck(constants.TOWER_BASE_COST):
-			player.purchase(constants.TOWER_BASE_COST)
+	def __init__ (self):
 			self.upgrade = 0 
 			self.specialisation = 0
+
+	"""
+	Static method for the player to purchase the tower that has been created
+
+	player -- the player who is purchasing the tower
+	"""
+	@staticmethod
+	def purchaseTower(player):
+		if player.purchaseCheck(constants.TOWER_BASE_COST):
+			player.purchase(constants.TOWER_BASE_COST)
+			return tower
+		else:
+			return None
 
 	"""
 	Upgrades the tower.
