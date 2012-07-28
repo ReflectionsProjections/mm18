@@ -35,9 +35,11 @@ class Player:
 	cost -- The cost of the upgrade
 	"""
 
-	def purchase(self, cost):
+	def purchase(self,cost):
+		self.resources -= cost
+
+	def purchaseCheck(self, cost):
 		if self.resources >= cost:
-			self.resources -= cost
 			return True
 		else:
 			return False

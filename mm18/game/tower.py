@@ -16,18 +16,16 @@ All towers need:
 class Tower:
 
 	"""
-	Creates a new Tower at grid positions X and Y.
-	All towers start with 0 upgrades and no specialisation.
+	Creates a new Tower.
+	All towers start with 0 upgrades, no specialisation and no position.
 
-	positionX -- The X position of the tower
-	positionY -- The Y position of the tower
 	player -- The player creating the tower
 	"""
-	def __init__ (self, positionX, positionY, player):
-		#if board.
-		self.position = (positionX, positionY)
-		self.upgrade = 0
-		self.specialisation = 0
+	def __init__ (self, player):
+		if player.purchaseCheck(constants.TOWER_BASE_COST):
+			player.purchase(constants.TOWER_BASE_COST)
+			self.upgrade = 0 
+			self.specialisation = 0
 
 	"""
 	Upgrades the tower.
@@ -37,7 +35,8 @@ class Tower:
 	def upgradeTower(self, player):
 		if self.upgrade == constants.MAX_UPGRADE:
 			print "Fully upgraded"
-		elif player.allowedUpgrade > self.upgrade and player.purchase(constants.UPGRADE_COST[self.upgrade + 1]):
+		elif player.allowedUpgrade > self.upgrade and player.purchaseCheck(constants.UPGRADE_COST[self.upgrade + 1]):
+			player.purchase(constants.UPGRADE_COST[self.upgrade + 1])
 			self.upgrade += 1
 			print "Tower level is now:", self.upgrade, "\nPlayer resources are now:", player.resources
 		else:
