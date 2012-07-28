@@ -24,9 +24,8 @@ class Tower:
 	player -- The player creating the tower
 	"""
 	def __init__ (self, positionX, positionY, player):
-
-		self.positionX = positionX
-		self.positionY = positionY
+		#if board.
+		self.position = (positionX, positionY)
 		self.upgrade = 0
 		self.specialisation = 0
 

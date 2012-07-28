@@ -24,10 +24,8 @@ class Player:
 	"""
 
 	def increaseUpgrade(self):
-		if self.sentUnits >= constants.BOOP:
+		if self.sentUnits >= constants.UPGRADE_INCREASE*(self.allowedUpgrade+1)
 			allowedUpgrade += 1
-
-
 
 
 	"""
