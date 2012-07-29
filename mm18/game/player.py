@@ -26,17 +26,25 @@ class Player:
 	def increaseUpgrade(self):
 		if self.sentUnits >= constants.UPGRADE_INCREASE*(self.allowedUpgrade+1)
 			allowedUpgrade += 1
+			return True
+		else:
+			return False
 
 
 	"""
-	Checks whether the player has enough resources to make a purchase
-	If they can it also deducts the purchase amount.
+	Purchase method to make purchases
 
-	cost -- The cost of the upgrade
+	cost -- The cost of the purchase
 	"""
 
 	def purchase(self,cost):
 		self.resources -= cost
+
+	"""
+	Method checks whether a user has enough resources to go through with a purchase.
+
+	cost -- the cost of the purchase
+	"""
 
 	def purchaseCheck(self, cost):
 		if self.resources >= cost:

@@ -5,8 +5,6 @@ import constants
 """
 This is the tower class
 Towers get created here.
-I'm thinking have this as a superclass and make the specialised classes from this?
-Or not - it may just be easier to put it all in here because towers don't need a lot
 All towers need:
 	-A position
 	-A specialisation (or lack)
@@ -43,13 +41,13 @@ class Tower:
 	"""
 	def upgradeTower(self, player):
 		if self.upgrade == constants.MAX_UPGRADE:
-			print "Fully upgraded"
+			return False #fully upgraded
 		elif player.allowedUpgrade > self.upgrade and player.purchaseCheck(constants.UPGRADE_COST[self.upgrade + 1]):
 			player.purchase(constants.UPGRADE_COST[self.upgrade + 1])
 			self.upgrade += 1
-			print "Tower level is now:", self.upgrade, "\nPlayer resources are now:", player.resources
+			return True #level increase, resources decrease
 		else:
-			print "Sommat fucked up or not enough resources"
+			return False #Sommat fucked up or not enough resources
 
 	"""
 	Specialises the towers provided the towers have not been upgraded and specialisation input is valid.
@@ -60,7 +58,7 @@ class Tower:
 	def specialise(self,spec):
 		if self.upgrade == 0 & spec >= -1 & spec <= 1:
 			self.specialisation = spec
-			print "New specialisation is:", self.specialisation
+			return True #new spec
 		else:
-			print "Either spec is not valid or object is already upgraded"
+			return False #either already upgraded or not valid
 
