@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import constants
+from types import *
 
 """For player stuff"""
 
@@ -47,6 +48,7 @@ class Player:
 	"""
 
 	def purchaseCheck(self, cost):
+		assert type(cost) is IntType
 		if self.resources >= cost:
 			return True
 		else:

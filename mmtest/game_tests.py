@@ -18,12 +18,8 @@ class TestGame(unittest.TestCase):
 		self.assertRaises(TypeError)
 
 	def testInvalidPlayerCreate3(self):
-		try:
+		with self.assertRaises(NameError):
 			test = Player(false)
-		except NameError:
-			pass
-		else:
-			fail("Expected a NameError")
 
 	def testValidPlayerCreate(self):
 		test = Player("testName")
@@ -36,10 +32,30 @@ class TestGame(unittest.TestCase):
 		test = Player("testName")
 		self.assertFalse(test.increaseUpgrade())
 
+	def testInvalidPlayerUpgrade1(self):
+		test = Player("testName")
+		with self.assertRaises(TypeError):
+			test.increaseUpgrade(5)
+
 	def testValidPlayerUpgrade(self):
 		test = Player("testName")
 		test.sentUnits = mm18.game.constants.UPGRADE_INCREASE*(test.allowedUpgrade+1)+1
 		self.assertTrue(test.increaseUpgrade())
+
+	def testInvalidPlayerPurchase(self):
+		test = Player("testName")
+		self.assertFalse(test.purchaseCheck(test.resources + 1))
+
+	def testInvalidPlayerPurchase1(self):
+		test = Player("testName")
+		with self.assertRaises(AssertionError):
+			test.purchaseCheck("I want to buy a cat")
+
+	def testValidPlayerPurchase(self):
+		test = Player("testName")
+		self.assertTrue(test.purchaseCheck(test.resources - 1))
+		test.purchase(test.resources - 1)
+		self.assertEquals(test.resources,1)
 
 	"""Board Tests"""
 
