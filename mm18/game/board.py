@@ -21,6 +21,17 @@ class Board:
 		self.board = {}
 
 	"""
+	Check whether the position of the object being inserted is a valid placement on the board.
+	Will contain error handling for invalid positions.
+
+	position -- tuple containing object position
+	"""
+
+	def validPosition(self, position):
+		x,y=position
+		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
+
+	"""
 	Adds an object to the board provided nothing is already in the location.
 	Returns true if successful and false if not
 
@@ -33,16 +44,6 @@ class Board:
 			return True
 		else:
 			return False
-
-	"""
-	Check whether the position of the object being inserted is a valid placement on the board.
-	Will contain error handling for invalid positions.
-
-	position -- tuple containing object position
-	"""
-
-	def validPosition(self, position):
-		return position >= (0,0) and position <= (constants.BOARD_SIDE,constants.BOARD_SIDE)
 
 	"""
 	Gets the item at the position or returns none if no object exists.
