@@ -105,7 +105,7 @@ class TestGame(unittest.TestCase):
 		self.assertEquals(test.board[(0,0)],testPlayer)
 #21
 	def testInvalidGetItem(self):
-		pass
+		pass #test
 
 
 if __name__ == "__main__":
