@@ -31,7 +31,7 @@ class Unit:
 	"""
 	@staticmethod
 	def purchaseUnit(level, spec, player):
-		if player.allowedUpgrade <= level and player.purchaseCheck(constants.UNIT_BASE_COST):
+		if player.allowedUpgrade >= level and player.purchaseCheck(constants.UNIT_BASE_COST) and spec >= -1 and spec <=1:
 			player.purchase(constants.UNIT_BASE_COST)
 			player.sentUnits += 1
 			player.increaseUpgrade()
