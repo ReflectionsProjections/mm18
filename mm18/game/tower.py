@@ -56,7 +56,7 @@ class Tower:
 	spec -- either 1, 0 or -1.  Indicates a specialisation.
 	"""
 	def specialise(self,spec):
-		if self.upgrade == 0 & spec >= -1 & spec <= 1:
+		if self.upgrade == 0 and spec >= -1 and spec <= 1:
 			self.specialisation = spec
 			return True #new spec
 		else:

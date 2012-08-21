@@ -16,7 +16,7 @@ TOWER_UPGRADE_ONE_COST = 1
 Dictionaries for upgrades/multipliers
 """
 UPGRADE_MULTIPLIER = {0:1, 1:1.5, 2:2.5, 3:3.5}
-UPGRADE_COST = {1:1.5, 2:2.5, 3:3.5}
+UPGRADE_COST = {1:1, 2:2, 3:3}
 
 """tower/unit specialisation output damage multiplier"""
 SUPER_EFFECTIVE = 1.25
