@@ -154,7 +154,7 @@ class TestGame(unittest.TestCase):
 	#Not allowed to upgrade higher
 	def testInvalidTowerUpgrade2(self):
 		self.assertFalse(self.testTower.upgradeTower(self.testPlayer))
-	
+
 	def testValidTowerUpgrade(self):
 		self.testPlayer.allowedUpgrade = 1
 		self.assertTrue(self.testTower.upgradeTower(self.testPlayer))
@@ -162,7 +162,7 @@ class TestGame(unittest.TestCase):
 	def testInvalidTowerSpec(self):
 		self.testTower.upgrade = 1
 		self.assertFalse(self.testTower.specialise(0))
-	
+
 	def testInvalidTowerSpec1(self):
 		self.assertFalse(self.testTower.specialise(-2))
 		self.assertFalse(self.testTower.specialise(2))
