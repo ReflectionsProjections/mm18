@@ -17,9 +17,11 @@ class Tower:
 	Creates a new Tower.
 	All towers start with 0 upgrades, no specialisation and no position.
 	"""
-	def __init__ (self):
-		self.upgrade = 0 
+	def __init__ (self, cost, player):
+		self.upgrade = 0
 		self.specialisation = 0
+		self.cost = cost
+		self.owner = player
 
 	"""
 	Static method for the player to purchase the tower that has been created
@@ -30,7 +32,7 @@ class Tower:
 	def purchaseTower(player):
 		if player.purchaseCheck(constants.TOWER_BASE_COST):
 			player.purchase(constants.TOWER_BASE_COST)
-			return Tower()
+			return Tower(constants.TOWER_BASE_COST, player)
 		else:
 			return None
 
@@ -44,6 +46,7 @@ class Tower:
 			return False #fully upgraded
 		elif player.allowedUpgrade > self.upgrade and player.purchaseCheck(constants.UPGRADE_COST[self.upgrade + 1]):
 			player.purchase(constants.UPGRADE_COST[self.upgrade + 1])
+			self.cost = constants.UPGRADE_COST[self.upgrade + 1]
 			self.upgrade += 1
 			return True #level increase, resources decrease
 		else:
@@ -62,3 +65,13 @@ class Tower:
 		else:
 			return False #either already upgraded or not valid
 
+	"""
+	Sells the tower
+	"""
+	@staticmethod
+	def sellTower(player, tower):
+		if tower.owner == player:
+			player.resources += (int)tower.cost*TOWER_SELL_SCALAR
+			tower = null
+		else:
+			None

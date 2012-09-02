@@ -57,10 +57,13 @@ class Board:
 
 	"""
 	Removes the item at the position
+
+	position -- a tuple containing object position
 	"""
 	def removeItem(self, position):
 		if self.getItem(position) != None:
 			del self.board[position]
+
 
 
 
