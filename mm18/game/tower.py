@@ -17,10 +17,10 @@ class Tower:
 	Creates a new Tower.
 	All towers start with 0 upgrades, no specialisation and no position.
 	"""
-	def __init__ (self, cost, player):
+	def __init__ (self, player):
 		self.upgrade = 0
 		self.specialisation = 0
-		self.cost = cost
+		self.cost = constants.TOWER_BASE_COST
 		self.owner = player
 
 	"""
@@ -32,7 +32,7 @@ class Tower:
 	def purchaseTower(player):
 		if player.purchaseCheck(constants.TOWER_BASE_COST):
 			player.purchase(constants.TOWER_BASE_COST)
-			return Tower(constants.TOWER_BASE_COST, player)
+			return Tower(player)
 		else:
 			return None
 
@@ -71,7 +71,7 @@ class Tower:
 	@staticmethod
 	def sellTower(player, tower):
 		if tower.owner == player:
-			player.resources += (int)tower.cost*TOWER_SELL_SCALAR
+			player.resources += tower.cost*TOWER_SELL_SCALAR
 			tower = null
 		else:
 			None
