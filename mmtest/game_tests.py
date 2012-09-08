@@ -11,7 +11,7 @@ class TestGame(unittest.TestCase):
 	def setUp(self):
 		unittest.TestCase.setUp(self)
 		self.testPlayer = Player("testName")
-		self.testBoard = Board(
+		self.testBoard = Board([(0,0),(0,1)],[(0,2),(1,2),(1,3),(0,4)])
 		self.testTower = Tower(Player("testName"))
 
 	def tearDown(self):

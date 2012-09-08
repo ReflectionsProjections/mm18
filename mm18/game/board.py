@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import constants
+import json
 from collections import deque
 
 """
@@ -24,27 +25,41 @@ class Board:
 		self.hitList = defaultdict(list)
 
 	"""
+	Reads in json for the board layout from a file and sorts it into two lists - for base positions and path positions
+	"""
+	@staticmethod
+	def jsonLoad():
+		data =json.load(open(board1.json).read())
+		bases = data['bases']
+		baseList = [tuple(pair) for pair in bases]
+		paths = data['paths']
+		pathList = [tuple(pair) for pair in paths]
+		findPaths(baseList, pathList)
+
+
+	"""
 	Breadth-first search method that takes the unordered list of path locations and sorts them by how far from the base they are.
 
 	baseList -- a list that contains the base locations
 	pathList -- a list that contains the paths to the base in no order
 	"""
 	@staticmethod
-	def findPaths(baseList,pathList):
+	def findPaths(baseList, pathList):
 		pathQueue = deque(baseList)
 		outPath = []
 		for elem in pathQueue:
-			x,y = pathQueue.popleft()
-			if (x, y + 1) in pathList:
-				pathQueue.append((x, y + 1))
-			if (x, y - 1) in pathList:
-				pathQueue.append((x, y - 1))
-			if (x + 1, y) in pathList:
-				pathQueue.append((x + 1, y))
-			if (x - 1, y) in pathList:
-				pathQueue.append((x - 1, y))
-			if (x,y) not in baseList:
-				outPath.append((x,y))
+			if (x,y) not in outPath:
+				x,y = pathQueue.popleft()
+				if (x, y + 1) in pathList:
+					pathQueue.append((x, y + 1))
+				if (x, y - 1) in pathList:
+					pathQueue.append((x, y - 1))
+				if (x + 1, y) in pathList:
+					pathQueue.append((x + 1, y))
+				if (x - 1, y) in pathList:
+					pathQueue.append((x - 1, y))
+				if (x,y) not in baseList:
+					outPath.append((x,y))
 		Board(baseList,outPath)
 
 	"""
