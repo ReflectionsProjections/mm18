@@ -9,6 +9,7 @@ MAX_UPGRADE = 3 #max upgrade level for towers and units
 BASE_UNIT_HEALTH = 1
 TOWER_SELL_SCALAR = 1
 TOWER_BASE_COST = 1
+TOWER_RANGE = {1:1, 2:1, 3:2}
 UNIT_BASE_COST = 1
 UPGRADE_MULTIPLIER = {0:1, 1:1.5, 2:2.5, 3:3.5}
 UPGRADE_COST = {1:1, 2:2, 3:3}

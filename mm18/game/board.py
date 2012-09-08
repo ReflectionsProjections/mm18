@@ -21,6 +21,7 @@ class Board:
 		self.base = base
 		self.path = path
 		self.tower = {}
+		self.hitList = defaultdict(list)
 
 	"""
 	Breadth-first search method that takes the unordered list of path locations and sorts them by how far from the base they are.
@@ -91,5 +92,44 @@ class Board:
 			del self.tower[position]
 
 
+	"""
+	Adds a tower to all the appropriate places of the hitList
 
+	self -- the board
+	tower -- the tower to add to the hitList
+	"""
+	def addToHitList(self, tower):
+		tX, tY = tower.position
+		tXLower = tX - TOWER_RANGE[tower.upgrade]
+		if(tXLower < 0): 
+			tXLower = 0
+		tXUpper = tX + TOWER_RANGE[tower.upgrade]
+		if(tXUpper >= BOARD_SIDE):
+			txUpper = BOARD_SIDE - 1
+		tYLower = tY - TOWER_RANGE[tower.upgrade]
+		if(tYLower < 0):
+			tYLower = 0
+		tYUpper = tY + TOWER_RANGE[tower.upgrade]
+		if(tYUpper >= BOARD_SIDE:
+			tYUpper = BOARD_SIDE - 1
+		for elem in self.paths:
+			elemX, elemY = elem
+			if elemX >= tXLower and elemX <= tXUpper:
+				if elemY >= tYLower and elemY <= tYUpper:
+					self.hitList[elem].append(tower)
+	
+
+	"""
+	Removes a certain tower from all places of the hitlist
+
+	self -- the board
+	tower -- the tower to be removed
+	"""
+
+	def removeFromHitList(self, tower)
+		for elem, i in self.hitList.iteritems():
+			for i in self.hitList[elem]	
+				i.remove(tower)
+			
+		
 

@@ -104,6 +104,12 @@ class TestGame(unittest.TestCase):
 		with self.assertRaises(KeyError):
 			self.testBoard.board[(0,0)]
 
+	def testAddHitList(self):
+		tower = Tower(self.testPlayer)
+		self.testBoard.addItem(tower, (0, 0))
+		self.testBoard.addToHitList(tower)
+		print self.testBoard.hitList
+
 	"""Unit Tests"""
 	#Not enough resources
 	def testInvalidPurchaseUnit(self):
