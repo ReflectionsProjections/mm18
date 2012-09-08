@@ -11,7 +11,7 @@ class TestGame(unittest.TestCase):
 	def setUp(self):
 		unittest.TestCase.setUp(self)
 		self.testPlayer = Player("testName")
-		self.testBoard = Board(
+		self.testBoard = Board([(0,1),(1,1)],[(0,2),(1,2),(1,3),(0,4)])
 		self.testTower = Tower(Player("testName"))
 
 	def tearDown(self):
@@ -65,7 +65,13 @@ class TestGame(unittest.TestCase):
 			test = Board(1)
 
 	def testValidBoardCreation(self):
-		self.assertEquals(len(self.testBoard.board),0)
+		self.assertEquals(len(self.testBoard.tower),0)
+
+	def testJsonLoadAndFindPathsOMGLongTitle(self):
+		testBoard1 = Board.jsonLoad()
+		self.assertEquals(testBoard1.base,[(5, 5), (5, 6), (5, 4), (6, 5), (6, 6), (6, 4), (4, 5), (4, 6), (4, 4)])
+		self.assertEquals(testBoard1.path,[(5, 1), (5, 2), (5, 3), (5, 4), (5, 8), (5, 9), (5, 10), (5, 0), (1, 5), (2, 5), (3, 5), (4, 5), (8, 5), (9, 5), (10, 5), (0, 5)])
+
 
 	def testInvalidPosition(self):
 		self.assertFalse(self.testBoard.validPosition((mm18.game.constants.BOARD_SIDE,mm18.game.constants.BOARD_SIDE)))
@@ -92,17 +98,23 @@ class TestGame(unittest.TestCase):
 
 	def testValidAddItem(self):
 		self.testBoard.addItem(self.testPlayer,(0,0))
-		self.assertEquals(self.testBoard.board[(0,0)],self.testPlayer)
+		self.assertEquals(self.testBoard.tower[(0,0)],self.testPlayer)
 
 	def testValidGetItem(self):
 		self.assertEquals(self.testBoard.getItem((0,1)),None)
 
 	def testValidRemoveItem(self):
 		self.testBoard.addItem(self.testPlayer,(0,0))
-		self.testBoard.board[(0,0)]
+		self.testBoard.tower[(0,0)]
 		self.testBoard.removeItem((0,0))
 		with self.assertRaises(KeyError):
-			self.testBoard.board[(0,0)]
+			self.testBoard.tower[(0,0)]
+
+	def testAddHitList(self):
+		tower = Tower(self.testPlayer)
+		self.testBoard.addItem(tower, (0, 0))
+		self.testBoard.addToHitList(tower, (0,0))
+		print self.testBoard.hitList
 
 	"""Unit Tests"""
 	#Not enough resources
