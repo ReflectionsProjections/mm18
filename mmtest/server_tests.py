@@ -3,6 +3,7 @@ import urllib, urllib2
 import thread
 import logging
 from mm18.server.run import Main
+import time
 
 class TestServer(unittest.TestCase):
 	"""
@@ -17,6 +18,7 @@ class TestServer(unittest.TestCase):
 				'log_format': '%(levelname)s: %(message)s',
 				'log_level': logging.INFO}
 		server_thread = thread.start_new_thread(Main, args, kwargs)
+		time.sleep(0.01)
 
 	def testEcho(self):
 		"""Iterates through the different HTTP codes and tests the server's
