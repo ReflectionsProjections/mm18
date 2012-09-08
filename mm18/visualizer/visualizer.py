@@ -2,8 +2,10 @@ import os
 import pyglet
 from pyglet.gl import *
 
+from mm18.game import constants
 from mm18.game.board import Board
-from mm18.game.constants import BOARD_SIDE
+
+TILE_SIZE = 32
 
 resources_path = os.path.join(os.path.dirname(__file__), 'resources')
 pyglet.resource.path.append(resources_path)
@@ -16,16 +18,20 @@ class Visualizer:
 
 	def __init__(self, board):
 		self.board = board
-		self.window = pyglet.window.Window(32*BOARD_SIDE, 32*BOARD_SIDE)
+		self.window = pyglet.window.Window(
+			width=TILE_SIZE * constants.BOARD_SIDE,
+			height=TILE_SIZE * constants.BOARD_SIDE,
+		)
 		self.window.set_handler('on_draw', self.onDraw)
 		glClearColor(1, 1, 1, 1)
 
 	def onDraw(self):
 		self.window.clear()
-		tiles = ((x, y) for x in range(BOARD_SIDE) for y in range(BOARD_SIDE))
+		width = height = constants.BOARD_SIDE
+		tiles = ((x, y) for x in range(width) for y in range(height))
 		for (x, y) in tiles:
 			tex = tex_path if (x, y) in self.board.path else tex_terrain
-			tex.blit(32 * x, 32 * y)
+			tex.blit(TILE_SIZE * x, TILE_SIZE * y)
 
 	def run(self):
 		pyglet.app.run()
