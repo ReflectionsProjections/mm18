@@ -1,24 +1,50 @@
 #! /usr/bin/env python
 
 import constants
+from collections import deque
 
 """
 This is the board class.
 It is where the code for the board goes.
-As far as I understand each player has their own board.
-The board needs:
-	-a map
-	-Ability to add/delete things from the map
 """
 
 class Board:
 	
 	"""
 	Board class. 
-	The board is made here in the form of a dictionary with each key being a tuple that corresponds the location and the entry being a reference to the item at that that location.
+	The board consists of two lists and a dictionary.  The dictionary contains the locations of the towers (key is a tuple for location on the board, entry is a tower object).  The base list contains the tuple locations of the base - unordered.   The path list contains the tuple locations of the path, ordered starting with those closest to the base and working outwards.
+
+	base -- a list of tuples that represent the base location
+	path -- a list of tuples that represent the path locations (ordered in findPaths method)
 	"""
-	def __init__(self):
-		self.board = {}
+	def __init__(self, base, path):
+		self.base = base
+		self.path = path
+		self.tower = {}
+
+	"""
+	Breadth-first search method that takes the unordered list of path locations and sorts them by how far from the base they are.
+
+	baseList -- a list that contains the base locations
+	pathList -- a list that contains the paths to the base in no order
+	"""
+	@staticmethod
+	def findPaths(baseList,pathList):
+		pathQueue = deque(baseList)
+		outPath = []
+		for elem in pathQueue:
+			x,y = pathQueue.popleft()
+			if (x, y + 1) in pathList:
+				pathQueue.append((x, y + 1))
+			if (x, y - 1) in pathList:
+				pathQueue.append((x, y - 1))
+			if (x + 1, y) in pathList:
+				pathQueue.append((x + 1, y))
+			if (x - 1, y) in pathList:
+				pathQueue.append((x - 1, y))
+			if (x,y) not in baseList:
+				outPath.append((x,y))
+		Board(baseList,outPath)
 
 	"""
 	Check whether the position of the object being inserted is a valid placement on the board.
@@ -39,8 +65,8 @@ class Board:
 	position -- a tuple for the position of the object
 	"""
 	def addItem(self, item, position):
-		if self.validPosition(position) and self.getItem(position) == None:
-			self.board[position] = item
+		if self.validPosition(position) and self.getItem(position) == None and position not in self.base and position not in self.path:
+			self.tower[position] = item
 			return True
 		else:
 			return False
@@ -53,7 +79,7 @@ class Board:
 	position -- a tuple containing object position
 	"""
 	def getItem(self, position):
-		return self.board.get(position,None)
+		return self.tower.get(position,None)
 
 	"""
 	Removes the item at the position
@@ -62,7 +88,7 @@ class Board:
 	"""
 	def removeItem(self, position):
 		if self.getItem(position) != None:
-			del self.board[position]
+			del self.tower[position]
 
 
 

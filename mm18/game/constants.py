@@ -26,7 +26,9 @@ BASE_HEALTH = 1
 HEALTH_DECREASE = 1
 
 """BOARD"""
-BOARD_SIDE = 5
+#Must always be odd
+BOARD_SIDE = 11
+BASE_SIZE = 3
 
 """PLACEHOLDER"""
 BOOP = -1000
