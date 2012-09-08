@@ -1,10 +1,11 @@
-#! /usr/bin/env python
-
 import pyglet
 from pyglet.gl import *
 
+from mm18.game.board import Board
+
 class Visualizer:
-	def __init__(self):
+	def __init__(self, board):
+		self.board = board
 		self.window = pyglet.window.Window()
 		self.window.set_handler('on_draw', self.onDraw)
 		glClearColor(1, 1, 1, 1)
@@ -14,7 +15,3 @@ class Visualizer:
 
 	def run(self):
 		pyglet.app.run()
-
-if __name__ == '__main__':
-	viz = Visualizer()
-	viz.run()
