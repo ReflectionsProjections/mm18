@@ -23,6 +23,12 @@ class Board:
 		self.tower = {}
 
 	"""
+
+	"""
+	@staticmethod
+	def jsonDump():
+
+	"""
 	Breadth-first search method that takes the unordered list of path locations and sorts them by how far from the base they are.
 
 	baseList -- a list that contains the base locations
@@ -33,17 +39,18 @@ class Board:
 		pathQueue = deque(baseList)
 		outPath = []
 		for elem in pathQueue:
-			x,y = pathQueue.popleft()
-			if (x, y + 1) in pathList:
-				pathQueue.append((x, y + 1))
-			if (x, y - 1) in pathList:
-				pathQueue.append((x, y - 1))
-			if (x + 1, y) in pathList:
-				pathQueue.append((x + 1, y))
-			if (x - 1, y) in pathList:
-				pathQueue.append((x - 1, y))
-			if (x,y) not in baseList:
-				outPath.append((x,y))
+			if (x,y) not in outPath:
+				x,y = pathQueue.popleft()
+				if (x, y + 1) in pathList:
+					pathQueue.append((x, y + 1))
+				if (x, y - 1) in pathList:
+					pathQueue.append((x, y - 1))
+				if (x + 1, y) in pathList:
+					pathQueue.append((x + 1, y))
+				if (x - 1, y) in pathList:
+					pathQueue.append((x - 1, y))
+				if (x,y) not in baseList:
+					outPath.append((x,y))
 		Board(baseList,outPath)
 
 	"""
