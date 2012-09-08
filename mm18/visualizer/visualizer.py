@@ -1,7 +1,6 @@
 import os
 import pyglet
 from pyglet.gl import *
-from pyglet import image
 
 from mm18.game.board import Board
 from mm18.game.constants import BOARD_SIDE
@@ -22,12 +21,10 @@ class Visualizer:
 
 	def onDraw(self):
 		self.window.clear()
-		for x in range(BOARD_SIDE):
-			for y in range(BOARD_SIDE):
-				self.texTerrain.blit(x*32,y*32)
-		path=self.board.path
-		for block in path:
-			self.texPath.blit(block[0]*32, block[1]*32)
+		tiles = ((x, y) for x in range(BOARD_SIDE) for y in range(BOARD_SIDE))
+		for (x, y) in tiles:
+			tex = self.texPath if (x, y) in self.board.path else self.texTerrain
+			tex.blit(32 * x, 32 * y)
 
 	def run(self):
 		pyglet.app.run()
