@@ -10,7 +10,7 @@ class Visualizer:
 		glClearColor(1, 1, 1, 1)
 
 	def onDraw(self):
-		glClear(GL_COLOR_BUFFER_BIT)
+		self.window.clear()
 
 	def run(self):
 		pyglet.app.run()
