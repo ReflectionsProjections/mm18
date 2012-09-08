@@ -2,7 +2,10 @@
 
 import constants
 import json
+import os
 from collections import deque
+from collections import defaultdict
+
 
 """
 This is the board class.
@@ -25,16 +28,17 @@ class Board:
 		self.hitList = defaultdict(list)
 
 	"""
-	Reads in json for the board layout from a file and sorts it into two lists - for base positions and path positions
+	Reads in json for the board layout from a file and sorts it into two lists one for base positions and the other for path positions
 	"""
 	@staticmethod
 	def jsonLoad():
-		data =json.load(open(board1.json).read())
+		filePath = os.path.join(os.path.dirname(__file__), 'board1.json')
+		data =json.load(open(filePath))
 		bases = data['bases']
 		baseList = [tuple(pair) for pair in bases]
 		paths = data['paths']
 		pathList = [tuple(pair) for pair in paths]
-		findPaths(baseList, pathList)
+		return Board.findPaths(baseList, pathList)
 
 
 	"""
@@ -47,9 +51,9 @@ class Board:
 	def findPaths(baseList, pathList):
 		pathQueue = deque(baseList)
 		outPath = []
-		for elem in pathQueue:
+		while pathQueue:
+			x,y = pathQueue.popleft()
 			if (x,y) not in outPath:
-				x,y = pathQueue.popleft()
 				if (x, y + 1) in pathList:
 					pathQueue.append((x, y + 1))
 				if (x, y - 1) in pathList:
@@ -60,7 +64,7 @@ class Board:
 					pathQueue.append((x - 1, y))
 				if (x,y) not in baseList:
 					outPath.append((x,y))
-		Board(baseList,outPath)
+		return Board(baseList,outPath)
 
 	"""
 	Check whether the position of the object being inserted is a valid placement on the board.
@@ -113,21 +117,21 @@ class Board:
 	self -- the board
 	tower -- the tower to add to the hitList
 	"""
-	def addToHitList(self, tower):
-		tX, tY = tower.position
-		tXLower = tX - TOWER_RANGE[tower.upgrade]
-		if(tXLower < 0): 
+	def addToHitList(self, tower, position):
+		tX, tY = position
+		tXLower = tX - constants.TOWER_RANGE[tower.upgrade]
+		if tXLower < 0:
 			tXLower = 0
-		tXUpper = tX + TOWER_RANGE[tower.upgrade]
-		if(tXUpper >= BOARD_SIDE):
-			txUpper = BOARD_SIDE - 1
-		tYLower = tY - TOWER_RANGE[tower.upgrade]
-		if(tYLower < 0):
+		tXUpper = tX + constants.TOWER_RANGE[tower.upgrade]
+		if tXUpper >= constants.BOARD_SIDE:
+			txUpper = constants.BOARD_SIDE - 1
+		tYLower = tY - constants.TOWER_RANGE[tower.upgrade]
+		if tYLower < 0:
 			tYLower = 0
-		tYUpper = tY + TOWER_RANGE[tower.upgrade]
-		if(tYUpper >= BOARD_SIDE:
-			tYUpper = BOARD_SIDE - 1
-		for elem in self.paths:
+		tYUpper = tY + constants.TOWER_RANGE[tower.upgrade]
+		if tYUpper >= constants.BOARD_SIDE:
+			tYUpper = constants.BOARD_SIDE - 1
+		for elem in self.path:
 			elemX, elemY = elem
 			if elemX >= tXLower and elemX <= tXUpper:
 				if elemY >= tYLower and elemY <= tYUpper:
@@ -141,9 +145,9 @@ class Board:
 	tower -- the tower to be removed
 	"""
 
-	def removeFromHitList(self, tower)
+	def removeFromHitList(self, tower):
 		for elem, i in self.hitList.iteritems():
-			for i in self.hitList[elem]	
+			for i in self.hitList[elem]:
 				i.remove(tower)
 			
 		
