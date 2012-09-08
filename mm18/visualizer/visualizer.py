@@ -31,7 +31,12 @@ class Visualizer:
 		tiles = ((x, y) for x in range(width) for y in range(height))
 		for (x, y) in tiles:
 			tex = tex_path if (x, y) in self.board.path else tex_terrain
-			tex.blit(TILE_SIZE * x, TILE_SIZE * y)
+			tex.blit(
+				x=TILE_SIZE * x,
+				y=TILE_SIZE * y,
+				width=TILE_SIZE,
+				height=TILE_SIZE,
+			)
 
 	def run(self):
 		pyglet.app.run()
