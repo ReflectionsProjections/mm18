@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
 	if branch in core_list:
 		result = test_suite.run_suite()
-		if result.errors != 0 or result.failures != 0:
+		if result.errors or result.failures:
 			print "One or more test cases failed on a core branch"
 			print "Core branches must have working test cases and code"
 			bail()
