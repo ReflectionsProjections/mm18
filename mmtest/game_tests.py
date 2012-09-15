@@ -33,7 +33,7 @@ class TestGame(unittest.TestCase):
 	def testValidPlayerCreate(self):
 		self.assertEqual(self.testPlayer.name, "testName")
 		self.assertEqual(self.testPlayer.resources, mm18.game.constants.BASE_RESOURCES)
-		self.assertEqual(self.testPlayer.allowedUpgrade, 0)
+		self.assertEqual(self.testPlayer.allowedUpgrade, 1)
 		self.assertEqual(self.testPlayer.sentUnits, 0)
 
 	def testInvalidPlayerUpgrade(self):
@@ -120,7 +120,7 @@ class TestGame(unittest.TestCase):
 	#Not enough resources
 	def testInvalidPurchaseUnit(self):
 		self.testPlayer.resources = 0
-		test = Unit.purchaseUnit(0,0,self.testPlayer)
+		test = Unit.purchaseUnit(1,0,self.testPlayer)
 		self.assertEquals(test,None)
 
 	#Level too high
@@ -130,14 +130,14 @@ class TestGame(unittest.TestCase):
 
 	#Invalid spec
 	def testInvalidPurchaseUnit2(self):
-		testUnit = Unit.purchaseUnit(0,-2,self.testPlayer)
+		testUnit = Unit.purchaseUnit(1,-2,self.testPlayer)
 		self.assertEquals(testUnit, None)
-		testUnit = Unit.purchaseUnit(0,2,self.testPlayer)
+		testUnit = Unit.purchaseUnit(1,2,self.testPlayer)
 		self.assertEquals(testUnit, None)
 
 	def testValidPurchaseUnit(self):
-		testUnit = Unit.purchaseUnit(0,1,self.testPlayer)
-		self.assertEquals(testUnit.level,0)
+		testUnit = Unit.purchaseUnit(1,1,self.testPlayer)
+		self.assertEquals(testUnit.level,1)
 		self.assertEquals(testUnit.specialisation,1)
 		self.assertEquals(testUnit.owner, self.testPlayer.name)
 
@@ -150,7 +150,7 @@ class TestGame(unittest.TestCase):
 	def testValidPurchaseTower(self):
 		testTower = Tower.purchaseTower(self.testPlayer)
 		self.assertEquals(self.testPlayer.resources,mm18.game.constants.BASE_RESOURCES - mm18.game.constants.TOWER_BASE_COST)
-		self.assertEquals(testTower.upgrade, 0)
+		self.assertEquals(testTower.upgrade, 1)
 		self.assertEquals(testTower.specialisation, 0)
 
 	#Already fully upgraded
@@ -168,11 +168,11 @@ class TestGame(unittest.TestCase):
 		self.assertFalse(self.testTower.upgradeTower(self.testPlayer))
 
 	def testValidTowerUpgrade(self):
-		self.testPlayer.allowedUpgrade = 1
+		self.testPlayer.allowedUpgrade += 1
 		self.assertTrue(self.testTower.upgradeTower(self.testPlayer))
 
 	def testInvalidTowerSpec(self):
-		self.testTower.upgrade = 1
+		self.testTower.upgrade += 1
 		self.assertFalse(self.testTower.specialise(0))
 
 	def testInvalidTowerSpec1(self):
@@ -180,7 +180,7 @@ class TestGame(unittest.TestCase):
 		self.assertFalse(self.testTower.specialise(2))
 		self.assertFalse(self.testTower.specialise(1.5))
 
-	def testValidTowerSoec(self):
+	def testValidTowerSpec(self):
 		self.assertTrue(self.testTower.specialise(1))
 
 

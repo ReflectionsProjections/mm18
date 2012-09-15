@@ -17,7 +17,7 @@ class Player:
 	def __init__(self, name):
 		self.resources = constants.BASE_RESOURCES
 		self.name = name
-		self.allowedUpgrade = 0
+		self.allowedUpgrade = 1
 		self.sentUnits = 0
 
 	"""
