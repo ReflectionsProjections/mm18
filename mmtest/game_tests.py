@@ -190,7 +190,11 @@ class TestGame(unittest.TestCase):
 	def testValidTowerSpec(self):
 		self.assertTrue(self.testTower.specialise(1))
 
-
+	def testValidFire(self):
+		testUnit = Unit.purchaseUnit(1,1,self.testPlayer,1)
+		testTower = Tower.purchaseTower(self.testPlayer)
+		self.assertFalse(self.testTower.fire(testUnit))
+		self.assertFalse(testUnit.health)
 
 
 

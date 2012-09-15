@@ -25,6 +25,7 @@ class Board:
 		self.base = base
 		self.path = path
 		self.tower = {}
+		self.unitList= {}
 		self.qN = deque()
 		self.qE = deque()
 		self.qS = deque()
