@@ -271,7 +271,7 @@ class Board:
 				 [constants.NORTH,constants.EAST,constants.SOUTH,constants.WEST]]
 		return ((unit,pos) for front in itertools.izip()
 	                     for (unit,pos) in front
-						 if unit is not None)
+						 if unit is not None and unit.health > 0)
 
 	"""
 	Advance the board state.
@@ -282,6 +282,6 @@ class Board:
 	def tick(self):
 		for path in self.paths.itervalues():
 			unit = path.advance()
-			if unit is not None:
+			if unit is not None and unit.health > 0:
 				self.owner.damage(unit.finalDamage())
 		self.fireTowers()
