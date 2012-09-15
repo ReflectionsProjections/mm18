@@ -3,9 +3,9 @@
 import constants
 import json
 import os
-from collections import deque
-from collections import defaultdict
-
+from collections import deque, defaultdict
+from path import Path
+import itertools
 
 """
 This is the board class.
@@ -29,10 +29,10 @@ class Board:
 		self.path = path
 		self.tower = {}
 		self.unitList= {}
-		self.qN = deque()
-		self.qE = deque()
-		self.qS = deque()
-		self.qW = deque()
+		self.paths = {constants.NORTH:Path([]),
+		              constants.EAST:Path([]),
+		              constants.SOUTH:Path([]),
+		              constants.WEST:Path([])}
 		self.hitList = defaultdict(list)
 		self.owner = player
 
@@ -59,7 +59,6 @@ class Board:
 		paths = data['paths']
 		pathList = [tuple(pair) for pair in paths]
 		return Board.orderPathsByClosest(baseList, pathList, player)
-
 
 	"""
 	Breadth-first search method that takes the unordered list of path locations and sorts them by how far from the base they are.
@@ -196,7 +195,6 @@ class Board:
 		if self.getItem(position) != None:
 			del self.tower[position]
 
-
 	"""
 	Adds a tower to all the appropriate places of the hitList
 
@@ -235,53 +233,55 @@ class Board:
 		for elem, i in self.hitList.iteritems():
 			for i in self.hitList[elem]:
 				i.remove(tower)
-			
 
 	"""
-	Goes through the path (orderPathByClosest ensures that it is ordered), and if there is an enemy unit, attack it.
+	Goes through the paths, and if there is an enemy unit, attack it.
 
 	self -- the board
 	"""
 	
 	def fireTowers(self):
-		self.resetTowers() #load the cannons/catapults/death rays
-		for p in self.path: #go through paths
-			for u in self.unitList: #if a unit is standing there
-				if p in self.unitList: 
-					for t in self.hitList[p]: #Go through hitList at that spot
-						if u.health >0 : #if the unit is NOT out of health
-							t.fire(u) #fire the cannons/lasers/steam-propelled tesla coils 
-
+		used = set()
+		for unit, pos in self.units():
+			for tower in self.hitlist[pos]:
+				if unit.health <= 0:
+					break
+				if tower not in used:
+					used.add(tower)
+					tower.fire(unit)
 
 	"""
-	Reset towers to having not fired (called once before every fireTowers call)
+	Queue's the unit at the entrance of the path it is supposed to take.
 
-	self-- the board
+	unit -- the unit being placed
+	q --  which entrance the unit needs to go to
 	"""
-
-	def resetTowers(self):
-		for t in self.tower:
-			t.reset()
-
 	def queueUnit(self, unit, q):
-
-		"""
-		Queue's the unit at the entrance of the path it is supposed to take.
-
-		unit -- the unit being placed
-		q --  which entrance the unit needs to go to
-		"""
-
-		if q == 1:
-			qN.append(unit)
-			return true
-		elif q == 2:
-			qE.append(unit)
-			return true
-		elif q == 3:
-			qS.append(unit)
-			return true
-		elif q == 4:
-			qW.append(unit)
+		if q in self.paths:
+			self.paths[q].start(unit)
 			return true
 		return false
+
+	"""
+	Return a generator of pairs of unit and position on the board,
+	in order of increasing distance from the base
+	"""
+	def units(self):
+		paths = [self.paths[q] for q in
+				 [constants.NORTH,constants.EAST,constants.SOUTH,constants.WEST]]
+		return ((unit,pos) for front in itertools.izip()
+	                     for (unit,pos) in front
+						 if unit is not None)
+
+	"""
+	Advance the board state.
+
+	Incoming units move forward, ones reaching the base do damage, and towers fire.
+	Each tower targets the unit closest to the base
+	"""
+	def tick(self):
+		for path in self.paths.itervalues():
+			unit = path.advance()
+			if unit is not None:
+				self.owner.damage(unit.finalDamage())
+		self.fireTowers()

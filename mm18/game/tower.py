@@ -22,7 +22,6 @@ class Tower:
 		self.specialisation = 0
 		self.cost = constants.TOWER_BASE_COST
 		self.owner = player
-		self.fired=0
 
 	"""
 	Static method for the player to purchase the tower that has been created
@@ -78,21 +77,8 @@ class Tower:
 			None
 
 	"""
-	set the tower's fired variable to 0
+	Damage the attacked unit
 	"""
-	def reset(self):
-		self.fired=0
-
-	"""
-	Fire at enemy unit
-
-	Does specialization 0, 1, and 2.
-	normal damage for 0
-	1 does high damage on 2, low on 1
-	2 does high damage on 1, low on 2
-	"""
-	def fire(self, enemy):
-		if self.fired==0: #if I haven't fired before
-			self.fired=1
-			enemy.damage(self.specialisation, constants.TOWER_UPGRADE_MULTIPLIER[self.upgrade]) #tell this ne'er do well to have at thee!
-		
+	def fire(self, unit):
+		unit.damage(constants.TOWER_UPGRADE_MULTIPLIER[self.upgrade]*constants.BASE_TOWER_DAMAGE,
+		            self.specialisation)

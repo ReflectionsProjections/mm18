@@ -70,10 +70,7 @@ class Player:
 	"""
 
 	def isDead(self):
-		if self.health > 0:
-			return False
-		else:
-			return True
+		return self.health <= 0
 
 
 	"""
@@ -103,4 +100,3 @@ class Player:
 	
 	def addResources(self, ammount):
 		self.resources += ammount
-

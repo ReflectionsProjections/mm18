@@ -42,9 +42,17 @@ class Unit:
 	"""
 	Take damage from a tower
 	
-	sepcial -- the speciality of the tower
-	multiply -- the tower's upgrade modifier
+	amount -- the amount of damage
+	specialisation -- the tower specialisation
 	"""
-	def damage(self, sepcial, multiply):
-		specialMultiplier=constants.NORMAL # determine the effectiveness of speciality
-		self.health-=constants.BASE_TOWER_DAMAGE*specialMultiplier*multiply #subtract damage
+	def damage(self, amount, specialisation):
+		multiplier = constants.specialisation_mulitplier(specialisation, self.specialisation)
+		self.health -= amount*multiplier
+
+	"""
+	Damage this unit does when it reaches the base
+	"""
+	def finalDamage(self):
+		return (constants.BASE_DAMAGE
+			*constants.UPGRADE_MULTIPLIER[self.level]
+			*(self.health / constants.BASE_UNIT_HEALTH))
