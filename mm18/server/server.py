@@ -38,7 +38,6 @@ class MMHandler(BaseHTTPRequestHandler):
 		method -- string containing the HTTP request method
 		"""
 
-		matched_url = False
 		invalid_method = False
 
 		for url in urlpatterns:
@@ -46,7 +45,6 @@ class MMHandler(BaseHTTPRequestHandler):
 
 			# check if match is found
 			if match:
-				matched_url = True
 
 				# if method is same, process
 				if method == url[1]:
@@ -59,11 +57,9 @@ class MMHandler(BaseHTTPRequestHandler):
 						self.send_error(400)
 						return
 
-					# TODO: What does this comment even mean? Someone who knows,
-					# fix it
-					# Send a response based on return from function first arg to
-					# url[2] is the matches pulled from url second arg is
-					# unrolled data dictionary
+					# url[2] is the function referenced in the url to call
+					# It is called with the group dictionary from the regex
+					# and the unrolled JSON data as keyworded arguments
 					self.respond(*url[2](match.groupdict(), **data))
 
 					break
@@ -73,14 +69,14 @@ class MMHandler(BaseHTTPRequestHandler):
 					invalid_method = True
 
 		# Error Handling Below
-		# no url match found, send 404
-		if not matched_url:
-			self.send_error(404)
-			return
 		# URL found, but not for that method, sending 405 error
 		if invalid_method:
 			self.send_error(405)
 			return
+
+		# no url match found, send 404
+		self.send_error(404)
+		return
 
 	def do_GET(self):
 		"""Handle all GET requests.
