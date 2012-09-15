@@ -67,6 +67,14 @@ class TestGame(unittest.TestCase):
 		self.testPlayer.damage(mm18.game.constants.BASE_HEALTH)
 		self.assertTrue(self.testPlayer.isDead())
 		self.assertEquals(self.testPlayer.healthIs(),0)
+		
+	def testResourcesIs(self):
+		self.testPlayer.resources = mm18.game.constants.BASE_RESOURCES
+		self.assertEquals(self.testPlayer.resourcesIs(),mm18.game.constants.BASE_RESOURCES)
+		
+	def testAllowedUpgradeIs(self):
+		self.testPlayer.allowedUpgrade = 1
+		self.assertEquals(self.testPlayer.allowedUpgradeIs(),1)
 
 	"""Board Tests"""
 	def testInvalidBoardCreation(self):
