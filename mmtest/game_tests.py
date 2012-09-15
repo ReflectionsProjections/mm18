@@ -75,6 +75,11 @@ class TestGame(unittest.TestCase):
 	def testAllowedUpgradeIs(self):
 		self.testPlayer.allowedUpgrade = 1
 		self.assertEquals(self.testPlayer.allowedUpgradeIs(),1)
+		
+	def testAddResources(self):
+		self.testPlayer.resources = mm18.game.constants.BASE_RESOURCES
+		self.testPlayer.addResources(42)
+		self.assertEquals(self.testPlayer.resourcesIs(), mm18.game.constants.BASE_RESOURCES+42)
 
 	"""Board Tests"""
 	def testInvalidBoardCreation(self):
