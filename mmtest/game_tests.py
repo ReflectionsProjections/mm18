@@ -63,7 +63,7 @@ class TestGame(unittest.TestCase):
 		self.testPlayer.health = mm18.game.constants.BASE_HEALTH
 		self.assertEquals(self.testPlayer.healthIs(),mm18.game.constants.BASE_HEALTH)
 		self.assertFalse(self.testPlayer.isDead())
-		self.testPlayer.takeDamage(mm18.game.constants.BASE_HEALTH)
+		self.testPlayer.damage(mm18.game.constants.BASE_HEALTH)
 		self.assertTrue(self.testPlayer.isDead())
 		self.assertEquals(self.testPlayer.healthIs(),0)
 
