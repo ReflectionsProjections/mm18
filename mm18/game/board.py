@@ -20,8 +20,9 @@ class Board:
 
 	base -- a list of tuples that represent the base location
 	path -- a list of tuples that represent the path locations (ordered in orderPathsByClosest method)
+	player -- the player who owns the board
 	"""
-	def __init__(self, base, path):
+	def __init__(self, base, path, player):
 		self.base = base
 		self.path = path
 		self.tower = {}
@@ -30,19 +31,20 @@ class Board:
 		self.qS = deque()
 		self.qW = deque()
 		self.hitList = defaultdict(list)
+		self.owner = player
 
 	"""
 	Reads in json for the board layout from a file and sorts it into two lists one for base positions and the other for path positions
 	"""
 	@staticmethod
-	def jsonLoad(filename):
+	def jsonLoad(filename, player):
 		filePath = os.path.join(os.path.dirname(__file__), filename)
 		data =json.load(open(filePath))
 		bases = data['bases']
 		baseList = [tuple(pair) for pair in bases]
 		paths = data['paths']
 		pathList = [tuple(pair) for pair in paths]
-		return Board.orderPathsByClosest(baseList, pathList)
+		return Board.orderPathsByClosest(baseList, pathList, player)
 
 
 	"""
@@ -52,7 +54,7 @@ class Board:
 	pathList -- a list that contains the paths to the base in no order
 	"""
 	@staticmethod
-	def orderPathsByClosest(baseList, pathList):
+	def orderPathsByClosest(baseList, pathList, player):
 		pathQueue = deque(baseList)
 		outPath = []
 		while pathQueue:
@@ -68,7 +70,7 @@ class Board:
 					pathQueue.append((x - 1, y))
 				if (x,y) not in baseList:
 					outPath.append((x,y))
-		return Board(baseList,outPath)
+		return Board(baseList, outPath, player)
 
 	"""
 	Check whether the position of the object being inserted is a valid placement on the board.
