@@ -12,7 +12,7 @@ class TestGame(unittest.TestCase):
 	def setUp(self):
 		unittest.TestCase.setUp(self)
 		self.testPlayer = Player("testName")
-		self.testBoard = Board([(0,1),(1,1)],[(0,2),(1,2),(1,3),(0,4)], Player("testName"))
+		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)], Player("testName"))
 		self.testTower = Tower(Player("testName"))
 
 	def tearDown(self):
@@ -89,13 +89,13 @@ class TestGame(unittest.TestCase):
 	def testValidBoardCreation(self):
 		self.assertEquals(len(self.testBoard.tower),0)
 
-	def testJsonLoadAndOrderPathByClosest(self):
+	def testJsonLoadAndOrderPathSquaresByClosest(self):
 		testBoard1 = Board.jsonLoad("board1.json", self.testPlayer)
 		self.assertEquals(testBoard1.base,[(5, 5), (5, 6), (5, 4), (6, 5), (6, 6), (6, 4), (4, 5), (4, 6), (4, 4)])
 		self.assertEquals(testBoard1.path,[(5, 7), (5, 3), (7, 5), (3, 5), (5, 8), (5, 2), (8, 5), (2, 5), (5, 9), (5, 1), (9, 5), (1, 5), (5, 10), (5, 0), (10, 5), (0, 5)])
 
 	def testFindPaths(self):
-		board = Board.jsonLoad("board1.json")
+		board = Board.jsonLoad("board1.json", self.testPlayer)
 		paths = board.findPaths()
 		print "\n"
 		print paths

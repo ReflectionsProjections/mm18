@@ -21,19 +21,25 @@ class Board:
 	base -- a list of tuples that represent the base location
 	path -- a list of tuples that represent the path locations (ordered in orderPathsByClosest method)
 	player -- the player who owns the board
+	width -- an optional arguement, the width of the board
+	height -- an optional arguement, the height of the board
 	"""
-	def __init__(self, base, path, player):
-		self.width = constants.BOARD_SIDE
-		self.height = constants.BOARD_SIDE
+	def __init__(self, base, path, player, width=constants.BOARD_SIDE, height=constants.BOARD_SIDE):
 		self.base = base
-		self.path = path
+		self.path = self.orderPathSquaresByClosest(base, path)
+		
+		self.width = width
+		self.height = height
+		
 		self.tower = {}
+		self.hitList = defaultdict(list)
+
 		self.unitList= {}
 		self.qN = deque()
 		self.qE = deque()
 		self.qS = deque()
 		self.qW = deque()
-		self.hitList = defaultdict(list)
+		
 		self.owner = player
 
 		self.startPos = 4*[None]
@@ -54,11 +60,17 @@ class Board:
 	def jsonLoad(filename, player):
 		filePath = os.path.join(os.path.dirname(__file__), filename)
 		data =json.load(open(filePath))
+		
 		bases = data['bases']
 		baseList = [tuple(pair) for pair in bases]
+		
 		paths = data['paths']
 		pathList = [tuple(pair) for pair in paths]
-		return Board.orderPathsByClosest(baseList, pathList, player)
+		
+		width = data['width']
+		height = data['height']
+
+		return Board(baseList, pathList, player)
 
 
 	"""
@@ -67,8 +79,7 @@ class Board:
 	baseList -- a list that contains the base locations
 	pathList -- a list that contains the paths to the base in no order
 	"""
-	@staticmethod
-	def orderPathsByClosest(baseList, pathList, player):
+	def orderPathSquaresByClosest(self, baseList, pathList):
 		pathQueue = deque(baseList)
 		outPath = []
 		while pathQueue:
@@ -84,7 +95,7 @@ class Board:
 					pathQueue.append((x - 1, y))
 				if (x,y) not in baseList:
 					outPath.append((x,y))
-		return Board(baseList, outPath, player)
+		return outPath
 
 	"""
 	Depth-first search method that uses a list of path locations to build a
