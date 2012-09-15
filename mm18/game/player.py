@@ -96,4 +96,11 @@ class Player:
 	
 	def allowedUpgradeIs(self):
 		return self.allowedUpgrade
+		
+	"""
+	Method to add resources to a player
+	"""
+	
+	def addResources(self, ammount):
+		self.resources += ammount
 
