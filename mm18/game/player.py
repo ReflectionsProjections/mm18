@@ -62,7 +62,7 @@ class Player:
 
 	"""
 
-	def takeDamage(self, damage):
+	def damage(self, damage):
 		self.health -= damage
 
 	"""
