@@ -46,6 +46,14 @@ class Visualizer:
 				width=TILE_SIZE,
 				height=TILE_SIZE,
 			)
+		self.drawTowers(board.tower)
+
+	def drawTowers(self, towers):
+		for (coords, tower) in towers:
+			self.drawTower(tower, coords)
+
+	def drawTower(self, tower, coords):
+		(x, y) = coords
 
 	def run(self):
 		pyglet.app.run()
