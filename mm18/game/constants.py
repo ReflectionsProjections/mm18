@@ -30,6 +30,10 @@ HEALTH_DECREASE = 1
 #Must always be odd
 BOARD_SIDE = 11
 BASE_SIZE = 3
+NORTH = 0
+EAST = 1
+SOUTH = 2
+WEST = 3
 
 """PLACEHOLDER"""
 BOOP = -1000

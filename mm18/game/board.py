@@ -13,7 +13,7 @@ It is where the code for the board goes.
 """
 
 class Board:
-	
+
 	"""
 	Board class. 
 	The board consists of two lists and a dictionary.  The dictionary contains the locations of the towers (key is a tuple for location on the board, entry is a tower object).  The base list contains the tuple locations of the base - unordered.   The path list contains the tuple locations of the path, ordered starting with those closest to the base and working outwards.
@@ -22,10 +22,23 @@ class Board:
 	path -- a list of tuples that represent the path locations (ordered in orderPathsByClosest method)
 	"""
 	def __init__(self, base, path):
+		self.width = constants.BOARD_SIDE
+		self.height = constants.BOARD_SIDE
 		self.base = base
 		self.path = path
 		self.tower = {}
 		self.hitList = defaultdict(list)
+
+		self.startPos = 4*[None]
+		for x,y in self.path:
+			if y is 0:
+				self.startPos[constants.NORTH] = (x,y)
+			elif x is self.width - 1:
+				self.startPos[constants.EAST] = (x,y)
+			elif y is self.height - 1:
+				self.startPos[constants.SOUTH] = (x,y)
+			elif x is 0:
+				self.startPos[constants.WEST] = (x,y)
 
 	"""
 	Reads in json for the board layout from a file and sorts it into two lists one for base positions and the other for path positions
@@ -67,12 +80,78 @@ class Board:
 		return Board(baseList,outPath)
 
 	"""
+	Depth-first search method that uses a list of path locations to build a
+	list of paths, where each path starts at a starting path square (on the
+	edge of the board) and ends at the base.
+	"""
+	# TODO: make sure that paths end at a base
+	def findPaths(self):
+		paths = []
+		
+		pathStack = [self.startPos[constants.NORTH]]
+		paths = self.findPathsRecurse(pathStack, paths)
+
+		pathStack = [self.startPos[constants.EAST]]
+		paths = self.findPathsRecurse(pathStack, paths)
+			
+		pathStack = [self.startPos[constants.SOUTH]]
+		paths = self.findPathsRecurse(pathStack, paths)
+
+		pathStack = [self.startPos[constants.WEST]]
+		paths = self.findPathsRecurse(pathStack, paths)
+
+		return paths
+	
+	"""
+	The helper function to findPaths, it actually travels down the paths via a
+	depth first search and adds a completed path the the paths list when it
+	cannot go any farther.
+	"""
+	def findPathsRecurse(self, pathStack, paths):
+		print "\n"
+		print pathStack
+		
+		pathEnds = True
+		x,y = pathStack[len(pathStack) - 1]
+		
+		north = (x, y+1)
+		if north not in pathStack and north in self.path:
+			pathEnds = False
+			pathStack.append(north)
+			self.findPathsRecurse(pathStack, paths)
+
+		east = (x+1, y)
+		if east not in pathStack and east in self.path:
+			pathEnds = False
+			pathStack.append(east)
+			self.findPathsRecurse(pathStack, paths)
+		
+		south = (x, y-1)
+		if south not in pathStack and south in self.path:
+			pathEnds = False
+			pathStack.append(south)
+			self.findPathsRecurse(pathStack, paths)
+		
+		west = (x-1, y)
+		if west not in pathStack and west in self.path:
+			pathEnds = False
+			pathStack.append(west)
+			self.findPathsRecurse(pathStack, paths)
+		
+		if pathEnds:
+			paths.append(pathStack[:])
+		
+		pathStack.pop()
+		return paths
+
+
+
+	"""
 	Check whether the position of the object being inserted is a valid placement on the board.
 	Will contain error handling for invalid positions.
 
 	position -- tuple containing object position
 	"""
-
 	def validPosition(self, position):
 		x,y=position
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
