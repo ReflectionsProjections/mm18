@@ -19,7 +19,7 @@ class Player:
 		self.name = name
 		self.allowedUpgrade = 1
 		self.sentUnits = 0
-		self.health = BASE_HEALTH
+		self.health = constants.BASE_HEALTH
 
 	"""
 	Increases the allowed upgrade level of the player
