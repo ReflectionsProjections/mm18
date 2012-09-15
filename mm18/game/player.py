@@ -82,4 +82,18 @@ class Player:
 
 	def healthIs(self):
 		return self.health
+		
+	"""
+	Method returns player resources
+	"""
+	
+	def resourcesIs(self):
+		return self.resources
+		
+	"""
+	Method returns allowed upgrade level of player
+	"""
+	
+	def allowedUpgradeIs(self):
+		return self.allowedUpgrade
 
