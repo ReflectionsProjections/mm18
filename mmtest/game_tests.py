@@ -248,10 +248,10 @@ class TestGame(unittest.TestCase):
 		self.assertTrue(self.testTower.specialise(1))
 
 	def testValidFire(self):
-		testUnit = Unit.purchaseUnit(1,1,self.testPlayer,1)
+		testUnit = Unit.purchaseUnit(1,0,self.testPlayer,1)
 		testTower = Tower.purchaseTower(self.testPlayer)
-		self.assertFalse(self.testTower.fire(testUnit))
-		self.assertFalse(testUnit.health)
+		self.testTower.fire(testUnit)
+		self.assertEqual(testUnit.health, 0)
 
 
 

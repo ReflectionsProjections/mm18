@@ -26,6 +26,14 @@ EFFECTIVE = 1.1
 NORMAL = 1
 NOT_EFFECTIVE = 0.75
 
+# specialisation_table[attack][defense]
+SPECIALISATION_TABLE = \
+  [[NOT_EFFECTIVE,   EFFECTIVE, SUPER_EFFECTIVE],
+   [NORMAL,          NORMAL,    NORMAL],
+   [SUPER_EFFECTIVE, EFFECTIVE, NOT_EFFECTIVE]]
+def specialisation_mulitplier(attack, defense):
+	return SPECIALISATION_TABLE[attack+1][defense+1]
+
 """PLAYER"""
 BASE_RESOURCES = 15
 UPGRADE_INCREASE = 10
