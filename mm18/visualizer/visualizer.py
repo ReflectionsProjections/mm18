@@ -22,10 +22,16 @@ class Visualizer:
 			width=TILE_SIZE * constants.BOARD_SIDE,
 			height=TILE_SIZE * constants.BOARD_SIDE,
 		)
-		self.window.set_handler('on_draw', self.onDraw)
+		self.window.set_handler('on_draw', self.draw)
+		pyglet.clock.schedule_interval(self.update, 1)
 		glClearColor(1, 1, 1, 1)
 
-	def onDraw(self):
+	def update(self, dt=0):
+		# parse and perform commands from log
+		# advance the game controller
+		pass
+
+	def draw(self):
 		self.window.clear()
 		self.drawBoard(self.board)
 
