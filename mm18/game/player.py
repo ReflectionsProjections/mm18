@@ -19,6 +19,7 @@ class Player:
 		self.name = name
 		self.allowedUpgrade = 1
 		self.sentUnits = 0
+		self.health = BASE_HEALTH
 
 	"""
 	Increases the allowed upgrade level of the player
@@ -53,4 +54,32 @@ class Player:
 			return True
 		else:
 			return False
+
+	"""
+	Damage method to take damage
+	
+	damage - amount of damage a player takes
+
+	"""
+
+	def takeDamage(self, damage):
+		self.health -= damage
+
+	"""
+	Method checks whether a user is dead or not
+	"""
+
+	def isDead(self):
+		if self.health > 0:
+			return False
+		else:
+			return True
+
+
+	"""
+	Method returns player health
+	"""
+
+	def healthIs(self):
+		return self.health
 

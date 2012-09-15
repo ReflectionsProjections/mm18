@@ -25,6 +25,10 @@ class Board:
 		self.base = base
 		self.path = path
 		self.tower = {}
+		self.qN = deque()
+		self.qE = deque()
+		self.qS = deque()
+		self.qW = deque()
 		self.hitList = defaultdict(list)
 
 	"""
@@ -177,3 +181,25 @@ class Board:
 		for t in self.tower:
 			t.reset()
 
+	def queueUnit(self, unit, q):
+
+		"""
+		Queue's the unit at the entrance of the path it is supposed to take.
+
+		unit -- the unit being placed
+		q --  which entrance the unit needs to go to
+		"""
+
+		if q == 1:
+			qN.append(unit)
+			return true
+		elif q == 2:
+			qE.append(unit)
+			return true
+		elif q == 3:
+			qS.append(unit)
+			return true
+		elif q == 4:
+			qW.append(unit)
+			return true
+		return false
