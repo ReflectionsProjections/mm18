@@ -4,6 +4,7 @@ from mm18.game.tower import Tower
 from mm18.game.units import Unit
 from mm18.game.board import Board
 from mm18.game.player import Player
+from mm18.game.path import Path
 
 """Tests for the game code go here"""
 class TestGame(unittest.TestCase):
@@ -122,6 +123,37 @@ class TestGame(unittest.TestCase):
 		self.testBoard.addItem(tower, (0, 0))
 		self.testBoard.addToHitList(tower, (0,0))
 		print self.testBoard.hitList
+
+	"""Path Tests"""
+	def testPath(self):
+		 p = Path([1,3,2])
+		 self.assertEquals(
+			 list(p.entries()),
+			 [(None, 1), (None, 3), (None, 2)])
+		 p.start('A')
+		 self.assertEquals(p.advance(), None)
+		 self.assertEquals(list(p.entries()),
+						   [(None, 1), (None, 3), ('A', 2)])
+		 self.assertEquals(p.advance(), None)
+		 p.start('B')
+		 self.assertEquals(list(p.entries()),
+						   [(None, 1), ('A', 3), (None, 2)])
+		 self.assertEquals(p.advance(), None)
+		 self.assertEquals(list(p.entries()),
+						   [('A', 1), (None, 3), ('B', 2)])
+		 p.start('C')
+		 p.start('D')
+		 self.assertEquals(p.advance(), 'A')
+		 self.assertEquals(list(p.entries()),
+						   [(None, 1), ('B', 3), ('C', 2)])
+		 self.assertEquals(p.advance(), None)
+		 self.assertEquals(list(p.entries()),
+						   [('B', 1), ('C', 3), ('D', 2)])
+		 self.assertEquals(p.advance(), 'B')
+		 self.assertEquals(p.advance(), 'C')
+		 self.assertEquals(p.advance(), 'D')
+		 self.assertEquals(list(p.entries()),
+						   [(None, 1), (None, 3), (None, 2)])
 
 	"""Unit Tests"""
 	#Not enough resources
