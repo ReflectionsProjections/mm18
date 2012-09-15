@@ -46,5 +46,5 @@ class Unit:
 	multiply -- the tower's upgrade modifier
 	"""
 	def damage(self, sepcial, multiply):
-		specialMiltiplier=NORMAL # determine the effectiveness of speciality
-		self.health-=BASE_TOWER_DAMAGE*specialMultiplier*multiply #subtract damage
+		specialMultiplier=constants.NORMAL # determine the effectiveness of speciality
+		self.health-=constants.BASE_TOWER_DAMAGE*specialMultiplier*multiply #subtract damage

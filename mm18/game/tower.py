@@ -94,5 +94,5 @@ class Tower:
 	def fire(self, enemy):
 		if self.fired==0: #if I haven't fired before
 			self.fired=1
-			enemy.damage(self.specialisation, TOWER_UPGRADE_MULTIPLIER[self.upgrade]) #tell this ne'er do well to have at thee!
+			enemy.damage(self.specialisation, constants.TOWER_UPGRADE_MULTIPLIER[self.upgrade]) #tell this ne'er do well to have at thee!
 		

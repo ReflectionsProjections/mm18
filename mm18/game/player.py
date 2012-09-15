@@ -62,7 +62,7 @@ class Player:
 
 	"""
 
-	def takeDamage(self, damage):
+	def damage(self, damage):
 		self.health -= damage
 
 	"""
@@ -82,4 +82,25 @@ class Player:
 
 	def healthIs(self):
 		return self.health
+		
+	"""
+	Method returns player resources
+	"""
+	
+	def resourcesIs(self):
+		return self.resources
+		
+	"""
+	Method returns allowed upgrade level of player
+	"""
+	
+	def allowedUpgradeIs(self):
+		return self.allowedUpgrade
+		
+	"""
+	Method to add resources to a player
+	"""
+	
+	def addResources(self, ammount):
+		self.resources += ammount
 
