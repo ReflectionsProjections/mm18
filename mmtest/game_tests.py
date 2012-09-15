@@ -67,11 +67,10 @@ class TestGame(unittest.TestCase):
 	def testValidBoardCreation(self):
 		self.assertEquals(len(self.testBoard.tower),0)
 
-	def testJsonLoadAndFindPathsOMGLongTitle(self):
-		testBoard1 = Board.jsonLoad()
+	def testJsonLoadAndOrderPathByClosest(self):
+		testBoard1 = Board.jsonLoad("board1.json")
 		self.assertEquals(testBoard1.base,[(5, 5), (5, 6), (5, 4), (6, 5), (6, 6), (6, 4), (4, 5), (4, 6), (4, 4)])
 		self.assertEquals(testBoard1.path,[(5, 7), (5, 3), (7, 5), (3, 5), (5, 8), (5, 2), (8, 5), (2, 5), (5, 9), (5, 1), (9, 5), (1, 5), (5, 10), (5, 0), (10, 5), (0, 5)])
-
 
 	def testInvalidPosition(self):
 		self.assertFalse(self.testBoard.validPosition((mm18.game.constants.BOARD_SIDE,mm18.game.constants.BOARD_SIDE)))

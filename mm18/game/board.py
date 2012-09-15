@@ -19,7 +19,7 @@ class Board:
 	The board consists of two lists and a dictionary.  The dictionary contains the locations of the towers (key is a tuple for location on the board, entry is a tower object).  The base list contains the tuple locations of the base - unordered.   The path list contains the tuple locations of the path, ordered starting with those closest to the base and working outwards.
 
 	base -- a list of tuples that represent the base location
-	path -- a list of tuples that represent the path locations (ordered in findPaths method)
+	path -- a list of tuples that represent the path locations (ordered in orderPathsByClosest method)
 	"""
 	def __init__(self, base, path):
 		self.base = base
@@ -31,14 +31,14 @@ class Board:
 	Reads in json for the board layout from a file and sorts it into two lists one for base positions and the other for path positions
 	"""
 	@staticmethod
-	def jsonLoad():
-		filePath = os.path.join(os.path.dirname(__file__), 'board1.json')
+	def jsonLoad(filename):
+		filePath = os.path.join(os.path.dirname(__file__), filename)
 		data =json.load(open(filePath))
 		bases = data['bases']
 		baseList = [tuple(pair) for pair in bases]
 		paths = data['paths']
 		pathList = [tuple(pair) for pair in paths]
-		return Board.findPaths(baseList, pathList)
+		return Board.orderPathsByClosest(baseList, pathList)
 
 
 	"""
@@ -48,7 +48,7 @@ class Board:
 	pathList -- a list that contains the paths to the base in no order
 	"""
 	@staticmethod
-	def findPaths(baseList, pathList):
+	def orderPathsByClosest(baseList, pathList):
 		pathQueue = deque(baseList)
 		outPath = []
 		while pathQueue:
