@@ -61,9 +61,11 @@ class TestGame(unittest.TestCase):
 		
 	def testPlayerDeathCheck(self):
 		self.testPlayer.health = mm18.game.constants.BASE_HEALTH
+		self.assertEquals(self.testPlayer.healthIs(),mm18.game.constants.BASE_HEALTH)
 		self.assertFalse(self.testPlayer.isDead())
 		self.testPlayer.takeDamage(mm18.game.constants.BASE_HEALTH)
 		self.assertTrue(self.testPlayer.isDead())
+		self.assertEquals(self.testPlayer.healthIs(),0)
 
 	"""Board Tests"""
 	def testInvalidBoardCreation(self):
