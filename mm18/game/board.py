@@ -20,6 +20,7 @@ class Board:
 
 	base -- a list of tuples that represent the base location
 	path -- a list of tuples that represent the path locations (ordered in findPaths method)
+	hitList -- a dictionary with a tuple key for path location, with a value of a list containing the towers that can fire on that location
 	"""
 	def __init__(self, base, path):
 		self.base = base
@@ -150,5 +151,19 @@ class Board:
 			for i in self.hitList[elem]:
 				i.remove(tower)
 			
-		
+	"""
+	Goes through the path (FindPath ensures that it is ordered from closest to furthest?), and if there is an enemy unit, attack it.
+
+	self -- the board
+	"""
+	"""
+	def fireTowers(self):
+		for i in self.path:
+			#bang bang
+	"""
+	"""
+	Reset towers to having not fired (called once before every fireTowers call)
+
+	self-- the board
+	"""
 
