@@ -27,6 +27,9 @@ class Visualizer:
 
 	def onDraw(self):
 		self.window.clear()
+		self.drawBoard(self.board)
+
+	def drawBoard(self, board):
 		width = height = constants.BOARD_SIDE
 		tiles = ((x, y) for x in range(width) for y in range(height))
 		for (x, y) in tiles:
