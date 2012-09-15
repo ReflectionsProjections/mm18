@@ -18,10 +18,11 @@ class Tower:
 	All towers start with 0 upgrades, no specialisation and no position.
 	"""
 	def __init__ (self, player):
-		self.upgrade = 0
+		self.upgrade = 1
 		self.specialisation = 0
 		self.cost = constants.TOWER_BASE_COST
 		self.owner = player
+		self.fired=0
 
 	"""
 	Static method for the player to purchase the tower that has been created
@@ -44,9 +45,9 @@ class Tower:
 	def upgradeTower(self, player):
 		if self.upgrade == constants.MAX_UPGRADE:
 			return False #fully upgraded
-		elif player.allowedUpgrade > self.upgrade and player.purchaseCheck(constants.UPGRADE_COST[self.upgrade + 1]):
-			player.purchase(constants.UPGRADE_COST[self.upgrade + 1])
-			self.cost = constants.UPGRADE_COST[self.upgrade + 1]
+		elif player.allowedUpgrade > self.upgrade and player.purchaseCheck(constants.TOWER_UPGRADE_COST[self.upgrade + 1]):
+			player.purchase(constants.TOWER_UPGRADE_COST[self.upgrade + 1])
+			self.cost = constants.TOWER_UPGRADE_COST[self.upgrade + 1]
 			self.upgrade += 1
 			return True #level increase, resources decrease
 		else:
@@ -59,7 +60,7 @@ class Tower:
 	spec -- either 1, 0 or -1.  Indicates a specialisation.
 	"""
 	def specialise(self,spec):
-		if self.upgrade == 0 and spec >= -1 and spec <= 1:
+		if self.upgrade == 1 and spec >= -1 and spec <= 1:
 			self.specialisation = spec
 			return True #new spec
 		else:
@@ -75,3 +76,23 @@ class Tower:
 			tower = null
 		else:
 			None
+
+	"""
+	set the tower's fired variable to 0
+	"""
+	def reset(self):
+		self.fired=0
+
+	"""
+	Fire at enemy unit
+
+	Does specialization 0, 1, and 2.
+	normal damage for 0
+	1 does high damage on 2, low on 1
+	2 does high damage on 1, low on 2
+	"""
+	def fire(self, enemy):
+		if self.fired==0: #if I haven't fired before
+			self.fired=1
+			enemy.damage(self.specialisation, constants.TOWER_UPGRADE_MULTIPLIER[self.upgrade]) #tell this ne'er do well to have at thee!
+		

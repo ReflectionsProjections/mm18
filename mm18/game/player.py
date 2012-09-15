@@ -17,8 +17,9 @@ class Player:
 	def __init__(self, name):
 		self.resources = constants.BASE_RESOURCES
 		self.name = name
-		self.allowedUpgrade = 0
+		self.allowedUpgrade = 1
 		self.sentUnits = 0
+		self.health = constants.BASE_HEALTH
 
 	"""
 	Increases the allowed upgrade level of the player
@@ -53,4 +54,53 @@ class Player:
 			return True
 		else:
 			return False
+
+	"""
+	Damage method to take damage
+	
+	damage - amount of damage a player takes
+
+	"""
+
+	def damage(self, damage):
+		self.health -= damage
+
+	"""
+	Method checks whether a user is dead or not
+	"""
+
+	def isDead(self):
+		if self.health > 0:
+			return False
+		else:
+			return True
+
+
+	"""
+	Method returns player health
+	"""
+
+	def healthIs(self):
+		return self.health
+		
+	"""
+	Method returns player resources
+	"""
+	
+	def resourcesIs(self):
+		return self.resources
+		
+	"""
+	Method returns allowed upgrade level of player
+	"""
+	
+	def allowedUpgradeIs(self):
+		return self.allowedUpgrade
+		
+	"""
+	Method to add resources to a player
+	"""
+	
+	def addResources(self, ammount):
+		self.resources += ammount
 

@@ -20,14 +20,21 @@ class Board:
 
 	base -- a list of tuples that represent the base location
 	path -- a list of tuples that represent the path locations (ordered in orderPathsByClosest method)
+	player -- the player who owns the board
 	"""
-	def __init__(self, base, path):
+	def __init__(self, base, path, player):
 		self.width = constants.BOARD_SIDE
 		self.height = constants.BOARD_SIDE
 		self.base = base
 		self.path = path
 		self.tower = {}
+		self.unitList= {}
+		self.qN = deque()
+		self.qE = deque()
+		self.qS = deque()
+		self.qW = deque()
 		self.hitList = defaultdict(list)
+		self.owner = player
 
 		self.startPos = 4*[None]
 		for x,y in self.path:
@@ -44,14 +51,14 @@ class Board:
 	Reads in json for the board layout from a file and sorts it into two lists one for base positions and the other for path positions
 	"""
 	@staticmethod
-	def jsonLoad(filename):
+	def jsonLoad(filename, player):
 		filePath = os.path.join(os.path.dirname(__file__), filename)
 		data =json.load(open(filePath))
 		bases = data['bases']
 		baseList = [tuple(pair) for pair in bases]
 		paths = data['paths']
 		pathList = [tuple(pair) for pair in paths]
-		return Board.orderPathsByClosest(baseList, pathList)
+		return Board.orderPathsByClosest(baseList, pathList, player)
 
 
 	"""
@@ -61,7 +68,7 @@ class Board:
 	pathList -- a list that contains the paths to the base in no order
 	"""
 	@staticmethod
-	def orderPathsByClosest(baseList, pathList):
+	def orderPathsByClosest(baseList, pathList, player):
 		pathQueue = deque(baseList)
 		outPath = []
 		while pathQueue:
@@ -77,7 +84,7 @@ class Board:
 					pathQueue.append((x - 1, y))
 				if (x,y) not in baseList:
 					outPath.append((x,y))
-		return Board(baseList,outPath)
+		return Board(baseList, outPath, player)
 
 	"""
 	Depth-first search method that uses a list of path locations to build a
@@ -229,5 +236,52 @@ class Board:
 			for i in self.hitList[elem]:
 				i.remove(tower)
 			
-		
 
+	"""
+	Goes through the path (orderPathByClosest ensures that it is ordered), and if there is an enemy unit, attack it.
+
+	self -- the board
+	"""
+	
+	def fireTowers(self):
+		self.resetTowers() #load the cannons/catapults/death rays
+		for p in self.path: #go through paths
+			for u in self.unitList: #if a unit is standing there
+				if p in self.unitList: 
+					for t in self.hitList[p]: #Go through hitList at that spot
+						if u.health >0 : #if the unit is NOT out of health
+							t.fire(u) #fire the cannons/lasers/steam-propelled tesla coils 
+
+
+	"""
+	Reset towers to having not fired (called once before every fireTowers call)
+
+	self-- the board
+	"""
+
+	def resetTowers(self):
+		for t in self.tower:
+			t.reset()
+
+	def queueUnit(self, unit, q):
+
+		"""
+		Queue's the unit at the entrance of the path it is supposed to take.
+
+		unit -- the unit being placed
+		q --  which entrance the unit needs to go to
+		"""
+
+		if q == 1:
+			qN.append(unit)
+			return true
+		elif q == 2:
+			qE.append(unit)
+			return true
+		elif q == 3:
+			qS.append(unit)
+			return true
+		elif q == 4:
+			qW.append(unit)
+			return true
+		return false
