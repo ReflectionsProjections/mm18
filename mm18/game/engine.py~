@@ -22,11 +22,7 @@ class Engine():
 	# Game controls
 
 	def advance(self):
-		self.curTick += 1;
-		if self.curTick >= 300000000: #game timeout
-			endGame()
-		#if self.curTick >= 1000000:
-		#	self.curTick = self.curTick%1000000	
+		self.curTick += 1;		
 		if self.curTick%constants.SUPPLY_TIME == 0:
 			supply() 
 		moveUnits() 
