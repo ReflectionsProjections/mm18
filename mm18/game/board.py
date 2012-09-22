@@ -125,9 +125,6 @@ class Board:
 	cannot go any farther.
 	"""
 	def findPathsRecurse(self, pathStack, paths):
-		print "\n"
-		print pathStack
-		
 		pathEnds = True
 		x,y = pathStack[len(pathStack) - 1]
 		

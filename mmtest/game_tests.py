@@ -97,10 +97,6 @@ class TestGame(unittest.TestCase):
 	def testFindPaths(self):
 		board = Board.jsonLoad("board1.json", self.testPlayer)
 		paths = board.findPaths()
-		print "\n"
-		print paths
-		print "\n"
-		print board.path
 		self.assertTrue( [(0,5),  (1,5), (2,5), (3,5)] in paths)
 		self.assertTrue( [(10,5), (9,5), (8,5), (7,5)] in paths)
 		self.assertTrue( [(5,0),  (5,1), (5,2), (5,3)] in paths)
