@@ -1,48 +1,74 @@
 #!/usr/bin/env python
 
-class GameController(object):
-	"""Facilitates communication between the server, database, and game logic.
-	
-	Basic class for facilitating communication between the server, game
-	database, and logic/rules of the game.
+# A global variable stores the active game engine
+_engine = None
 
-	Static class. Should not need initialization.
+"""Runs the game and facilitates communication between the server, database,
+and game logic.
+
+Basic set of functions for facilitating communication between the server, game
+storage, and logic/rules of the game.
+
+Most functions in this file take arguments in the form (regex, **json)
+where regex is the parsed regular expression match object (contains things
+grabbed from the regular expression), and json is all the keyworded
+arguments parsed out of the json sent to the server.
+
+All functions with (regex, **json) input return a tuple in the form (code,
+json), where code is the HTTP status code to respond with, and json is the
+response dictionary to serialize and send out to the client.
+
+The engine must be set with the initalizer before any of these functions will
+work succesfully.
+"""
+
+# Setup functions
+
+def init_controller(gameEngine):
+	global _engine
+	_engine = gameEngine
+
+# Engine API hooks
+
+def get_game_status(regex, **json):
+	"""Get the status of the currently running game
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+
 	"""
 
-	@staticmethod
-	def init_game(self, game_info):
-		"""Create a new running game and get its ID.
+	pass
 
-		game_info - Dictionary of game setup data
-		"""
+def get_player_status(regex, **json):
+	pass
 
-		pass
+def board_get(regex, **json):
+	pass
 
-	@staticmethod
-	def send_to_game(self, message, game):
-		"""Process a message and send it to the active game
+def tower_upgrade(regex, **json):
+	pass
 
-		message - The message to send to the game
-		game - Game ID to send to
-		"""
+def tower_specialize(regex, **json):
+	pass
 
-		pass
+def tower_sell(regex, **json):
+	pass
 
-	@staticmethod
-	def get_from_game(self, message, game):
-		"""Process a message and send it to the active game
+def tower_get(regex, **json):
+	pass
 
-		message - The message describing what to recover
-		game - Game ID to send to
-		"""
+def tower_create(regex, **json):
+	pass
 
-		pass
+def tower_list(regex, **json):
+	pass
 
-	@staticmethod
-	def get_game_info(self, game):
-		"""Recover a predefined dictionary of game data.
+def unit_status(regex, **json):
+	pass
 
-		game - Game ID to get information from
-		"""
-
-		pass
+def unit_create(regex, **json):
+	pass
