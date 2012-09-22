@@ -13,7 +13,7 @@ class Path(object):
 	#  If not other units are waiting it will start moving
 	#  the next time advance is called
 	#  @param unit unit to enqueue
-	"""
+	
 	def start(self, unit):
 		self.waiting.append(unit)
 		
