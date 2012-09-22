@@ -20,11 +20,10 @@ class Board:
 
 	base -- a list of tuples that represent the base location
 	path -- a list of tuples that represent the path locations (ordered in orderPathsByClosest method)
-	player -- the player who owns the board
 	width -- an optional arguement, the width of the board
 	height -- an optional arguement, the height of the board
 	"""
-	def __init__(self, base, path, player, width=constants.BOARD_SIDE, height=constants.BOARD_SIDE):
+	def __init__(self, base, path, width=constants.BOARD_SIDE, height=constants.BOARD_SIDE):
 		self.base = base
 		self.path = self.orderPathSquaresByClosest(base, path)
 		
@@ -40,7 +39,6 @@ class Board:
 		              constants.SOUTH:Path([]),
 		              constants.WEST:Path([])}
 		
-		self.owner = player
 
 		self.startPos = 4*[None]
 		for x,y in self.path:
@@ -57,7 +55,7 @@ class Board:
 	Reads in json for the board layout from a file and sorts it into two lists one for base positions and the other for path positions
 	"""
 	@staticmethod
-	def jsonLoad(filename, player):
+	def jsonLoad(filename):
 		filePath = os.path.join(os.path.dirname(__file__), filename)
 		data =json.load(open(filePath))
 		
@@ -70,7 +68,7 @@ class Board:
 		width = data['width']
 		height = data['height']
 
-		return Board(baseList, pathList, player)
+		return Board(baseList, pathList)
 
 	"""
 	Breadth-first search method that takes the unordered list of path locations and sorts them by how far from the base they are.

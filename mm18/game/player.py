@@ -14,18 +14,21 @@ class Player:
 	Any function related to the player should be in this class.
 	"""
 
-	def __init__(self, name):
+	def __init__(self, name board):
 		"""Create a player with a base number of resources.
 		
 		Each player cannot upgrade their towers/units past their allowed upgrade.
 		
 		\param name The player's name
 		"""
-		self.resources = constants.BASE_RESOURCES
 		self.name = name
+		self.board = board
+
+		self.resources = constants.BASE_RESOURCES
+		self.health = constants.BASE_HEALTH
+
 		self.allowedUpgrade = 1
 		self.sentUnits = 0
-		self.health = constants.BASE_HEALTH
 
 	def increaseUpgrade(self):
 		"""Increases the allowed upgrade level of the player
