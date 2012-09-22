@@ -6,7 +6,7 @@ import json
 
 from urls import urlpatterns
 from client_manager import MMClientManager
-from mm18.game.game_controller import init_controller
+from mm18.game.game_controller import init_game
 
 global_client_manager = MMClientManager()
 
@@ -135,6 +135,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		allowed (not already connected, server is not full).
 		"""
 
+		print "Connecting client"
 		client = global_client_manager.add_client()
 		if client is None:
 			# Server is full, no connection for you!
@@ -153,7 +154,20 @@ class MMHandler(BaseHTTPRequestHandler):
 		After a client has joined the game, we wait for the game to start
 		before sending them back information about the game.
 		"""
-		# TODO: Spin waiting for the server to fill up
+		# Get the run lock on the client manager
+		global_client_manager.game_condition.acquire()
+		if global_client_manager.is_full():
+			print "Game is full, starting"
+			# Start the game and let everyone know we started it
+			_start_game()
+			global_client_manager.game_condition.notify_all()
+			# Release the run lock
+			global_client_manager.game_condition.release()
+		else:
+			print "Game is still not full, waiting on more players"
+			# Spin waiting for the server to fill up. This releases the
+			# run lock and waits for the game to start
+			global_client_manager.game_condition.wait()
 
 		# TODO: Game has started, add any info given in start
 		self.respond(200, reply)
@@ -171,14 +185,12 @@ class MMHandler(BaseHTTPRequestHandler):
 			# Bad call to client, bail us out
 			self.respond(401, {'error': 'Bad id or auth code'})
 
+	def _start_game(self):
+		init_game()
+
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""
 
 	# Inheriting from ThreadingMixIn automatically gives us the default
 	# functions we need for a threaded server.
-	pass
-
-def init_server():
-	"""Init the server by setting up needed globals for the handler"""
-	
 	pass

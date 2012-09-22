@@ -154,6 +154,7 @@ class Board:
 	## Check whether the position of the object being inserted is a valid placement on the board.
 	#  Will contain error handling for invalid positions.
 	#  @param position Tuple containing object position
+	# TODO: Error handling for invalid positions
 	def validPosition(self, position):
 		x,y=position
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
@@ -244,11 +245,13 @@ class Board:
 	                     for (unit,pos) in front
 						 if unit is not None and unit.health > 0)
 
+
 	## Advance the board state.
-	#  Incoming units move forward, ones reaching the base do damage, and towers fire.
-	#  Each tower targets the unit closest to the base
+	#  Incoming units move forward, ones reaching the base do damage
+	# TODO: check if next to base before exploding, dead units die
 	def moveUnits(self):
 		for path in self.paths.itervalues():
 			unit = path.advance()
-			if unit is not None and unit.health > 0:
-				self.owner.damage(unit.finalDamage())
+		#	if unit is not None and unit.health > 0:
+		#		self.owner.damage(unit.finalDamage())
+

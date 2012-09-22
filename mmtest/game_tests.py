@@ -198,12 +198,19 @@ class TestGame(unittest.TestCase):
 		testTower = self.testPlayer.purchaseTower()
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
-"""
-	def testValidMovement(self):
+
+"""	def testValidMovement(self):
 		testUnit=Unit.purchaseUnit(1,0,self.testPlayer,1)
 		self.assertTrue(self.testBoard.queueUnit(testUnit, testUnit.pathID))
 		self.testBoard.moveUnits()
-		self.assertEqual(self.testBoard.unitList[(1,2)], testUnit)
+		testTest=False;
+		for unit in self.testBoard.paths[1].moving:
+			#if unit==testUnit and pos==(0,2):
+				#testTest=True;
+			self.assertEquals(unit, testUnit)
+			self.assertEquals(pos, (0,2))
+			testTest=True;
+		self.assertTrue(testTest)
 """
 
 
