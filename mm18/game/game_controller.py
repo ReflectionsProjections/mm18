@@ -38,6 +38,18 @@ def init_controller(gameEngine):
 ## Get the status of the currently running game.
 #  @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 def get_game_status(regex, **json):
+
+	"""Get the status of the currently running game
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+
+	"""
+
+
 	pass
 
 ## Get the status of the player, don't return anything
@@ -57,30 +69,116 @@ def board_get(regex, **json):
 #  @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 #  @return JSON containing "Error message if any" (error), "The tower that was upgraded (or just the unupgraded one if the update failed)" (tower), and "The player's updated resources" (resources)
 def tower_upgrade(regex, **json):
-	pass
+	"""Upgrade a certain tower, if possible
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The tower that was upgraded (or just the unupgraded
+			one if the update failed)
+		resources - The player's updated resources
+		
+	"""
+
+	tower = _engine.tower_upgrade(regex[1], json["id"])
+	player = _engine.get_player(json["id"])
+	code = 200
+	error = ""
+	resources = player.resourcesIs()
+
+	if(tower == None):
+		code = 409
+		error = "Insufficient funds"
+
+	jsonret = {"error": error, "tower": tower, "resources": resources}
+
+	return (code, jsonret)
+
 
 ## Specialize a certain tower, if possible
 #  @param **json Expected to contain "Request player's ID" (id) and "Request palyer's authentication token" (auth)
 #  @return JSON containing "Error message if any" (error), "The tower that was upgraded (or just the unupgraded one if the update failed)" (tower), and "The player's updated resources" (resources)
 def tower_specialize(regex, **json):
-	pass
+
+	"""Specialize a certain tower, if possible
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The tower that was upgraded (or just the unupgraded
+			one if the update failed)
+		resources - The player's updated resources
+		
+	"""
+
+	tower_id = regex[1]
+
 ## 
 # @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 # @return JSON containing "Error message if any" (error) and "Your updated resources count" (resources)
 def tower_sell(regex, **json):
-	pass
+
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+		error - Error message if any
+		resources - Your updated resource count
+
+	"""
+
+	tower_id = regex[1]
+
 
 ## 
 # @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 # @return JSON containing "Error message if any" (error) and "The requested tower (none if it doesn't exist)" (tower)
 def tower_get(regex, **json):
-	pass
+	
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The requested tower (none if it doesn't exist)
+
+	"""
+
+	tower_id = regex[1]
+
 
 ## 
 # @param **json Expected to contain "Request player's ID" (id), "Request player's authentication token" (auth), and "A tuple for the new tower's position" (position)
 # @return JSON containing "Error message if any" (error), "The new tower, or none if it failed" (tower), and "The updated player's resources" (resources)
 def tower_create(regex, **json):
-	pass
+	
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+		position - A tuple for the new tower's position
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The new tower, or none if it failed
+		resources - The updated player's resources
+	"""
+
+
 
 ## 
 # @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication toekn" (auth)
