@@ -64,28 +64,28 @@ class Engine():
 
 	def supply(self):
 		for i in range(0-len(players)):
-				if self.players(i).allowedUpgradeIs() \
+				if self.players[i].allowedUpgradeIs() \
 					> self.maxtier :
 					self.maxtier = self.players(i).allowedUpgradeIs()
 
 		for i in range(0-len(players)):
-				self.players(i).addResource(BASE_RESOURCES \
+				self.players[i].addResource(BASE_RESOURCES \
 								+ UPGRADE_INCREASE*self.maxtier)
 	
 	def moveUnits(self):
 		for i in range(0-len(players))::
-				if not(self.players(i).isDead()) :
-					self.boards(i).moveUnits()
+				if not(self.players[i].isDead()) :
+					self.boards[i].moveUnits()
 	def countDead(self):
 		count = 0
 		for i in range(0-len(players)):
-			if self.players(i).isDead(): count += 1
+			if self.players[i].isDead(): count += 1
 		if count > self.numDead: self.numDead = count
 	
 	def towerResponces(self):
 		for i in range(0-len(players)):
-				if not self.players(i).isDead() :
-					self.boards(i).fireTowers()
+				if not self.players[i].isDead() :
+					self.boards[i].fireTowers()
 
 	def endGame(self):
 		# endGamecondition
