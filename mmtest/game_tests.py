@@ -11,61 +11,11 @@ class TestGame(unittest.TestCase):
 
 	def setUp(self):
 		unittest.TestCase.setUp(self)
-		self.testPlayer = Player("testName")
-		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)], Player("testName"))
-		self.testTower = Tower(Player("testName"))
-
-	def tearDown(self):
-		unittest.TestCase.tearDown(self)
-
-	"""Player tests"""
-	def testInvalidPlayerCreate1(self):
-		test = Player(1)
-		self.assertRaises(TypeError)
-
-	def testInvalidPlayerCreate2(self):
-		test = Player('a')
-		self.assertRaises(TypeError)
-
-	def testInvalidPlayerCreate3(self):
-		with self.assertRaises(NameError):
-			test = Player(false)
-
-	def testValidPlayerCreate(self):
-		self.assertEqual(self.testPlayer.name, "testName")
-		self.assertEqual(self.testPlayer.resources, mm18.game.constants.BASE_RESOURCES)
-		self.assertEqual(self.testPlayer.allowedUpgrade, 1)
-		self.assertEqual(self.testPlayer.sentUnits, 0)
-
-	def testInvalidPlayerUpgrade(self):
-		self.assertFalse(self.testPlayer.increaseUpgrade())
-
-	def testInvalidPlayerUpgrade1(self):
-		with self.assertRaises(TypeError):
-			self.testPlayer.increaseUpgrade(5)
-
-	def testValidPlayerUpgrade(self):
-		self.testPlayer.sentUnits = mm18.game.constants.UPGRADE_INCREASE*(self.testPlayer.allowedUpgrade+1)+1
-		self.assertTrue(self.testPlayer.increaseUpgrade())
-#8
-	def testInvalidPlayerPurchase(self):
-		self.assertFalse(self.testPlayer.purchaseCheck(self.testPlayer.resources + 1))
-
-	def testInvalidPlayerPurchase1(self):
-		with self.assertRaises(AssertionError):
-			self.testPlayer.purchaseCheck("I want to buy a cat")
-
-	def testValidPlayerPurchase(self):
-		self.assertTrue(self.testPlayer.purchaseCheck(self.testPlayer.resources - 1))
-		self.testPlayer.purchase(self.testPlayer.resources - 1)
-		self.assertEquals(self.testPlayer.resources,1)
-		
-	def testPlayerDeathCheck(self):
-		self.testPlayer.health = mm18.game.constants.BASE_HEALTH
-		self.assertEquals(self.testPlayer.healthIs(),mm18.game.constants.BASE_HEALTH)
-		self.assertFalse(self.testPlayer.isDead())
+		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
+		self.testPlayer = Player("testName", self.testBoard)
+		self.testTower = Tower(self.testdeadIs())
 		self.testPlayer.damage(mm18.game.constants.BASE_HEALTH)
-		self.assertTrue(self.testPlayer.isDead())
+		self.assertTrue(self.testPlayer.deadIs())
 		self.assertEquals(self.testPlayer.healthIs(),0)
 		
 	def testResourcesIs(self):
@@ -81,7 +31,8 @@ class TestGame(unittest.TestCase):
 		self.testPlayer.addResources(42)
 		self.assertEquals(self.testPlayer.resourcesIs(), mm18.game.constants.BASE_RESOURCES+42)
 
-	"""Board Tests"""
+	"""BOARD TESTS"""
+# =============================================================================
 	def testInvalidBoardCreation(self):
 		with self.assertRaises(TypeError):
 			test = Board(1)
@@ -90,12 +41,12 @@ class TestGame(unittest.TestCase):
 		self.assertEquals(len(self.testBoard.tower),0)
 
 	def testJsonLoadAndOrderPathSquaresByClosest(self):
-		testBoard1 = Board.jsonLoad("board1.json", self.testPlayer)
+		testBoard1 = Board.jsonLoad("board1.json")
 		self.assertEquals(testBoard1.base,[(5, 5), (5, 6), (5, 4), (6, 5), (6, 6), (6, 4), (4, 5), (4, 6), (4, 4)])
 		self.assertEquals(testBoard1.path,[(5, 7), (5, 3), (7, 5), (3, 5), (5, 8), (5, 2), (8, 5), (2, 5), (5, 9), (5, 1), (9, 5), (1, 5), (5, 10), (5, 0), (10, 5), (0, 5)])
 
 	def testFindPaths(self):
-		board = Board.jsonLoad("board1.json", self.testPlayer)
+		board = Board.jsonLoad("board1.json")
 		paths = board.findPaths()
 		self.assertTrue( [(0,5),  (1,5), (2,5), (3,5)] in paths)
 		self.assertTrue( [(10,5), (9,5), (8,5), (7,5)] in paths)
@@ -145,7 +96,8 @@ class TestGame(unittest.TestCase):
 		self.testBoard.addToHitList(tower, (0,0))
 		print self.testBoard.hitList
 
-	"""Path Tests"""
+	"""PATH TESTS"""
+# =============================================================================
 	def testPath(self):
 		 p = Path([1,3,2])
 		 self.assertEquals(
@@ -201,7 +153,8 @@ class TestGame(unittest.TestCase):
 		self.assertEquals(testUnit.specialisation,1)
 		self.assertEquals(testUnit.owner, self.testPlayer.name)
 
-	"""Tower Tests"""
+	"""TOWER TESTS"""
+# =============================================================================
 	def testInvalidPurchaseTower(self):
 		self.testPlayer.resources = 0
 		testTower = Tower.purchaseTower(self.testPlayer)
@@ -248,7 +201,13 @@ class TestGame(unittest.TestCase):
 		testTower = Tower.purchaseTower(self.testPlayer)
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
-
+"""
+	def testValidMovement(self):
+		testUnit=Unit.purchaseUnit(1,0,self.testPlayer,1)
+		self.assertTrue(self.testBoard.queueUnit(testUnit, testUnit.pathID))
+		self.testBoard.moveUnits()
+		self.assertEqual(self.testBoard.unitList[(1,2)], testUnit)
+"""
 
 
 """Uncomment & delete this line for concise test output
