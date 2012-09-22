@@ -57,8 +57,8 @@ EAST = 1
 SOUTH = 2
 WEST = 3
 
-"""MODEL"""
-SUPPLY_TIME = 4;
-
 """PLACEHOLDER"""
 BOOP = -1000
+
+"""MODEL"""
+SUPPLY_TIME = 4;
