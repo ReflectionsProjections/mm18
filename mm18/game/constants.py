@@ -3,6 +3,8 @@
 #import json
 #this class needs organisation
 
+"""Timeing Constants"""
+TICK_TIME =1
 """TOWERS"""
 BASE_TOWER_DAMAGE = 1
 MAX_UPGRADE = 3 #max upgrade level for towers and units
