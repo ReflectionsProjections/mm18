@@ -18,7 +18,8 @@ class TestGame(unittest.TestCase):
 	def tearDown(self):
 		unittest.TestCase.tearDown(self)
 
-	"""Player tests"""
+	"""PLAYER TESTS"""
+# =============================================================================
 	def testInvalidPlayerCreate1(self):
 		test = Player(1)
 		self.assertRaises(TypeError)
@@ -81,7 +82,8 @@ class TestGame(unittest.TestCase):
 		self.testPlayer.addResources(42)
 		self.assertEquals(self.testPlayer.resourcesIs(), mm18.game.constants.BASE_RESOURCES+42)
 
-	"""Board Tests"""
+	"""BOARD TESTS"""
+# =============================================================================
 	def testInvalidBoardCreation(self):
 		with self.assertRaises(TypeError):
 			test = Board(1)
@@ -145,7 +147,8 @@ class TestGame(unittest.TestCase):
 		self.testBoard.addToHitList(tower, (0,0))
 		print self.testBoard.hitList
 
-	"""Path Tests"""
+	"""PATH TESTS"""
+# =============================================================================
 	def testPath(self):
 		 p = Path([1,3,2])
 		 self.assertEquals(
@@ -201,7 +204,8 @@ class TestGame(unittest.TestCase):
 		self.assertEquals(testUnit.specialisation,1)
 		self.assertEquals(testUnit.owner, self.testPlayer.name)
 
-	"""Tower Tests"""
+	"""TOWER TESTS"""
+# =============================================================================
 	def testInvalidPurchaseTower(self):
 		self.testPlayer.resources = 0
 		testTower = Tower.purchaseTower(self.testPlayer)
