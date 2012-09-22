@@ -6,3 +6,9 @@
 
 # Virtual environments
 venv
+
+# Backup files
+*~
+
+# Vim swap
+*.swp
