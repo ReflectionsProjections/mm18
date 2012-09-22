@@ -46,11 +46,13 @@ class Engine():
 
 	def supply(self):
 		for i in self.get_player_ids():
-				if self.get_player(i).self.get_player(i).allowedUpgradeIs() > self.maxtier :
+				if self.get_player(i).self.get_player(i).allowedUpgradeIs() \
+					> self.maxtier :
 					self.maxtier = self.get_player(i).allowedUpgradeIs()
 
 		for i in self.get_player_ids():
-				self.get_player(i).addResource(BASE_RESOURCES + UPGRADE_INCREASE*self.maxtier)
+				self.get_player(i).addResource(BASE_RESOURCES \
+								+ UPGRADE_INCREASE*self.maxtier)
 	
 	def moveUnits(self):
 		for i in self.get_player_ids():
