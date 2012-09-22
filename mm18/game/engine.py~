@@ -46,7 +46,7 @@ class Engine():
 	def moveUnits(self):
 		for i in self.get_player_ids():
 				if not(self.get_player(i).isDead()) :
-					self.get_board(self.get_player(i)).moveUnits()
+					self.get_board(self.get_player(i)).advanceUnits()
 	def countDead(self):
 		count = 0
 		for i in self.get_player_ids():

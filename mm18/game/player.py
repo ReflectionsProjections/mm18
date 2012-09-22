@@ -3,100 +3,76 @@
 import constants
 from types import *
 
-## \file player.py
-## \brief A Python program for player stuff
+## @file player.py
+#  @brief A Python program for player stuff
 
-
-# Player class
+## A class to hold all player-related functions.
+#  Any function related to the player should be in this class.
 class Player:
-	""" \brief A class to hold all player-related functions
-	
-	Any function related to the player should be in this class.
-	"""
 
-	def __init__(self, name):
-		"""Create a player with a base number of resources.
-		
-		Each player cannot upgrade their towers/units past their allowed upgrade.
-		
-		\param name The player's name
-		"""
-		self.resources = constants.BASE_RESOURCES
+	## Create a player with a base number of resources.
+	#  Each player cannot upgrade their towers/units past their allowed upgrade.
+	#  @param name The player's name
+	#  @param board The board the player should be added to
+	def __init__(self, name, board):
 		self.name = name
-		self.allowedUpgrade = 1
-		self.sentUnits = 0
+		self.board = board
+
+		self.resources = constants.BASE_RESOURCES
 		self.health = constants.BASE_HEALTH
 
+		self.allowedUpgrade = 1
+		self.sentUnits = 0
+
+	## Increases the allowed upgrade level of the player.
 	def increaseUpgrade(self):
-		"""Increases the allowed upgrade level of the player
-		"""
 		if self.sentUnits >= constants.UPGRADE_INCREASE*(self.allowedUpgrade+1):
 			self.allowedUpgrade += 1
 			return True
 		else:
 			return False
-
+			
+	## Purchase method to make purchases.
+	#  @param cost The cost of the purchase
 	def purchase(self,cost):
-		"""Purchase method to make purchases
-		
-		\param cost The cost of the purchase
-		"""
 		self.resources -= cost
 
+	## Method checks whether a user has enough resources to go through with a purchase.
+	#  @param cost The cost of the purchase
+	#  @return true if the player has sufficient resources for the purchase and false otherwise
 	def purchaseCheck(self, cost):
-		"""Method checks whether a user has enough resources to go through with a purchase.
-		
-		\param cost The cost of the purchase
-		\return true if the player has sufficient resources for the purchase and false otherwise
-		"""
 		assert type(cost) is IntType
 		if self.resources >= cost:
 			return True
 		else:
 			return False
 
-	"""
-	Damage method to take damage
-	
-	damage - amount of damage a player takes
-
-	"""
-
+	## Damage method to take damage.
+	#  @param damage Amount of damage a player takes
 	def damage(self, damage):
 		self.health -= damage
 
-	"""
-	Method checks whether a user is dead or not
-	"""
-
+	## Method checks whether a user is dead or not.
+	#  @return true if dead or false if alive
 	def isDead(self):
 		return self.health <= 0
 
-
-	"""
-	Method returns player health
-	"""
-
+	## Method return player health.
+	#  @return Remaining health of player
 	def healthIs(self):
 		return self.health
-		
-	"""
-	Method returns player resources
-	"""
-	
+
+	## Method returns player resources
+	#  @return Player resources
 	def resourcesIs(self):
 		return self.resources
-		
-	"""
-	Method returns allowed upgrade level of player
-	"""
-	
+
+	## Method returns allowed upgrade level of player
+	#  @return Allowed upgrade level
 	def allowedUpgradeIs(self):
 		return self.allowedUpgrade
-		
-	"""
-	Method to add resources to a player
-	"""
-	
+
+	## Method to add resources to a player
+	#  @param ammount Number of resources to add
 	def addResources(self, ammount):
 		self.resources += ammount
