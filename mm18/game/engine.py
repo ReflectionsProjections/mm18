@@ -3,6 +3,7 @@
 import mm18.game.constants
 from mm18.game.board import Board
 from mm18.game.player import Player
+import time
 
 class Engine():
 
@@ -18,10 +19,13 @@ class Engine():
 		self.maxtier = 0
 		self.numDead = 0
 		self.curTick = 0
+		self.oldtime
+		self.pasttime
 
 	# Game controls
 
 	def advance(self):
+		self.oldtime=time.time()
 		self.curTick += 1;
 		if self.curTick >= 300000000: #game timeout
 			endGame()
@@ -33,7 +37,12 @@ class Engine():
 		countDead() 
 		towerResponces()
 		if self.numDead == 3 :
-			endGame()	
+			endGame()
+		self.pasttime = time.time()-oldtime	
+		if constants.TICK_TIME-pasttime > 0 
+			time.sleep(TICK_TIME-pasttime)
+		
+			
 
 	def supply(self):
 		for i in self.get_player_ids():
