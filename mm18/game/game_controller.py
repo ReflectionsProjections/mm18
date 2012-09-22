@@ -44,31 +44,178 @@ def get_game_status(regex, **json):
 	pass
 
 def get_player_status(regex, **json):
+
+	"""Get the status of the player, don't return anything
+	that shouldn't be visible to the player
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+		error - Error message if any
+		health - Request player's base health
+		resources - The request player's resources
+		
+	"""
+
 	pass
 
 def board_get(regex, **json):
+	
+	"""Get the player's board status
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+
+
+	JSON Output Expectations:
+		error - Error message if any
+		towers - The list of all towers to be further
+			parsed by the game clients
+		units - The list of all units on the board
+			to be further parsed by the game clients
+	"""
+
 	pass
 
 def tower_upgrade(regex, **json):
+	"""Upgrade a certain tower, if possible
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The tower that was upgraded (or just the unupgraded
+			one if the update failed)
+		resources - The player's updated resources
+		
+	"""
+
 	pass
 
 def tower_specialize(regex, **json):
+
+	"""Specialize a certain tower, if possible
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The tower that was upgraded (or just the unupgraded
+			one if the update failed)
+		resources - The player's updated resources
+		
+	"""
+
+
 	pass
 
 def tower_sell(regex, **json):
+
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+	JSON Output Expectations:
+		error - Error message if any
+		resources - Your updated resource count
+
+	"""
+
+
 	pass
+
 
 def tower_get(regex, **json):
+	
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The requested tower (none if it doesn't exist)
+
+	"""
+
 	pass
+
 
 def tower_create(regex, **json):
+	
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+		position - A tuple for the new tower's position
+
+	JSON Output Expectations:
+		error - Error message if any
+		tower - The new tower, or none if it failed
+		resources - The updated player's resources
+	"""
+
 	pass
 
+
 def tower_list(regex, **json):
+	
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+
+	JSON Output Expectations:
+		error - Error message if any
+		towers - The list of towers on the board
+	"""
+
 	pass
 
 def unit_status(regex, **json):
+	
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+		
+
+	JSON Output Expectations:
+		error - Error message if any
+		unit - The unit (or none if something went wrong)
+
+	"""
+
 	pass
 
 def unit_create(regex, **json):
+	
+	"""
+
+	JSON Input Expectations:
+		id - Request player's ID
+		auth - Request player's authentication token
+
+
+	JSON Output Expectations:
+		error - Error message if any
+		unit - The unit (or none if something went wrong)
+	"""
+
 	pass
