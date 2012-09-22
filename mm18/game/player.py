@@ -3,52 +3,52 @@
 import constants
 from types import *
 
-"""For player stuff"""
+## \file player.py
+## \brief A Python program for player stuff
 
+
+# Player class
 class Player:
-
-	"""
-	Creates a player with a base number of resources.
-	Each player cannot upgrade their towers/units past their allowed upgrade.
-
-	name -- player name
+	""" \brief A class to hold all player-related functions
+	
+	Any function related to the player should be in this class.
 	"""
 
 	def __init__(self, name):
+		"""Create a player with a base number of resources.
+		
+		Each player cannot upgrade their towers/units past their allowed upgrade.
+		
+		\param name The player's name
+		"""
 		self.resources = constants.BASE_RESOURCES
 		self.name = name
 		self.allowedUpgrade = 1
 		self.sentUnits = 0
 		self.health = constants.BASE_HEALTH
 
-	"""
-	Increases the allowed upgrade level of the player
-	"""
-
 	def increaseUpgrade(self):
+		"""Increases the allowed upgrade level of the player
+		"""
 		if self.sentUnits >= constants.UPGRADE_INCREASE*(self.allowedUpgrade+1):
 			self.allowedUpgrade += 1
 			return True
 		else:
 			return False
 
-
-	"""
-	Purchase method to make purchases
-
-	cost -- The cost of the purchase
-	"""
-
 	def purchase(self,cost):
+		"""Purchase method to make purchases
+		
+		\param cost The cost of the purchase
+		"""
 		self.resources -= cost
 
-	"""
-	Method checks whether a user has enough resources to go through with a purchase.
-
-	cost -- the cost of the purchase
-	"""
-
 	def purchaseCheck(self, cost):
+		"""Method checks whether a user has enough resources to go through with a purchase.
+		
+		\param cost The cost of the purchase
+		\return true if the player has sufficient resources for the purchase and false otherwise
+		"""
 		assert type(cost) is IntType
 		if self.resources >= cost:
 			return True
