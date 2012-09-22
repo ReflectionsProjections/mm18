@@ -55,48 +55,44 @@ class Player:
 		else:
 			return False
 
-	"""
-	Damage method to take damage
-	
-	damage - amount of damage a player takes
-
-	"""
-
 	def damage(self, damage):
+		"""Damage method to take damage
+		
+		\param damage Amount of damage a player takes
+		"""
 		self.health -= damage
 
-	"""
-	Method checks whether a user is dead or not
-	"""
-
 	def isDead(self):
+		"""Method checks whether a user is dead or not
+		
+		\return true if dead or false if alive
+		"""
 		return self.health <= 0
 
-
-	"""
-	Method returns player health
-	"""
-
 	def healthIs(self):
+		"""Method returns player health
+		
+		\return Remaining health of player
+		"""
 		return self.health
 		
-	"""
-	Method returns player resources
-	"""
-	
 	def resourcesIs(self):
+		"""Method returns player resources
+		
+		\return Player resources
+		"""
 		return self.resources
 		
-	"""
-	Method returns allowed upgrade level of player
-	"""
-	
 	def allowedUpgradeIs(self):
+		"""Method returns allowed upgrade level of player
+		
+		\return Allowed upgrade level
+		"""
 		return self.allowedUpgrade
 		
-	"""
-	Method to add resources to a player
-	"""
-	
 	def addResources(self, ammount):
+		"""Method to add resources to a player
+		
+		\param ammount Number of resources to add
+		"""
 		self.resources += ammount
