@@ -265,8 +265,8 @@ class Board:
 	def queueUnit(self, unit, q):
 		if q in self.paths:
 			self.paths[q].start(unit)
-			return true
-		return false
+			return True
+		return False
 
 	"""
 	Return a generator of pairs of unit and position on the board,
@@ -285,9 +285,8 @@ class Board:
 	Incoming units move forward, ones reaching the base do damage, and towers fire.
 	Each tower targets the unit closest to the base
 	"""
-	def tick(self):
+	def moveUnits(self):
 		for path in self.paths.itervalues():
 			unit = path.advance()
 			if unit is not None and unit.health > 0:
 				self.owner.damage(unit.finalDamage())
-		self.fireTowers()

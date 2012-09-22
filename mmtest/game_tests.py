@@ -13,7 +13,7 @@ class TestGame(unittest.TestCase):
 		unittest.TestCase.setUp(self)
 		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
 		self.testPlayer = Player("testName", self.testBoard)
-		self.testTower = Tower(testPlayer)
+		self.testTower = Tower(self.testPlayer)
 
 	def tearDown(self):
 		unittest.TestCase.tearDown(self)
@@ -21,16 +21,16 @@ class TestGame(unittest.TestCase):
 	"""PLAYER TESTS"""
 # =============================================================================
 	def testInvalidPlayerCreate1(self):
-		test = Player(1, testBoard)
+		test = Player(1, self.testBoard)
 		self.assertRaises(TypeError)
 
 	def testInvalidPlayerCreate2(self):
-		test = Player('a', testBoard)
+		test = Player('a', self.testBoard)
 		self.assertRaises(TypeError)
 
 	def testInvalidPlayerCreate3(self):
 		with self.assertRaises(NameError):
-			test = Player(false, testBoard)
+			test = Player(false, self.testBoard)
 
 	def testValidPlayerCreate(self):
 		self.assertEqual(self.testPlayer.name, "testName")
@@ -252,7 +252,13 @@ class TestGame(unittest.TestCase):
 		testTower = Tower.purchaseTower(self.testPlayer)
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
-
+"""
+	def testValidMovement(self):
+		testUnit=Unit.purchaseUnit(1,0,self.testPlayer,1)
+		self.assertTrue(self.testBoard.queueUnit(testUnit, testUnit.pathID))
+		self.testBoard.moveUnits()
+		self.assertEqual(self.testBoard.unitList[(1,2)], testUnit)
+"""
 
 
 """Uncomment & delete this line for concise test output

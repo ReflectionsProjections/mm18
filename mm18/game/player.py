@@ -14,7 +14,7 @@ class Player:
 	Any function related to the player should be in this class.
 	"""
 
-	def __init__(self, name board):
+	def __init__(self, name, board):
 		"""Create a player with a base number of resources.
 		
 		Each player cannot upgrade their towers/units past their allowed upgrade.
