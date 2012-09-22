@@ -11,19 +11,23 @@ class Engine():
 
 		#generate players and boards
 		self.players = []
-		for i in range(0-4)
-			self.players.append(Player(i))
 		self.boards = []
-		for i in range(0-4)
-			self.boards.append(Board([(0,1),(1,1)],[(0,2),(1,2),(1,3),(0,4)]))
 		self.maxtier = 0
 		self.numDead = 0
 		self.curTick = 0
+		self.running = true
 		self.oldtime
 		self.pasttime
 
 	# Game controls
-
+	def addPlayer(self, name)
+		self.players.append(Player(name, makeboard()))
+	
+	def run(self)
+		if self.players:
+			while self.running:
+				advance()
+	
 	def advance(self):
 		self.oldtime=time.time()
 		self.curTick += 1;
@@ -66,7 +70,7 @@ class Engine():
 	
 	def towerResponces(self):
 		for i in self.get_player_ids():
-				if not(self.get_player(i).isDead()) :
+				if not self.get_player(i).isDead() :
 					self.get_board(self.get_player(i)).fireTowers()
 
 	def endGame(self):
