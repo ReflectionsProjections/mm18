@@ -10,6 +10,9 @@ from types import *
 #  Any function related to the player should be in this class.
 class Player:
 
+# INSTANTIATION
+# =============================================================================
+
 	## Create a player with a base number of resources.
 	#  Each player cannot upgrade their towers/units past their allowed upgrade.
 	#  @param name The player's name
@@ -23,6 +26,10 @@ class Player:
 
 		self.allowedUpgrade = 1
 		self.sentUnits = 0
+
+
+# FUNCTIONS
+# =============================================================================
 
 	## Increases the allowed upgrade level of the player.
 	def increaseUpgrade(self):
@@ -51,6 +58,9 @@ class Player:
 	#  @param damage Amount of damage a player takes
 	def damage(self, damage):
 		self.health -= damage
+
+# GETTERS / SETTERS
+# =============================================================================
 
 	## Method checks whether a user is dead or not.
 	#  @return true if dead or false if alive

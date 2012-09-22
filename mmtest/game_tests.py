@@ -13,60 +13,9 @@ class TestGame(unittest.TestCase):
 		unittest.TestCase.setUp(self)
 		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
 		self.testPlayer = Player("testName", self.testBoard)
-		self.testTower = Tower(self.testPlayer)
-
-	def tearDown(self):
-		unittest.TestCase.tearDown(self)
-
-	"""PLAYER TESTS"""
-# =============================================================================
-	def testInvalidPlayerCreate1(self):
-		test = Player(1, self.testBoard)
-		self.assertRaises(TypeError)
-
-	def testInvalidPlayerCreate2(self):
-		test = Player('a', self.testBoard)
-		self.assertRaises(TypeError)
-
-	def testInvalidPlayerCreate3(self):
-		with self.assertRaises(NameError):
-			test = Player(false, self.testBoard)
-
-	def testValidPlayerCreate(self):
-		self.assertEqual(self.testPlayer.name, "testName")
-		self.assertEqual(self.testPlayer.resources, mm18.game.constants.BASE_RESOURCES)
-		self.assertEqual(self.testPlayer.allowedUpgrade, 1)
-		self.assertEqual(self.testPlayer.sentUnits, 0)
-
-	def testInvalidPlayerUpgrade(self):
-		self.assertFalse(self.testPlayer.increaseUpgrade())
-
-	def testInvalidPlayerUpgrade1(self):
-		with self.assertRaises(TypeError):
-			self.testPlayer.increaseUpgrade(5)
-
-	def testValidPlayerUpgrade(self):
-		self.testPlayer.sentUnits = mm18.game.constants.UPGRADE_INCREASE*(self.testPlayer.allowedUpgrade+1)+1
-		self.assertTrue(self.testPlayer.increaseUpgrade())
-#8
-	def testInvalidPlayerPurchase(self):
-		self.assertFalse(self.testPlayer.purchaseCheck(self.testPlayer.resources + 1))
-
-	def testInvalidPlayerPurchase1(self):
-		with self.assertRaises(AssertionError):
-			self.testPlayer.purchaseCheck("I want to buy a cat")
-
-	def testValidPlayerPurchase(self):
-		self.assertTrue(self.testPlayer.purchaseCheck(self.testPlayer.resources - 1))
-		self.testPlayer.purchase(self.testPlayer.resources - 1)
-		self.assertEquals(self.testPlayer.resources,1)
-		
-	def testPlayerDeathCheck(self):
-		self.testPlayer.health = mm18.game.constants.BASE_HEALTH
-		self.assertEquals(self.testPlayer.healthIs(),mm18.game.constants.BASE_HEALTH)
-		self.assertFalse(self.testPlayer.isDead())
+		self.testTower = Tower(self.testdeadIs())
 		self.testPlayer.damage(mm18.game.constants.BASE_HEALTH)
-		self.assertTrue(self.testPlayer.isDead())
+		self.assertTrue(self.testPlayer.deadIs())
 		self.assertEquals(self.testPlayer.healthIs(),0)
 		
 	def testResourcesIs(self):

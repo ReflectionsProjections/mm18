@@ -1,13 +1,17 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
-import re, json
+
+import re
+import json
 
 from urls import urlpatterns
+from client_manager import MMClientManager
+from mm18.game.game_controller import init_controller
+
+global_client_manager = MMClientManager()
 
 class MMHandler(BaseHTTPRequestHandler):
 	"""HTTP request handler for Mechmania"""
-
-	## Server Startup Functions
 
 	def respond(self, status_code, data):
 		"""
@@ -40,6 +44,12 @@ class MMHandler(BaseHTTPRequestHandler):
 
 		invalid_method = False
 
+		# Special case connection. Shut up I know it's ugly.
+		connect_match = re.match(r'/connect', self.path)
+		if connect_match:
+			self._connect_client()
+			return
+
 		for url in urlpatterns:
 			match = re.match(url[0], self.path)
 
@@ -60,6 +70,8 @@ class MMHandler(BaseHTTPRequestHandler):
 					# url[2] is the function referenced in the url to call
 					# It is called with the group dictionary from the regex
 					# and the unrolled JSON data as keyworded arguments
+					# A two-tuple is returned, which is unrolled and passed as
+					# arguments to respond
 					self.respond(*url[2](match.groupdict(), **data))
 
 					break
@@ -116,12 +128,57 @@ class MMHandler(BaseHTTPRequestHandler):
 
 		return data
 
-	def _connect_client(self, client_id):
-		pass
+	def _connect_client(self):
+		"""Connect a new client to the game.
+
+		When a client attempts to connect we connect them to the game if
+		allowed (not already connected, server is not full).
+		"""
+
+		client = global_client_manager.add_client()
+		if client is None:
+			# Server is full, no connection for you!
+			self.respond(403, {'error': 'Server is full'})
+			return
+
+		# Prepare the dictionary to send back to the user
+		reply = {}
+		reply['id'] = client[0]
+		reply['auth'] = client[1]
+		self._wait_for_game_init(reply)
+
+	def _wait_for_game_init(self, reply):
+		"""Wait for the game to start before returning to the client.
+
+		After a client has joined the game, we wait for the game to start
+		before sending them back information about the game.
+		"""
+		# TODO: Spin waiting for the server to fill up
+
+		# TODO: Game has started, add any info given in start
+		self.respond(200, reply)
+
+	def _validate_client(self, json):
+		"""Validate a client's request to proceed.
+
+		Checks with the client manager that a client is who they say they are.
+		Kicks anyone out who doesn't meet the bouncer's minimum requirements.
+		"""
+
+		if global_client_manager.auth.authorize_client(client_id, token):
+			return
+		else:
+			# Bad call to client, bail us out
+			self.respond(401, {'error': 'Bad id or auth code'})
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""
 
 	# Inheriting from ThreadingMixIn automatically gives us the default
 	# functions we need for a threaded server.
+	pass
+
+def init_server():
+	"""Init the server by setting up needed globals for the handler"""
+	
 	pass
