@@ -62,7 +62,7 @@ class Player:
 
 	## Static method for the player to purchase the tower that has been created.
 	#  @param player The player who is purchasing the tower
-	def purchaseTower(player):
+	def purchaseTower(self):
 		if self.purchaseCheck(constants.TOWER_BASE_COST):
 			self.purchase(constants.TOWER_BASE_COST)
 			t = Tower(self)
@@ -71,7 +71,7 @@ class Player:
 			return None
 
 	## Sells the tower
-	def sellTower(position):
+	def sellTower(self):
 		"""
 		Sells the tower
 		"""
