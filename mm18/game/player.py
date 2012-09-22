@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import constants
+import tower
 from types import *
 
 ## @file player.py
@@ -58,6 +59,26 @@ class Player:
 	#  @param damage Amount of damage a player takes
 	def damage(self, damage):
 		self.health -= damage
+
+	## Static method for the player to purchase the tower that has been created.
+	#  @param player The player who is purchasing the tower
+	def purchaseTower(self):
+		if self.purchaseCheck(constants.TOWER_BASE_COST):
+			self.purchase(constants.TOWER_BASE_COST)
+			t = Tower(self)
+			self.board.addItem( t )
+		else:
+			return None
+
+	## Sells the tower
+	def sellTower(self):
+		"""
+		Sells the tower
+		"""
+		tower = player.board.getItem(position)
+		if tower is not None:
+			self.resources += tower.cost * TOWER_SELL_SCALAR
+			self.board.removeItem(position)
 
 # GETTERS / SETTERS
 # =============================================================================

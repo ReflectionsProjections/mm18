@@ -13,10 +13,9 @@ class Path(object):
 	#  If not other units are waiting it will start moving
 	#  the next time advance is called
 	#  @param unit unit to enqueue
-	"""
 	def start(self, unit):
 		self.waiting.append(unit)
-		
+
 	## Advance every unit a step, and starts first waiting unit.
 	#  @return The unit that reached the base if any, or None
 	def advance(self):

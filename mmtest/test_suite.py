@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-from mmtest.server_tests import *
 from mmtest.game_tests import *
 import unittest
 
