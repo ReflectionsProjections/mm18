@@ -9,14 +9,13 @@ class MMAuthenticator():
 	# Constant value for the bits in the token
 	_token_size = 32
 
-	def __init__(self, max_clients=4):
+	def __init__(self):
 		"""Set up an MMAuthenticator
 
 		max_clients - The maximum number of clients that can join the server
 		"""
 
 		self._client_tokens = {}
-		self._max_clients = max_clients
 		random.seed()
 
 	def add_client(self, client_id):
@@ -25,8 +24,7 @@ class MMAuthenticator():
 		client_id - The id key for the client's auth lookup
 		"""
 
-		if len(self._client_tokens) < self._max_clients \
-				and client_id not in self._client_tokens:
+		if client_id not in self._client_tokens:
 			token = self._generate_token()
 			self._client_tokens[client_id] = token
 			return token
