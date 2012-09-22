@@ -14,6 +14,9 @@ class Player:
 	Any function related to the player should be in this class.
 	"""
 
+# INSTANTIATION
+# =============================================================================
+
 	def __init__(self, name, board):
 		"""Create a player with a base number of resources.
 		
@@ -29,6 +32,10 @@ class Player:
 
 		self.allowedUpgrade = 1
 		self.sentUnits = 0
+
+
+# FUNCTIONS
+# =============================================================================
 
 	def increaseUpgrade(self):
 		"""Increases the allowed upgrade level of the player
@@ -65,7 +72,10 @@ class Player:
 		"""
 		self.health -= damage
 
-	def isDead(self):
+# GETTERS / SETTERS
+# =============================================================================
+
+	def deadIs(self):
 		"""Method checks whether a user is dead or not
 		
 		\return true if dead or false if alive
