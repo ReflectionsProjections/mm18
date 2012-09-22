@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import constants
-import tower
+from tower import Tower
 from types import *
 
 ## @file player.py
