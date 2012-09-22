@@ -25,5 +25,7 @@ urlpatterns = [
 	(r'/unit/create', 'POST', unit_create),
 
 	# Connection API
+	# This exists, but is implemented in server. Leave it here to document.
+	# I'm aware it's not the prettiest of solutions.
 	#(r'/connect', 'POST', connect),
 ]
