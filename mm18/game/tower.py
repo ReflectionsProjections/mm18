@@ -38,7 +38,7 @@ class Tower:
 
 	"""
 	Upgrades the tower.
-	
+
 	player -- The player upgrading the tower
 	"""
 	def upgradeTower(self, player):
@@ -71,7 +71,7 @@ class Tower:
 	@staticmethod
 	def sellTower(player, tower):
 		if tower.owner == player:
-			player.resources += tower.cost*TOWER_SELL_SCALAR
+			player.resources += tower.cost * TOWER_SELL_SCALAR
 			tower = null
 		else:
 			None
@@ -80,5 +80,6 @@ class Tower:
 	Damage the attacked unit
 	"""
 	def fire(self, unit):
-		unit.damage(constants.TOWER_UPGRADE_MULTIPLIER[self.upgrade]*constants.BASE_TOWER_DAMAGE,
-		            self.specialisation)
+		unit.damage(constants.TOWER_UPGRADE_MULTIPLIER[self.upgrade]
+                    * constants.BASE_TOWER_DAMAGE,
+					self.specialisation)

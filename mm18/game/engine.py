@@ -53,10 +53,9 @@ class Engine():
 				self.get_player(i).addResource(BASE_RESOURCES + UPGRADE_INCREASE*self.maxtier)
 	
 	def moveUnits(self):
-		# moveunits on all valid boards
-		#for all players : player.board.moveunits
-		pass
-	
+		for i in self.get_player_ids():
+				if not(self.get_player(i).isDead()) :
+					self.get_board(self.get_player(i)).moveUnits()
 	def countDead(self):
 		count = 0
 		for i in self.get_player_ids():
@@ -64,9 +63,9 @@ class Engine():
 		if count > self.numDead: self.numDead = count
 	
 	def towerResponces(self):
-		# all towers attack
-		#for all players : player.board.useTowers
-		pass
+		for i in self.get_player_ids():
+				if not(self.get_player(i).isDead()) :
+					self.get_board(self.get_player(i)).fireTowers()
 
 	def endGame(self):
 		# endGamecondition
