@@ -31,6 +31,7 @@ def init_controller(gameEngine):
 # Engine API hooks
 
 def get_game_status(regex, **json):
+
 	"""Get the status of the currently running game
 
 	JSON Input Expectations:
@@ -40,6 +41,7 @@ def get_game_status(regex, **json):
 	JSON Output Expectations:
 
 	"""
+
 
 	pass
 
@@ -96,7 +98,20 @@ def tower_upgrade(regex, **json):
 		
 	"""
 
-	pass
+	tower = _engine.tower_upgrade(regex[1], json["id"])
+	player = _engine.get_player(json["id"])
+	code = 200
+	error = ""
+	resources = player.resourcesIs()
+
+	if(tower == None):
+		code = 409
+		error = "Insufficient funds"
+
+	jsonret = {"error": error, "tower": tower, "resources": resources}
+
+	return (code, jsonret)
+
 
 def tower_specialize(regex, **json):
 
@@ -114,6 +129,7 @@ def tower_specialize(regex, **json):
 		
 	"""
 
+	tower_id = regex[1]
 
 	pass
 
@@ -131,6 +147,7 @@ def tower_sell(regex, **json):
 
 	"""
 
+	tower_id = regex[1]
 
 	pass
 
@@ -150,6 +167,8 @@ def tower_get(regex, **json):
 
 	"""
 
+	tower_id = regex[1]
+
 	pass
 
 
@@ -167,6 +186,7 @@ def tower_create(regex, **json):
 		tower - The new tower, or none if it failed
 		resources - The updated player's resources
 	"""
+
 
 	pass
 
