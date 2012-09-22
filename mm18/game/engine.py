@@ -11,18 +11,27 @@ class Engine():
 
 		#generate players and boards
 		self.players = []
-		for i in range(0-4)
-			self.players.append(Player(i))
 		self.boards = []
-		for i in range(0-4)
-			self.boards.append(Board([(0,1),(1,1)],[(0,2),(1,2),(1,3),(0,4)]))
 		self.maxtier = 0
 		self.numDead = 0
 		self.curTick = 0
 		self.oldtime
 		self.pasttime
+		self.mapName
+		
+
+
+	def setBoardname()
+		 self.mapName="board1.json"
+
+	def makeBoards(self):
+		newBoard= Board(Board.jsonLoad(self.mapName))
+		self.boards.append(newBoard)
+		return self.boards.newBoard
 
 	# Game controls
+
+
 
 	def advance(self):
 		self.oldtime=time.time()
