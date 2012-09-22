@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from mm18.game.engine import Engine
+
 # A global variable stores the active game engine
 _engine = None
 
@@ -24,9 +26,10 @@ work succesfully.
 
 # Setup functions
 
-def init_controller(gameEngine):
+def init_game():
+	"""Start up the game"""
 	global _engine
-	_engine = gameEngine
+	_engine = Engine()
 
 # Engine API hooks
 

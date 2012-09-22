@@ -1,5 +1,7 @@
 from auth import MMAuthenticator
 
+import threading
+
 class MMClientManager():
 	"""Mechmania Client Manager
 
@@ -11,6 +13,8 @@ class MMClientManager():
 		self.clients = []
 		self.auth = MMAuthenticator()
 		self._max_clients = max_clients
+		self._run_lock = threading.Lock()
+		self.game_condition = threading.Condition(self._run_lock)
 
 	def add_client(self):
 		"""Add a new client to the game.
