@@ -21,16 +21,6 @@ class Tower:
 		self.cost = constants.TOWER_BASE_COST
 		self.owner = player
 
-	## Static method for the player to purchase the tower that has been created.
-	#  @param player The player who is purchasing the tower
-	@staticmethod
-	def purchaseTower(player):
-		if player.purchaseCheck(constants.TOWER_BASE_COST):
-			player.purchase(constants.TOWER_BASE_COST)
-			return Tower(player)
-		else:
-			return None
-			
 	## Upgrades the tower.
 	#  @param player The player upgrading the tower
 	def upgradeTower(self, player):
@@ -53,15 +43,6 @@ class Tower:
 			return True #new spec
 		else:
 			return False #either already upgraded or not valid
-
-	## Sells the tower.
-	@staticmethod
-	def sellTower(player, tower):
-		if tower.owner == player:
-			player.resources += tower.cost * TOWER_SELL_SCALAR
-			tower = null
-		else:
-			None
 
 	## Damage the attacked unit.
 	def fire(self, unit):

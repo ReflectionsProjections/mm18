@@ -13,19 +13,16 @@ class TestGame(unittest.TestCase):
 		unittest.TestCase.setUp(self)
 		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
 		self.testPlayer = Player("testName", self.testBoard)
-		self.testTower = Tower(self.testdeadIs())
-		self.testPlayer.damage(mm18.game.constants.BASE_HEALTH)
-		self.assertTrue(self.testPlayer.deadIs())
-		self.assertEquals(self.testPlayer.healthIs(),0)
-		
+		self.testTower = Tower(self.testPlayer)
+
 	def testResourcesIs(self):
 		self.testPlayer.resources = mm18.game.constants.BASE_RESOURCES
 		self.assertEquals(self.testPlayer.resourcesIs(),mm18.game.constants.BASE_RESOURCES)
-		
+
 	def testAllowedUpgradeIs(self):
 		self.testPlayer.allowedUpgrade = 1
 		self.assertEquals(self.testPlayer.allowedUpgradeIs(),1)
-		
+
 	def testAddResources(self):
 		self.testPlayer.resources = mm18.game.constants.BASE_RESOURCES
 		self.testPlayer.addResources(42)
@@ -157,11 +154,11 @@ class TestGame(unittest.TestCase):
 # =============================================================================
 	def testInvalidPurchaseTower(self):
 		self.testPlayer.resources = 0
-		testTower = Tower.purchaseTower(self.testPlayer)
+		testTower = self.testPlayer.purchaseTower()
 		self.assertEquals(testTower, None)
 
 	def testValidPurchaseTower(self):
-		testTower = Tower.purchaseTower(self.testPlayer)
+		testTower = self.testPlayer.purchaseTower()
 		self.assertEquals(self.testPlayer.resources,mm18.game.constants.BASE_RESOURCES - mm18.game.constants.TOWER_BASE_COST)
 		self.assertEquals(testTower.upgrade, 1)
 		self.assertEquals(testTower.specialisation, 0)
@@ -198,7 +195,7 @@ class TestGame(unittest.TestCase):
 
 	def testValidFire(self):
 		testUnit = Unit.purchaseUnit(1,0,self.testPlayer,1)
-		testTower = Tower.purchaseTower(self.testPlayer)
+		testTower = self.testPlayer.purchaseTower()
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
 """
