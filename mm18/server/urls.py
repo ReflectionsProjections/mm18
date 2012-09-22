@@ -13,7 +13,7 @@ urlpatterns = [
 	(r'/board/(?P<id>\d+)', 'GET', board_get),
 
 	# Tower API
-	(r'/tower/(?P<id>\d+)/upgrade', 'POST', tower_uprade),
+	(r'/tower/(?P<id>\d+)/upgrade', 'POST', tower_upgrade),
 	(r'/tower/(?P<id>\d+)/specialize', 'POST', tower_specialize),
 	(r'/tower/(?P<id>\d+)/sell', 'POST', tower_sell),
 	(r'/tower/(?P<id>\d+)', 'GET', tower_get),
@@ -23,4 +23,7 @@ urlpatterns = [
 	# Unit API
 	(r'/unit/(?P<id>\d+)', 'GET', unit_status),
 	(r'/unit/create', 'POST', unit_create),
+
+	# Connection API
+	#(r'/connect', 'POST', connect),
 ]
