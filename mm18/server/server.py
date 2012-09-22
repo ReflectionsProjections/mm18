@@ -116,6 +116,9 @@ class MMHandler(BaseHTTPRequestHandler):
 
 		return data
 
+	def _connect_client(self, client_id):
+		pass
+
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""
 

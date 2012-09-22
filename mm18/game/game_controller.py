@@ -22,9 +22,13 @@ The engine must be set with the initalizer before any of these functions will
 work succesfully.
 """
 
+# Setup functions
+
 def init_controller(gameEngine):
 	global _engine
 	_engine = gameEngine
+
+# Engine API hooks
 
 def get_game_status(regex, **json):
 	"""Get the status of the currently running game
