@@ -88,8 +88,7 @@ class Engine():
 					self.boards[i].fireTowers()
 
 	def endGame(self):
-		# endGamecondition
-		pass
+		self.running = false
 	
 	# Player controls
 
