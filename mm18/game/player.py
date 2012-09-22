@@ -13,6 +13,7 @@ class Player:
 	## Create a player with a base number of resources.
 	#  Each player cannot upgrade their towers/units past their allowed upgrade.
 	#  @param name The player's name
+	#  @param board The board the player should be added to
 	def __init__(self, name, board):
 		self.name = name
 		self.board = board
