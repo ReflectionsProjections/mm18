@@ -33,7 +33,8 @@ class Engine():
 	# Game controls
 
 	def addPlayer(self, name)
-		self.players.append(Player(name, makeboard()))
+		self.boards.append(makeboard())
+		self.players.append(Player(name, boards[len(boards) - 1])
 	
 	def run(self)
 		if self.players:
@@ -44,8 +45,8 @@ class Engine():
 	def advance(self):
 		self.oldtime=time.time()
 		self.curTick += 1;
-		if self.curTick >= 300000000: #game timeout
-			endGame()
+		#if self.curTick >= 300000000: #game timeout
+		#	endGame()
 		#if self.curTick >= 1000000:
 		#	self.curTick = self.curTick%1000000	
 		if self.curTick%constants.SUPPLY_TIME == 0:
@@ -72,19 +73,19 @@ class Engine():
 								+ UPGRADE_INCREASE*self.maxtier)
 	
 	def moveUnits(self):
-		for i in self.get_player_ids():
-				if not(self.get_player(i).isDead()) :
-					self.get_board(self.get_player(i)).moveUnits()
+		for i in range(0-len(players))::
+				if not(self.players(i).isDead()) :
+					self.boards(i).moveUnits()
 	def countDead(self):
 		count = 0
-		for i in self.get_player_ids():
-			if self.get_player(i).isDead(): count += 1
+		for i in range(0-len(players)):
+			if self.players(i).isDead(): count += 1
 		if count > self.numDead: self.numDead = count
 	
 	def towerResponces(self):
-		for i in self.get_player_ids():
-				if not self.get_player(i).isDead() :
-					self.get_board(self.get_player(i)).fireTowers()
+		for i in range(0-len(players)):
+				if not self.players(i).isDead() :
+					self.boards(i).fireTowers()
 
 	def endGame(self):
 		# endGamecondition
