@@ -67,6 +67,8 @@ class Player:
 			self.purchase(constants.TOWER_BASE_COST)
 			t = Tower(self)
 			self.board.addItem( t )
+
+			return t
 		else:
 			return None
 
@@ -102,6 +104,11 @@ class Player:
 	#  @return Allowed upgrade level
 	def allowedUpgradeIs(self):
 		return self.allowedUpgrade
+
+	## Method returns board of player
+	# @return The board of the player
+	def boardIs(self):
+		return self.board
 
 	## Method to add resources to a player
 	#  @param ammount Number of resources to add
