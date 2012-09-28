@@ -101,7 +101,7 @@ class Engine():
 
 	""" This should return the tower object that's created """
 	def tower_create(self, owner_id, coords, level=1, spec=0):
-		return self.get_player(owner_id).purchaseTower()
+		return self.get_player(owner_id).purchaseTower(coords)
 
 	""" This should return the upgraded tower """
 	def tower_upgrade(self, tower_id, owner_id):
