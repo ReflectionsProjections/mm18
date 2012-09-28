@@ -10,35 +10,22 @@ class Engine():
 	def __init__(self):
 
 		#generate players and boards
-		self.players = []
-		self.boards = []
-		self.maxtier = 0
+		self.players = {}
 		self.numDead = 0
 		self.curTick = 0
-		self.running = true
-		self.oldtime
-		self.pasttime
-		self.mapName
+		self.running = True
 
 		#this is an id that will be used for giving towers
 		#a unique identifier
 		self.currID = 0
-		
-
-
-	def setBoardname():
-		 self.mapName="board1.json"
-
-	def makeBoards(self):
-		newBoard= Board(Board.jsonLoad(self.mapName))
-		self.boards.append(newBoard)
-		return self.boards.newBoard
 
 	# Game controls
 
-	def addPlayer(self, name):
-		self.boards.append(makeboard())
-		self.players.append(Player(name, boards[len(boards) - 1]))
+	def add_player(self, id):
+		board = Board.jsonLoad('board1.json')
+		player = Player(id, board)
+		self.players[id] = player
+		return player
 	
 	def run(self):
 		if self.players:
@@ -57,42 +44,37 @@ class Engine():
 			supply() 
 		moveUnits() 
 		countDead() 
-		towerResponces()
+		towerResponses()
 		if self.numDead == 3 :
 			endGame()
 		self.pasttime = time.time()-oldtime	
 		if constants.TICK_TIME-pasttime > 0 :
 			time.sleep(TICK_TIME-pasttime)
-		
-			
 
 	def supply(self):
-		for i in range(0-len(players)):
-				if self.players[i].allowedUpgradeIs() \
-					> self.maxtier :
-					self.maxtier = self.players(i).allowedUpgradeIs()
+		maxTier = max(self.players.iterkeys(), key=allowedUpgrade)
+		resources = BASE_RESOURCES + UPGRADE_INCREASE * maxTier
+		for player in players.iteritems():
+			player.addResources(resources)
 
-		for i in range(0-len(players)):
-				self.players[i].addResource(BASE_RESOURCES \
-								+ UPGRADE_INCREASE*self.maxtier)
-	
 	def moveUnits(self):
-		for i in range(0-len(players)):
-				if not(self.players[i].isDead()) :
-					self.boards[i].moveUnits()
+		for player in players.iteritems():
+			if not player.isDead():
+				player.board.moveUnits()
+
 	def countDead(self):
-		count = 0
-		for i in range(0-len(players)):
-			if self.players[i].isDead(): count += 1
-		if count > self.numDead: self.numDead = count
-	
-	def towerResponces(self):
-		for i in range(0-len(players)):
-				if not self.players[i].isDead() :
-					self.boards[i].fireTowers()
+		count = sum(1 for player in players.iteritems() if player.isDead())
+		if count > self.numDead:
+			self.numDead = count
+		return count
+
+	def towerResponses(self):
+		for player in players.iteritems():
+			if not player.isDead():
+				player.board.fireTowers()
 
 	def endGame(self):
-		self.running = false
+		self.running = False
 
 	def generateID(self):
 		retID = self.currID
@@ -103,48 +85,23 @@ class Engine():
 
 	""" This should return a list of all player IDs """
 	def get_player_ids(self):
-		ids = []
-
-		for elem in self.players:
-			ids.append(elem.nameIs())
-
-		return ids
+		return self.players.keys()
 
 	""" This should return a player object """
 	def get_player(self, player_id):
-		retPlayer = None
-
-		for elem in self.players:
-			if(elem.nameIs() == player_id):
-				retPlayer = elem.nameIs()
-				break
-		
-		return retPlayer
+		return self.players.get(player_id)
 
 	# Board Class Controls
 
 	""" This should return the board of player_id """
 	def board_get(self, player_id):
-
-		retBoard = None
-
-		for elem in self.players:
-			if(elem.nameIs() == player_id):
-				retBoard = elem.boardIs()
-				break
-
-		return retBoard
+		return self.get_player(player_id).board
 
 	# Tower Class Controls
 
 	""" This should return the tower object that's created """
-	def tower_create(self, owner_id, coords, level, spec):
-		towerRet = None
-		for elem in self.players:
-			if(elem.nameIs() == owner_id):
-				towerRet = elem.purchaseTower()
-
-		return towerRet
+	def tower_create(self, owner_id, coords, level=1, spec=0):
+		return self.get_player(owner_id).purchaseTower()
 
 	""" This should return the upgraded tower """
 	def tower_upgrade(self, tower_id, owner_id):
