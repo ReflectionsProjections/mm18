@@ -30,7 +30,7 @@ class Visualizer:
 	def update(self, dt=0):
 		# parse and perform commands from log
 		# advance the game controller
-		pass
+		self.game.advance()
 
 	def draw(self):
 		self.window.clear()
