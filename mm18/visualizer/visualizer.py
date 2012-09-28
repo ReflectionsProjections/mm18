@@ -49,8 +49,8 @@ class Visualizer:
 		self.drawTowers(board.tower)
 
 	def drawTowers(self, towers):
-		for (coords, tower) in towers:
-			self.drawTower(tower, coords)
+		for coords in towers.iterkeys():
+			self.drawTower(towers[coords], coords)
 
 	def drawTower(self, tower, coords):
 		(x, y) = coords
