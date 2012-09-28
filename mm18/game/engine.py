@@ -28,13 +28,14 @@ class Engine():
 		return player
 	
 	def run(self):
-		if self.players:
-			while self.running:
-				advance()
-	
+		while self.running:
+			startTime = time.time()
+			advance()
+			timePassed = time.time() - startTime
+			if timePassed < constants.TICK_TIME:
+				time.sleep(constants.TICK_TIME - timePassed)
 
 	def advance(self):
-		oldtime=time.time()
 		self.curTick += 1;
 		#if self.curTick >= 300000000: #game timeout
 		#	endGame()
@@ -47,9 +48,6 @@ class Engine():
 		self.towerResponses()
 		if self.numDead == 3 :
 			endGame()
-		pasttime = time.time()-oldtime
-		if constants.TICK_TIME-pasttime > 0 :
-			time.sleep(constants.TICK_TIME-pasttime)
 
 	def supply(self):
 		maxTier = max(player.allowedUpgrade for player in self.players.itervalues())
