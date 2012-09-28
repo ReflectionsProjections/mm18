@@ -34,42 +34,42 @@ class Engine():
 	
 
 	def advance(self):
-		self.oldtime=time.time()
+		oldtime=time.time()
 		self.curTick += 1;
 		#if self.curTick >= 300000000: #game timeout
 		#	endGame()
 		#if self.curTick >= 1000000:
 		#	self.curTick = self.curTick%1000000	
 		if self.curTick%constants.SUPPLY_TIME == 0:
-			supply() 
-		moveUnits() 
-		countDead() 
-		towerResponses()
+			self.supply()
+		self.moveUnits()
+		self.countDead()
+		self.towerResponses()
 		if self.numDead == 3 :
 			endGame()
-		self.pasttime = time.time()-oldtime	
+		pasttime = time.time()-oldtime
 		if constants.TICK_TIME-pasttime > 0 :
-			time.sleep(TICK_TIME-pasttime)
+			time.sleep(constants.TICK_TIME-pasttime)
 
 	def supply(self):
-		maxTier = max(self.players.iterkeys(), key=allowedUpgrade)
-		resources = BASE_RESOURCES + UPGRADE_INCREASE * maxTier
-		for player in players.iteritems():
+		maxTier = max(player.allowedUpgrade for player in self.players.itervalues())
+		resources = constants.BASE_RESOURCES + constants.UPGRADE_INCREASE * maxTier
+		for player in self.players.itervalues():
 			player.addResources(resources)
 
 	def moveUnits(self):
-		for player in players.iteritems():
+		for player in self.players.itervalues():
 			if not player.isDead():
 				player.board.moveUnits()
 
 	def countDead(self):
-		count = sum(1 for player in players.iteritems() if player.isDead())
+		count = sum(1 for player in self.players.itervalues() if player.isDead())
 		if count > self.numDead:
 			self.numDead = count
 		return count
 
 	def towerResponses(self):
-		for player in players.iteritems():
+		for player in self.players.itervalues():
 			if not player.isDead():
 				player.board.fireTowers()
 
