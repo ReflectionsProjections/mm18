@@ -1,9 +1,10 @@
 #! /usr/bin/env python
 
-import mm18.game.constants
-from mm18.game.board import Board
-from mm18.game.player import Player
 import time
+
+import constants
+from board import Board
+from player import Player
 
 class Engine():
 
