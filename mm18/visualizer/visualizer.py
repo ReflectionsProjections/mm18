@@ -16,8 +16,9 @@ tex_path = pyglet.resource.image('genericPath.png')
 
 class Visualizer:
 
-	def __init__(self, board):
-		self.board = board
+	def __init__(self, game):
+		self.game = game
+		self.player_id = next(game.players.iterkeys())
 		self.window = pyglet.window.Window(
 			width=TILE_SIZE * constants.BOARD_SIDE,
 			height=TILE_SIZE * constants.BOARD_SIDE,
@@ -33,13 +34,13 @@ class Visualizer:
 
 	def draw(self):
 		self.window.clear()
-		self.drawBoard(self.board)
+		self.drawBoard(self.game.board_get(self.player_id))
 
 	def drawBoard(self, board):
 		width = height = constants.BOARD_SIDE
 		tiles = ((x, y) for x in range(width) for y in range(height))
 		for (x, y) in tiles:
-			tex = tex_path if (x, y) in self.board.path else tex_terrain
+			tex = tex_path if (x, y) in board.path else tex_terrain
 			tex.blit(
 				x=TILE_SIZE * x,
 				y=TILE_SIZE * y,
