@@ -45,7 +45,7 @@ class Tower:
 				player.purchaseCheck(constants.TOWER_SPECIALIZE_COST[self.upgrade]):
 			player.purchase(constants.TOWER_SPECIALIZE_COST[self.upgrade])
 			self.cost = constants.TOWER_SPECIALIZE_COST[self.upgrade]
-			self.specialisation += specialisation
+			self.specialisation += spec
 			return True #special changes, resources decrease
 		else:
 			return False #Sommat fucked up or not enough resources
@@ -57,4 +57,4 @@ class Tower:
 					self.specialisation)
 
 	def getID(self):
-		return ID
+		return self.ID

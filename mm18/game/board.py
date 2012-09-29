@@ -254,4 +254,4 @@ class Board:
 
 	## Return the tower list
 	def getTowers(self):
-		return tower
+		return self.tower
