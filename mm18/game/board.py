@@ -46,9 +46,8 @@ class Board:
 			elif x is 0:
 				self.startPos[constants.WEST] = (x,y)
 
-		pathList = self.findPaths()
-		self.paths = {direction: Path(pathList[direction])
-			for direction in constants.DIRECTIONS}
+		self.paths = self.findPaths()
+		
 
 	## Reads in json for the board layout from a file and sorts it into two lists
 	#  one for base positions and the other for path positions
@@ -97,17 +96,19 @@ class Board:
 	def findPaths(self):
 		paths = []
 		
-		pathStack = [self.startPos[constants.NORTH]]
-		paths = self.findPathsRecurse(pathStack, paths)
-
-		pathStack = [self.startPos[constants.EAST]]
-		paths = self.findPathsRecurse(pathStack, paths)
-			
-		pathStack = [self.startPos[constants.SOUTH]]
-		paths = self.findPathsRecurse(pathStack, paths)
-
-		pathStack = [self.startPos[constants.WEST]]
-		paths = self.findPathsRecurse(pathStack, paths)
+		northStack = self.startPos[constants.NORTH]
+		eastStack = self.startPos[constants.EAST]
+		southStack = self.startPos[constants.SOUTH]
+		westStack = self.startPos[constants.WEST]
+		
+		if northStack:
+			paths.append(self.findPathsRecurse([northStack],paths))
+		if eastStack:
+			paths.append(self.findPathsRecurse([eastStack],paths))
+		if southStack:
+			paths.append(self.findPathsRecurse([southStack],paths))
+		if westStack:
+			paths.append(self.findPathsRecurse([westStack],paths))
 
 		return paths
 	
@@ -116,7 +117,7 @@ class Board:
 	#  cannot go any farther.
 	def findPathsRecurse(self, pathStack, paths):
 		pathEnds = True
-		x,y = pathStack[len(pathStack) - 1]
+		x,y = pathStack[-1]
 		
 		north = (x, y+1)
 		if north not in pathStack and north in self.path:
