@@ -77,7 +77,7 @@ class Player:
 		"""
 		Sells the tower
 		"""
-		tower = player.board.getItem(position)
+		tower = self.board.getItem(position)
 		if tower is not None:
 			self.resources += tower.cost * constants.TOWER_SELL_SCALAR
 			self.board.removeItem(position)
@@ -114,3 +114,8 @@ class Player:
 	#  @param ammount Number of resources to add
 	def addResources(self, ammount):
 		self.resources += ammount
+	
+	## Move units, take damage
+	def moveUnits(self):
+		self.damage(self.board.moveUnits())
+		

@@ -61,7 +61,7 @@ class Engine():
 	def moveUnits(self):
 		for player in self.players.itervalues():
 			if not player.isDead():
-				player.board.moveUnits()
+				player.moveUnits()
 
 	def towerResponses(self):
 		for player in self.players.itervalues():
@@ -110,8 +110,8 @@ class Engine():
 		retTower = None
 
 		for elem in towers:
-			if elem.getID == tower_id:
-				retTower = elem
+			if towers[elem].getID() == tower_id:
+				retTower = towers[elem]
 				break
 
 		
@@ -119,11 +119,11 @@ class Engine():
 
 	""" This should return the player object relating to owner_id """
 	def tower_sell(self, tower_id, owner_id):
-		retPlayer = get_player(owner_id)
+		retPlayer = self.get_player(owner_id)
 		if retPlayer == None:
 			return retPlayer
 
-		tower = get_tower(tower_id, owner_id)
+		tower = self.tower_get(tower_id, owner_id)
 		if tower == None:
 			return retPlayer
 
@@ -133,31 +133,31 @@ class Engine():
 
 	""" This should return the tower that's been specialized """
 	def tower_specialize(self, tower_id, owner_id, spec):
-		retTower = tower_get(tower_id, owner_id)
+		retTower = self.tower_get(tower_id, owner_id)
 		if(retTower == None):
 			return None
 
-		player = get_player(owner_id)
+		player = self.get_player(owner_id)
 
 		if(player == None):
 			return None
 
 		retTower.specialise(spec, player)
-		return tower		
+		return retTower		
 
 	""" This should return the tower that's been specified """
-	def tower_upgrade(self, tower_id, player_id):
-		retTower = tower_get(tower_id, owner_id)
+	def tower_upgrade(self, tower_id, owner_id):
+		retTower = self.tower_get(tower_id, owner_id)
 		if(retTower == None):
 			return None
 
-		player = get_player(owner_id)
+		player = self.get_player(owner_id)
 
 		if(player == None):
 			return None
 
-		retTower.specialise(spec, player)
-		return tower
+		retTower.upgradeTower(player)
+		return retTower
 
 	# Unit Class Controls
 
@@ -175,5 +175,5 @@ class Engine():
 
 		retUnit = Unit.purchaseUnit(level, spec, player)
 		board.queueUnit(retUnit, direction)
-				
+
 		return retUnit

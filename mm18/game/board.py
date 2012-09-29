@@ -46,7 +46,13 @@ class Board:
 			elif x is 0:
 				self.startPos[constants.WEST] = (x,y)
 
-		self.paths = self.findPaths()
+		pathList = self.findPaths()
+		# The Path class takes paths starting at the base, so reverse
+		for path in pathList:
+			if path is not None:
+				path.reverse()
+		self.paths = {direction: Path(pathList[direction]) \
+			for direction in constants.DIRECTIONS}
 		
 
 	## Reads in json for the board layout from a file and sorts it into two lists
@@ -102,13 +108,21 @@ class Board:
 		westStack = self.startPos[constants.WEST]
 		
 		if northStack:
-			paths.append(self.findPathsRecurse([northStack],paths))
+			self.findPathsRecurse([northStack], paths)
+		else:
+			paths.append(None)
 		if eastStack:
-			paths.append(self.findPathsRecurse([eastStack],paths))
+			self.findPathsRecurse([eastStack], paths)
+		else:
+			paths.append(None)
 		if southStack:
-			paths.append(self.findPathsRecurse([southStack],paths))
+			self.findPathsRecurse([southStack], paths)
+		else:
+			paths.append(None)
 		if westStack:
-			paths.append(self.findPathsRecurse([westStack],paths))
+			self.findPathsRecurse([westStack], paths)
+		else:
+			paths.append(None)
 
 		return paths
 	
@@ -118,7 +132,6 @@ class Board:
 	def findPathsRecurse(self, pathStack, paths):
 		pathEnds = True
 		x,y = pathStack[-1]
-		
 		north = (x, y+1)
 		if north not in pathStack and north in self.path:
 			pathEnds = False
@@ -155,6 +168,15 @@ class Board:
 	# TODO: Error handling for invalid positions
 	def validPosition(self, position):
 		x,y=position
+		
+		for house in self.base:
+			if house==(x,y):
+				return 0
+
+		for road in self.path:
+			if road==(x,y):
+				return 0
+
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
 
 	## Adds an object to the board provided nothing is already in the location.
@@ -230,8 +252,9 @@ class Board:
 	#  @param q Which entrance the unit needs to go to
 	def queueUnit(self, unit, q):
 		if q in self.paths:
-			self.paths[q].start(unit)
-			return True
+			if self.paths[q].moving is not None:
+				self.paths[q].start(unit)
+				return True
 		return False
 
 	## Return a generator of pairs of unit and position on the board,
@@ -246,13 +269,15 @@ class Board:
 
 	## Advance the board state.
 	#  Incoming units move forward, ones reaching the base do damage
-	# TODO: check if next to base before exploding, dead units die
+	# @return: damage to be dealt to the player
 	def moveUnits(self):
+		damage=0
 		for path in self.paths.itervalues():
 			unit = path.advance()
-		#	if unit is not None and unit.health > 0:
-		#		self.owner.damage(unit.finalDamage())
+			if unit is not None and unit.health > 0:
+				damage+=unit.finalDamage()
+		return damage
 
 	## Return the tower list
 	def getTowers(self):
-		return tower
+		return self.tower
