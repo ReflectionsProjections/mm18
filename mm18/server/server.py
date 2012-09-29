@@ -77,7 +77,7 @@ class MMHandler(BaseHTTPRequestHandler):
 					# arguments to respond
 					self.respond(*url[2](match.groupdict(), **data))
 
-					break
+					return
 
 				else:
 					# Bad method, but valid URL, used for sending 405s
@@ -162,7 +162,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		if global_client_manager.is_full():
 			print "Game is full, starting"
 			# Start the game and let everyone know we started it
-			_start_game()
+			self._start_game()
 			global_client_manager.game_condition.notify_all()
 			# Release the run lock
 			global_client_manager.game_condition.release()
@@ -189,7 +189,7 @@ class MMHandler(BaseHTTPRequestHandler):
 			self.respond(401, {'error': 'Bad id or auth code'})
 
 	def _start_game(self):
-		init_game()
+		init_game(global_client_manager)
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""
