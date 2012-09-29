@@ -27,13 +27,13 @@ _engine = None
 # Setup functions
 
 def require_running_game(func):
-	def check_run_and_process(*args):
+	def check_run_and_process(regex, **json):
 		if _engine is None:
 			print "No engine"
 			# Game isn't running, call error handling
 			return respond_for_no_game()
 		else:
-			return func(*args)
+			return func(regex, **json)
 
 	return check_run_and_process
 

@@ -50,7 +50,7 @@ class MMHandler(BaseHTTPRequestHandler):
 
 		# Get the data from the method
 		try:
-			data = self._process_POST_data(method)
+			data = self._process_POST_data()
 		except ValueError:
 			# Invalid JSON
 			self.send_error(400)
@@ -93,7 +93,7 @@ class MMHandler(BaseHTTPRequestHandler):
 
 		self.match_path()
 
-	def _process_POST_data(self, method):
+	def _process_POST_data(self):
 		"""Processes the POST data from a request. Private method.
 
 		Reads in a request and returns a dictionary based on whether or not the
@@ -102,18 +102,12 @@ class MMHandler(BaseHTTPRequestHandler):
 		
 		Throws ValueError on invalid JSON.
 
-		Returns POST data in a dictionary, or empty dictionary on GET.
+		Returns POST data in a dictionary.
 		"""
 
-		if method == 'POST':
-			# POST data should be catured
-			length = int(self.headers['Content-Length'])
-			input = self.rfile.read(length)
-			data = json.loads(input)
-
-		else:
-			# GET method, so empty dictionary
-			data = {}
+		length = int(self.headers['Content-Length'])
+		input = self.rfile.read(length)
+		data = json.loads(input)
 
 		return data
 
