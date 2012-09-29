@@ -37,7 +37,7 @@ class Engine():
 				time.sleep(constants.TICK_TIME - timePassed)
 
 	def advance(self):
-		self.curTick += 1;
+		self.curTick = self.curTick + 1
 		#if self.curTick >= 300000000: #game timeout
 		#	endGame()
 		#if self.curTick >= 1000000:
