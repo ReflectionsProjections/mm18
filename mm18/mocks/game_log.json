@@ -1,0 +1,6 @@
+{"action": "add_player", "id": "p1"}
+{"action": "start", "tick": 0}
+{"action": "tower_create", "owner_id": "p1", "coords": [0, 2]}
+{"action": "advance", "tick": 1}
+{"action": "unit_create", "owner_id": "p1", "level": 1, "spec": 0, "target_id": "p1", "direction": 0}
+{"action": "advance", "tick": 2}
