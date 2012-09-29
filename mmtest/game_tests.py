@@ -201,7 +201,6 @@ class TestGame(unittest.TestCase):
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
 
-
 	def testValidMovement(self):
 		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
 		paths=self.testBoard.findPaths()

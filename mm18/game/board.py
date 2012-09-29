@@ -257,12 +257,14 @@ class Board:
 
 	## Advance the board state.
 	#  Incoming units move forward, ones reaching the base do damage
-	# TODO: check if next to base before exploding, dead units die
+	# @return: damage to be dealt to the player
 	def moveUnits(self):
+		damage=0
 		for path in self.paths.itervalues():
 			unit = path.advance()
-		#	if unit is not None and unit.health > 0:
-		#		self.owner.damage(unit.finalDamage())
+			if unit is not None and unit.health > 0:
+				damage+=unit.finalDamage()
+		return damage
 
 	## Return the tower list
 	def getTowers(self):

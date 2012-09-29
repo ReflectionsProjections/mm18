@@ -114,3 +114,8 @@ class Player:
 	#  @param ammount Number of resources to add
 	def addResources(self, ammount):
 		self.resources += ammount
+	
+	## Move units, take damage
+	def moveUnits():
+		damage(board.moveUnits())
+		
