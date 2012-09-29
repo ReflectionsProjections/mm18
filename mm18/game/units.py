@@ -12,24 +12,23 @@ class Unit:
 	#  @param level The level the unit is.  Cannot be changed once created.
 	#  @param spec The specialisation the unit has
 	#  @param player The player the unit belongs to
-	def __init__(self, level, spec, player, pathID):
+	def __init__(self, level, spec, player):
 			self.level = level
 			self.specialisation = spec
 			self.health = constants.BASE_UNIT_HEALTH*constants.UNIT_UPGRADE_MULTIPLIER[self.level]
 			self.owner = player.name
-			self.pathID = pathID
 	
 	## Static method for the player to purchase the units.
 	#  @param level The level the unit is.  Cannot be changed once created.
 	#  @param spec The specialisation the unit has
 	#  @param player The player the unit belongs to
 	@staticmethod
-	def purchaseUnit(level, spec, player, pathID):
+	def purchaseUnit(level, spec, player):
 		if player.allowedUpgrade >= level and player.purchaseCheck(constants.UNIT_BASE_COST*constants.UNIT_UPGRADE_COST[level]) and spec >= -1 and spec <=1:
 			player.purchase(constants.UNIT_BASE_COST*constants.UNIT_UPGRADE_COST[level])
 			player.sentUnits += 1
 			player.increaseUpgrade()
-			return Unit(level, spec, player, pathID)
+			return Unit(level, spec, player)
 		else:
 			return None
 			
