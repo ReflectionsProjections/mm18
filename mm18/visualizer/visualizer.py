@@ -42,8 +42,7 @@ class Visualizer:
 		self.drawBoard(self.game.board_get(self.player_id))
 
 	def drawBoard(self, board):
-		width = height = constants.BOARD_SIDE
-		tiles = ((x, y) for x in range(width) for y in range(height))
+		tiles = ((x, y) for x in range(board.width) for y in range(board.height))
 		for (x, y) in tiles:
 			tex = tex_path if (x, y) in board.path else tex_terrain
 			tex.blit(
