@@ -1,8 +1,5 @@
 #! /usr/bin/env python
 
-#import json
-#this class needs organisation
-
 """Timing Constants"""
 # Time each tick takes, in seconds
 TICK_TIME = .001
@@ -58,6 +55,3 @@ WEST = 3
 
 """MODEL"""
 SUPPLY_TIME = 4;
-
-"""PLACEHOLDER"""
-BOOP = -1000
