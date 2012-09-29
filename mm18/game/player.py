@@ -116,6 +116,6 @@ class Player:
 		self.resources += ammount
 	
 	## Move units, take damage
-	def moveUnits():
-		damage(board.moveUnits())
+	def moveUnits(self):
+		self.damage(self.board.moveUnits())
 		
