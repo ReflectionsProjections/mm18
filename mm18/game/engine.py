@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import time
+import threading
 
 import constants
 from board import Board
@@ -9,8 +10,16 @@ from units import Unit
 
 class Engine():
 
-	def __init__(self):
+	@staticmethod
+	def spawn_game(players):
+		engine = Engine()
+		for player in players:
+			engine.add_player(player)
+		thread = threading.Thread(target=engine.run)
+		thread.start()
+		return engine
 
+	def __init__(self):
 		#generate players and boards
 		self.players = {}
 		self.currTick = 0
