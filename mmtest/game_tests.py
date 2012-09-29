@@ -14,6 +14,7 @@ class TestGame(unittest.TestCase):
 		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
 		self.testPlayer = Player("testName", self.testBoard)
 		self.testTower = Tower(self.testPlayer)
+		self.testEngine = Engine()
 
 	def testResourcesIs(self):
 		self.testPlayer.resources = mm18.game.constants.BASE_RESOURCES
@@ -129,23 +130,23 @@ class TestGame(unittest.TestCase):
 	#Not enough resources
 	def testInvalidPurchaseUnit(self):
 		self.testPlayer.resources = 0
-		test = Unit.purchaseUnit(1,0,self.testPlayer,1)
+		test = Unit.purchaseUnit(1,0,self.testPlayer)
 		self.assertEquals(test,None)
 
 	#Level too high
 	def testInvalidPurchaseUnit1(self):
-		test = Unit.purchaseUnit(3,0,self.testPlayer,1)
+		test = Unit.purchaseUnit(3,0,self.testPlayer)
 		self.assertEquals(test,None)
 
 	#Invalid spec
 	def testInvalidPurchaseUnit2(self):
-		testUnit = Unit.purchaseUnit(1,-2,self.testPlayer,1)
+		testUnit = Unit.purchaseUnit(1,-2,self.testPlayer)
 		self.assertEquals(testUnit, None)
-		testUnit = Unit.purchaseUnit(1,2,self.testPlayer,1)
+		testUnit = Unit.purchaseUnit(1,2,self.testPlayer)
 		self.assertEquals(testUnit, None)
 
 	def testValidPurchaseUnit(self):
-		testUnit = Unit.purchaseUnit(1,1,self.testPlayer,1)
+		testUnit = Unit.purchaseUnit(1,1,self.testPlayer)
 		self.assertEquals(testUnit.level,1)
 		self.assertEquals(testUnit.specialisation,1)
 		self.assertEquals(testUnit.owner, self.testPlayer.name)
@@ -194,7 +195,7 @@ class TestGame(unittest.TestCase):
 		self.assertTrue(self.testTower.specialise(1))
 
 	def testValidFire(self):
-		testUnit = Unit.purchaseUnit(1,0,self.testPlayer,1)
+		testUnit = Unit.purchaseUnit(1,0,self.testPlayer)
 		testTower = self.testPlayer.purchaseTower()
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
@@ -213,7 +214,15 @@ class TestGame(unittest.TestCase):
 		self.assertTrue(testTest)
 """
 
+	"""ENGINE TESTS"""
+# =============================================================================
 
+	def testAddPlayer(self):
+		self.assertEquals(0, len(self.testEngine.get_player_ids()))
+		self.testEngine.add_player(self.testPlayer)
+		self.assertEquals(1, len(self.testEngine.get_player_ids()))
+
+	
 """Uncomment & delete this line for concise test output
 if __name__ == "__main__":
 	unittest.main()
