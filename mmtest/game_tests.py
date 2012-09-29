@@ -204,13 +204,13 @@ class TestGame(unittest.TestCase):
 		testUnit=Unit.purchaseUnit(1,0,self.testPlayer,1)
 		self.assertTrue(self.testBoard.queueUnit(testUnit, testUnit.pathID))
 		self.testBoard.moveUnits()
-		testTest=False;
+		testTest=False
 		for unit in self.testBoard.paths[1].moving:
 			#if unit==testUnit and pos==(0,2):
-				#testTest=True;
+				#testTest=True
 			self.assertEquals(unit, testUnit)
 			self.assertEquals(pos, (0,2))
-			testTest=True;
+			testTest=True
 		self.assertTrue(testTest)
 """
 
@@ -221,32 +221,36 @@ class TestGame(unittest.TestCase):
 		self.assertEquals(0, len(self.testEngine.get_player_ids()))
 		self.testEngine.add_player(1)
 		self.assertEquals(1, len(self.testEngine.get_player_ids()))
-	"""def testSupply(self):
-		self.testplayer.allowedUpgrade = 1;
-		self.testplayer.resources = 0;
-		self.testEngine.supply()
-		self.assertEquals(self.testplayer.resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*1)
-		self.testplayer.allowedUpgrade = 2;
-		self.testplayer.resources = 0;
-		self.testEngine.supply()
-		self.assertEquals(self.testplayer.resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*2)
-		self.testplayer.allowedUpgrade = 3;
-		self.testplayer.resources = 0;
-		self.testEngine.supply()
-		self.assertEquals(self.testplayer.resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*3)
-
-	def testMoveUnits(self):
-		pass
-
-	def testTowerResponses(self):
-		pass
 	
-	def get_player(self, player_id):
-		return self.players.get(player_id
+	def testSupply(self):
+		self.testEngine.add_player(1)
+		self.testEngine.get_player(1).resources = 0
+		self.testEngine.supply()
+		self.assertEquals(self.testEngine.get_player(1).resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*self.testEngine.get_player(1).allowedUpgrade)
+		
 
-	def board_get(self, player_id):
-		return self.get_player(player_id).board"""
+	
+	def testget_player(self):
+		self.testEngine.add_player(1)
+		self.assertEquals(self.testEngine.get_player(1).name, 1)
 
+	def testboard_get(self):
+		self.testEngine.add_player(1)
+		self.assertTrue(self.testEngine.board_get(1) != None)
+
+	def testget_player_ids(self):
+		self.testEngine.add_player(1)
+		self.assertEquals(len(self.testEngine.get_player_ids()),1)
+		self.testEngine.add_player(2)
+		self.assertEquals(len(self.testEngine.get_player_ids()),2)
+		self.testEngine.add_player(3)
+		self.assertEquals(len(self.testEngine.get_player_ids()),3)
+		self.testEngine.add_player(4)
+		self.assertEquals(len(self.testEngine.get_player_ids()),4)
+
+	def testget_player(self, player_id):
+		self.testEngine.add_player(1)
+		self.assertTrue(self.testEngine.get_player(1) != None)
 
 
 	
