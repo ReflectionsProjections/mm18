@@ -8,8 +8,9 @@ from mm18.game import constants
 game = Engine()
 game.add_player('p1')
 game.tower_create('p1', (0, 2))
-path = game.board_get('p1').paths[constants.NORTH]
-unit = Unit(1, 0, game.get_player('p1'), None)
-path.start(unit)
+game.board_get('p1').queueUnit(
+	Unit(1, 0, game.get_player('p1')),
+	constants.NORTH
+)
 viz = Visualizer(game)
 viz.run()
