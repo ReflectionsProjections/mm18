@@ -65,6 +65,14 @@ class TestGame(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			self.testBoard.validPosition(5)
 
+	def testInvalidPosition4(self):
+		self.assertFalse(self.testBoard.validPosition((1,1)))
+
+	def testInvalidPosition5(self):
+		tower= Tower(self.testPlayer, 0)
+		self.testBoard.addItem(tower, (2,2))
+		self.assertFalse(self.testBoard.validPosition((2,2)))
+
 	def testValidPosition(self):
 		self.assertTrue(self.testBoard.validPosition((0,0)))
 
@@ -94,6 +102,15 @@ class TestGame(unittest.TestCase):
 		self.testBoard.addItem(tower, (0, 0))
 		self.testBoard.addToHitList(tower, (0,0))
 		print self.testBoard.hitList
+
+	def testValidMovement(self):
+		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
+		paths=self.testBoard.findPaths()
+		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
+		self.testBoard.moveUnits()
+		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
+
+
 
 	"""PATH TESTS"""
 # =============================================================================
@@ -126,6 +143,8 @@ class TestGame(unittest.TestCase):
 		 self.assertEquals(p.advance(), 'D')
 		 self.assertEquals(list(p.entries()),
 						   [(None, 1), (None, 3), (None, 2)])
+
+
 
 	"""Unit Tests"""
 	#Not enough resources
@@ -199,20 +218,13 @@ class TestGame(unittest.TestCase):
 		testUnit = Unit.purchaseUnit(1,0,self.testPlayer)
 		testTower = self.testPlayer.purchaseTower()
 		self.testTower.fire(testUnit)
-		self.assertEqual(testUnit.health, 0)
+		self.assertEquals(testUnit.health, 0)
 
 	def testValidSell(self):
 		testTower = self.testPlayer.purchaseTower((1,0))
 		self.testPlayer.resources = 0
 		self.testPlayer.sellTower((1,0))
 		self.assertFalse(self.testPlayer.resources==0)
-
-	def testValidMovement(self):
-		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
-		paths=self.testBoard.findPaths()
-		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
-		self.testBoard.moveUnits()
-		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
 
 	"""ENGINE TESTS"""
 # =============================================================================
@@ -226,6 +238,69 @@ class TestGame(unittest.TestCase):
 		self.testEngine.get_player(1).resources = 0
 		self.testEngine.supply()
 		self.assertEquals(self.testEngine.get_player(1).resources, mm18.game.constants.BASE_RESOURCES + mm18.game.constants.UPGRADE_INCREASE*self.testEngine.get_player(1).allowedUpgrade)
+		
+	def test_advance(self):
+		self.testEngine.add_player(1)
+		self.testEngine.add_player(2)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.advance()
+		self.p2board= self.testEngine.board_get(2)
+		self.testUnit=self.p2board.paths[1].moving[-1];
+		self.testEngine.advance()
+		self.assertFalse(self.testUnit==None)
+		self.assertEquals(self.p2board.paths[1].moving[-2], self.testUnit)
+
+	def test_advanceAndQue(self):
+		self.testEngine.add_player(1)
+		self.testEngine.add_player(2)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.advance()
+		self.testEngine.advance()
+		self.p2board= self.testEngine.board_get(2)
+		self.testUnit=self.p2board.paths[1].moving[-2];
+		self.testUnit2=self.p2board.paths[1].moving[-1];
+		self.testEngine.advance()
+		self.assertFalse(self.testUnit==None)
+		self.assertEquals(self.p2board.paths[1].moving[-3], self.testUnit)
+
+	def testcheck_running(self):
+		self.testEngine.add_player(3)
+		self.testEngine.check_running()
+		print self.testEngine.running
+		self.assertFalse(self.testEngine.running)
+
+	def test_run(self):
+		#this test will brake if you give players more helth. 
+		#if this happeds add more units for player 2!
+		self.testEngine.add_player(1)
+		self.testEngine.add_player(2)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.run()
+		self.assertFalse(self.testEngine.running)
+		self.player2=self.testEngine.get_player(2)
+		self.assertEquals(self.player2.isDead(),True)
 		
 
 	def testboard_get(self):

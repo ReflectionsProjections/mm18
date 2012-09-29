@@ -47,12 +47,13 @@ class Board:
 				self.startPos[constants.WEST] = (x,y)
 
 		pathList = self.findPaths()
+		self.paths={}
 		# The Path class takes paths starting at the base, so reverse
 		for path in pathList:
 			if path is not None:
 				path.reverse()
-		self.paths = {direction: Path(pathList[direction]) \
-			for direction in constants.DIRECTIONS}
+		for direction in constants.DIRECTIONS:
+			self.paths[direction]=Path(pathList[direction])
 		
 
 	## Reads in json for the board layout from a file and sorts it into two lists
@@ -132,7 +133,6 @@ class Board:
 	def findPathsRecurse(self, pathStack, paths):
 		pathEnds = True
 		x,y = pathStack[-1]
-		
 		north = (x, y+1)
 		if north not in pathStack and north in self.path:
 			pathEnds = False
@@ -166,9 +166,20 @@ class Board:
 	## Check whether the position of the object being inserted is a valid placement on the board.
 	#  Will contain error handling for invalid positions.
 	#  @param position Tuple containing object position
-	# TODO: Error handling for invalid positions
 	def validPosition(self, position):
 		x,y=position
+		
+		for house in self.base:
+			if house==(x,y):
+				return 0
+
+		for road in self.path:
+			if road==(x,y):
+				return 0
+
+		if position in self.tower:
+			return 0
+
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
 
 	## Adds an object to the board provided nothing is already in the location.
