@@ -234,6 +234,21 @@ class TestGame(unittest.TestCase):
 		self.testEngine.supply()
 		self.assertEquals(self.testEngine.get_player(1).resources, mm18.game.constants.BASE_RESOURCES + mm18.game.constants.UPGRADE_INCREASE*self.testEngine.get_player(1).allowedUpgrade)
 		
+	def test_advance(self):
+		self.testEngine.add_player(1)
+		self.testEngine.add_player(2)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.advance()
+		self.p2board= self.testEngine.board_get(2)
+		self.testUnit=self.p2board.paths[1].moving[-1];
+		print self.p2board.paths[0].moving
+		print self.p2board.paths[1].moving
+		print self.p2board.paths[2].moving
+		print self.p2board.paths[3].moving
+		self.testEngine.advance()
+		self.assertFalse(self.testUnit==None)
+		self.assertEquals(self.p2board.paths[1].moving[-2], self.testUnit)
+
 
 	def testboard_get(self):
 		self.testEngine.add_player(1)
