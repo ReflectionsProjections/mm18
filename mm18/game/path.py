@@ -7,7 +7,10 @@ class Path(object):
 	def __init__(self, path):
 		self.path = path
 		self.waiting = deque()
-		self.moving = deque([None for _ in path])
+		if path is not None:
+			self.moving = deque([None for _ in path])
+		else:
+			self.moving=None
 
 	## Queue a unit at the entrance.
 	#  If not other units are waiting it will start moving
@@ -19,9 +22,11 @@ class Path(object):
 	## Advance every unit a step, and starts first waiting unit.
 	#  @return The unit that reached the base if any, or None
 	def advance(self):
+		if self.moving is None:
+			return None
 		if len(self.waiting) > 0:
 			self.moving.append(self.waiting.popleft())
-		else:
+		elif self.moving:
 			self.moving.append(None)
 		return self.moving.popleft()
 

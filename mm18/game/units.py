@@ -41,6 +41,6 @@ class Unit:
 
 	## Damage this unit does when it reaches the base.
 	def finalDamage(self):
-		return (constants.BASE_UNIT_DAMAGE
-			*constants.UNIT_UPGRADE_MULTIPLIER[self.level]
+		return (constants.BASE_UNIT_DAMAGE \
+			*constants.UNIT_UPGRADE_MULTIPLIER[self.level] \
 			*(self.health / constants.BASE_UNIT_HEALTH))
