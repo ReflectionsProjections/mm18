@@ -259,7 +259,7 @@ def tower_get(regex, **json):
 	code = 200
 	error = ""
 
-	if tower == None : 
+	if tower == None:
 		code = 409
 		error = "Tower not visible or invalid tower ID"
 
