@@ -14,6 +14,7 @@ pyglet.resource.reindex()
 tex_terrain = pyglet.resource.image('genericGrass.png')
 tex_path = pyglet.resource.image('genericPath.png')
 tex_tower = pyglet.resource.image('genericTower.png')
+tex_unit = pyglet.resource.image('genericUnit.png')
 
 class Visualizer:
 
@@ -49,6 +50,8 @@ class Visualizer:
 				height=TILE_SIZE,
 			)
 		self.drawTowers(board.tower)
+		for path in board.paths.itervalues():
+			self.drawUnits(path)
 
 	def drawTowers(self, towers):
 		for coords in towers.iterkeys():
@@ -57,6 +60,20 @@ class Visualizer:
 	def drawTower(self, tower, coords):
 		(x, y) = coords
 		tex_tower.blit(
+			x=TILE_SIZE * x,
+			y=TILE_SIZE * y,
+			width=TILE_SIZE,
+			height=TILE_SIZE,
+		)
+
+	def drawUnits(self, path):
+		for unit, coords in path.entries():
+			if unit:
+				self.drawUnit(unit, coords)
+
+	def drawUnit(self, unit, coords):
+		(x, y) = coords
+		tex_unit.blit(
 			x=TILE_SIZE * x,
 			y=TILE_SIZE * y,
 			width=TILE_SIZE,
