@@ -25,5 +25,18 @@ class Replayer:
 	def play_action(self, action):
 		"""Play an action and returns its type."""
 		entry = json.loads(action)
-		print entry
-		return entry['action']
+		actionType = entry.pop('action')
+
+		if actionType == 'start':
+			pass
+		elif actionType == 'advance':
+			self.game.advance()
+		elif actionType == 'tower_create':
+			self.game.tower_create(
+				owner_id=entry['owner_id'],
+				coords=tuple(entry['coords'])
+			)
+		else:
+			getattr(self.game, actionType)(**entry)
+
+		return actionType
