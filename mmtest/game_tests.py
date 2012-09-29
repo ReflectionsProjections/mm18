@@ -68,6 +68,11 @@ class TestGame(unittest.TestCase):
 	def testInvalidPosition4(self):
 		self.assertFalse(self.testBoard.validPosition((1,1)))
 
+	def testInvalidPosition5(self):
+		tower= Tower(self.testPlayer, 0)
+		self.testBoard.addItem(tower, (2,2))
+		self.assertFalse(self.testBoard.validPosition((2,2)))
+
 	def testValidPosition(self):
 		self.assertTrue(self.testBoard.validPosition((0,0)))
 

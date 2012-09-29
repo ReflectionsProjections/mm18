@@ -47,12 +47,13 @@ class Board:
 				self.startPos[constants.WEST] = (x,y)
 
 		pathList = self.findPaths()
+		self.paths={}
 		# The Path class takes paths starting at the base, so reverse
 		for path in pathList:
 			if path is not None:
 				path.reverse()
-		self.paths = {direction: Path(pathList[direction]) \
-			for direction in constants.DIRECTIONS}
+		for direction in constants.DIRECTIONS:
+			self.paths[direction]=Path(pathList[direction])
 		
 
 	## Reads in json for the board layout from a file and sorts it into two lists
@@ -176,6 +177,9 @@ class Board:
 		for road in self.path:
 			if road==(x,y):
 				return 0
+
+		if position in self.tower:
+			return 0
 
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
 
