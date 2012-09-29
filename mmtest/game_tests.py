@@ -201,20 +201,24 @@ class TestGame(unittest.TestCase):
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
 
+	def testValidSell(self):
+		testTower = self.testPlayer.purchaseTower((1,0))
+		self.testPlayer.resources = 0
+		self.testPlayer.sellTower((1,0))
+		self.assertFalse(self.testPlayer.resources==0)
+
 	def testValidMovement(self):
 		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
 		paths=self.testBoard.findPaths()
-		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
+		self.assertTrue(self.testBoard.queueUnit(testUnit, 0))
 		self.testBoard.moveUnits()
-		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
-
+		self.assertEquals(self.testBoard.paths[0].moving.pop(), testUnit)
 
 	"""ENGINE TESTS"""
 # =============================================================================
-
 	def testAddPlayer(self):
 		self.assertEquals(0, len(self.testEngine.get_player_ids()))
-		self.testEngine.add_player(1)
+		self.testEngine.add_player(self.testPlayer)
 		self.assertEquals(1, len(self.testEngine.get_player_ids()))
 	
 	def testSupply(self):
@@ -241,7 +245,6 @@ class TestGame(unittest.TestCase):
 	def testget_player(self):
 		self.testEngine.add_player(1)
 		self.assertTrue(self.testEngine.get_player(1) != None)
-
 
 	
 """Uncomment & delete this line for concise test output

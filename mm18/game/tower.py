@@ -57,4 +57,4 @@ class Tower:
 					self.specialisation)
 
 	def getID(self):
-		return ID
+		return self.ID

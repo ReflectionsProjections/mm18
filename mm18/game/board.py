@@ -47,6 +47,10 @@ class Board:
 				self.startPos[constants.WEST] = (x,y)
 
 		pathList = self.findPaths()
+		# The Path class takes paths starting at the base, so reverse
+		for path in pathList:
+			if path is not None:
+				path.reverse()
 		self.paths = {direction: Path(pathList[direction]) \
 			for direction in constants.DIRECTIONS}
 		
@@ -268,4 +272,4 @@ class Board:
 
 	## Return the tower list
 	def getTowers(self):
-		return tower
+		return self.tower
