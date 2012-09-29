@@ -5,6 +5,7 @@ import time
 import constants
 from board import Board
 from player import Player
+from units import Unit
 
 class Engine():
 
@@ -162,17 +163,17 @@ class Engine():
 
 	""" This should return the object of the unit """
 	def unit_create(self, owner_id, level, spec, target_id, direction):
-		player = player_get(owner_id)
+		player = self.get_player(owner_id)
 
 		if(player == None):
 			return None
 
-		board = board_get(owner_id)
+		board = self.board_get(target_id)
 
 		if(board == None):
 			return None
 
-		retUnit = player.purchaseUnit(level, spec, player, direction)
-		board.queueUnit(unit, direction)
+		retUnit = Unit.purchaseUnit(level, spec, player)
+		board.queueUnit(retUnit, direction)
 				
 		return retUnit
