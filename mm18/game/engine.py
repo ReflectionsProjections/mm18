@@ -95,7 +95,7 @@ class Engine():
 
 	""" This should return the tower object that's created """
 	def tower_create(self, owner_id, coords, level=1, spec=0):
-		return self.get_player(owner_id).purchaseTower(coords, generateID())
+		return self.get_player(owner_id).purchaseTower(coords, self.generateID())
 
 	""" This should return the tower that's been specified"""
 	def tower_get(self, tower_id, owner_id):
