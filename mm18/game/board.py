@@ -47,6 +47,9 @@ class Board:
 				self.startPos[constants.WEST] = (x,y)
 
 		pathList = self.findPaths()
+		# The Path class takes paths starting at the base, so reverse
+		for path in pathList:
+			path.reverse()
 		self.paths = {direction: Path(pathList[direction]) \
 			for direction in constants.DIRECTIONS}
 		
