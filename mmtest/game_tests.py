@@ -246,14 +246,62 @@ class TestGame(unittest.TestCase):
 		self.testEngine.advance()
 		self.p2board= self.testEngine.board_get(2)
 		self.testUnit=self.p2board.paths[1].moving[-1];
-		print self.p2board.paths[0].moving
-		print self.p2board.paths[1].moving
-		print self.p2board.paths[2].moving
-		print self.p2board.paths[3].moving
 		self.testEngine.advance()
 		self.assertFalse(self.testUnit==None)
 		self.assertEquals(self.p2board.paths[1].moving[-2], self.testUnit)
 
+	def test_advanceAndQue(self):
+		self.testEngine.add_player(1)
+		self.testEngine.add_player(2)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.advance()
+		self.testEngine.advance()
+		self.p2board= self.testEngine.board_get(2)
+		self.testUnit=self.p2board.paths[1].moving[-2];
+		self.testUnit2=self.p2board.paths[1].moving[-1];
+		self.testEngine.advance()
+		self.assertFalse(self.testUnit==None)
+		self.assertEquals(self.p2board.paths[1].moving[-3], self.testUnit)
+
+	def testcheck_running(self):
+		self.testEngine.add_player(3)
+		self.testEngine.check_running()
+		print self.testEngine.running
+		self.assertFalse(self.testEngine.running)
+
+	def test_run(self):
+		#this test will brake if you give players more helth. 
+		#if this happeds add more units for player 2!
+		self.testEngine.add_player(1)
+		self.testEngine.add_player(2)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.unit_create(1,1,1,2,1)
+		self.testEngine.run()
+		self.assertFalse(self.testEngine.running)
+		self.player2=self.testEngine.get_player(2)
+		self.assertEquals(self.player2.isDead(),True)
+		
 
 	def testboard_get(self):
 		self.testEngine.add_player(1)
