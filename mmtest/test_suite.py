@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 
-from mmtest.server_tests import *
+from mmtest.game_tests import *
 import unittest
 
 def get_suite():
-	suite = unittest.TestLoader().loadTestsFromTestCase(TestServer)
+	suite = unittest.TestLoader().loadTestsFromTestCase(TestGame)
 	return suite
 
 def run_suite():
