@@ -214,45 +214,17 @@ class TestGame(unittest.TestCase):
 		self.assertTrue(testTest)
 """
 
-	"""ENGINE TESTS"""
+"""ENGINE TESTS"""
 # =============================================================================
-
 	def testAddPlayer(self):
 		self.assertEquals(0, len(self.testEngine.get_player_ids()))
-		self.testEngine.add_player(1)
+		self.testEngine.add_player(self.testPlayer)
 		self.assertEquals(1, len(self.testEngine.get_player_ids()))
-	"""def testSupply(self):
-		self.testplayer.allowedUpgrade = 1;
-		self.testplayer.resources = 0;
-		self.testEngine.supply()
-		self.assertEquals(self.testplayer.resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*1)
-		self.testplayer.allowedUpgrade = 2;
-		self.testplayer.resources = 0;
-		self.testEngine.supply()
-		self.assertEquals(self.testplayer.resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*2)
-		self.testplayer.allowedUpgrade = 3;
-		self.testplayer.resources = 0;
-		self.testEngine.supply()
-		self.assertEquals(self.testplayer.resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*3)
-
-	def testMoveUnits(self):
-		pass
-
-	def testTowerResponses(self):
-		pass
-	
-	def get_player(self, player_id):
-		return self.players.get(player_id
-
-	def board_get(self, player_id):
-		return self.get_player(player_id).board"""
-
-
 
 	
 """Uncomment & delete this line for concise test output
 if __name__ == "__main__":
 	unittest.main()
 """
-suite = unittest.TestLoader().loadTestsFromTestCase(TestGame)
-unittest.TextTestRunner(verbosity=2).run(suite)
+"""suite = unittest.TestLoader().loadTestsFromTestCase(TestGame)
+unittest.TextTestRunner(verbosity=2).run(suite)"""
