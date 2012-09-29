@@ -218,7 +218,7 @@ class TestGame(unittest.TestCase):
 		testUnit = Unit.purchaseUnit(1,0,self.testPlayer)
 		testTower = self.testPlayer.purchaseTower()
 		self.testTower.fire(testUnit)
-		self.assertEqual(testUnit.health, 0)
+		self.assertEquals(testUnit.health, 0)
 
 	def testValidSell(self):
 		testTower = self.testPlayer.purchaseTower((1,0))
