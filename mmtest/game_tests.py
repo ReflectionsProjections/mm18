@@ -5,15 +5,16 @@ from mm18.game.units import Unit
 from mm18.game.board import Board
 from mm18.game.player import Player
 from mm18.game.path import Path
+from mm18.game.engine import Engine
 
 """Tests for the game code go here"""
 class TestGame(unittest.TestCase):
 
 	def setUp(self):
 		unittest.TestCase.setUp(self)
-		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
+		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4),(0,5),  (1,5), (2,5), (3,5)])
 		self.testPlayer = Player("testName", self.testBoard)
-		self.testTower = Tower(self.testPlayer)
+		self.testTower = Tower(self.testPlayer, 0)
 		self.testEngine = Engine()
 
 	def testResourcesIs(self):
@@ -89,7 +90,7 @@ class TestGame(unittest.TestCase):
 			self.testBoard.tower[(0,0)]
 
 	def testAddHitList(self):
-		tower = Tower(self.testPlayer)
+		tower = Tower(self.testPlayer, 1)
 		self.testBoard.addItem(tower, (0, 0))
 		self.testBoard.addToHitList(tower, (0,0))
 		print self.testBoard.hitList
@@ -200,19 +201,19 @@ class TestGame(unittest.TestCase):
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
 
-"""	def testValidMovement(self):
-		testUnit=Unit.purchaseUnit(1,0,self.testPlayer,1)
-		self.assertTrue(self.testBoard.queueUnit(testUnit, testUnit.pathID))
+	def testValidSell(self):
+		testTower = self.testPlayer.purchaseTower((1,0))
+		self.testPlayer.resources = 0
+		self.testPlayer.sellTower((1,0))
+		self.assertFalse(self.testPlayer.resources==0)
+
+	def testValidMovement(self):
+		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
+		paths=self.testBoard.findPaths()
+		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
 		self.testBoard.moveUnits()
-		testTest=False;
-		for unit in self.testBoard.paths[1].moving:
-			#if unit==testUnit and pos==(0,2):
-				#testTest=True;
-			self.assertEquals(unit, testUnit)
-			self.assertEquals(pos, (0,2))
-			testTest=True;
-		self.assertTrue(testTest)
-"""
+		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
+
 
 """ENGINE TESTS"""
 # =============================================================================
@@ -220,6 +221,31 @@ class TestGame(unittest.TestCase):
 		self.assertEquals(0, len(self.testEngine.get_player_ids()))
 		self.testEngine.add_player(self.testPlayer)
 		self.assertEquals(1, len(self.testEngine.get_player_ids()))
+	
+	def testSupply(self):
+		self.testEngine.add_player(1)
+		self.testEngine.get_player(1).resources = 0
+		self.testEngine.supply()
+		self.assertEquals(self.testEngine.get_player(1).resources, mm18.game.constants.BASE_RESOURCES + mm18.game.constants.UPGRADE_INCREASE*self.testEngine.get_player(1).allowedUpgrade)
+		
+
+	def testboard_get(self):
+		self.testEngine.add_player(1)
+		self.assertTrue(self.testEngine.board_get(1) != None)
+
+	def testget_player_ids(self):
+		self.testEngine.add_player(1)
+		self.assertEquals(len(self.testEngine.get_player_ids()),1)
+		self.testEngine.add_player(2)
+		self.assertEquals(len(self.testEngine.get_player_ids()),2)
+		self.testEngine.add_player(3)
+		self.assertEquals(len(self.testEngine.get_player_ids()),3)
+		self.testEngine.add_player(4)
+		self.assertEquals(len(self.testEngine.get_player_ids()),4)
+
+	def testget_player(self):
+		self.testEngine.add_player(1)
+		self.assertTrue(self.testEngine.get_player(1) != None)
 
 	
 """Uncomment & delete this line for concise test output
