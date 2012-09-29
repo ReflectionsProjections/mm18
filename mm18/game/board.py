@@ -206,7 +206,7 @@ class Board:
 	#  @param position A tuple containing object position
 	def removeItem(self, position):
 		if self.getItem(position) != None:
-			self.removeFromHitlist(self.tower[position])
+			self.removeFromHitList(self.tower[position])
 			del self.tower[position]
 			
 
