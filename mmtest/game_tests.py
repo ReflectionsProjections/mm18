@@ -207,7 +207,7 @@ class TestGame(unittest.TestCase):
 		paths=self.testBoard.findPaths()
 		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
 		self.testBoard.moveUnits()
-		self.assertEquals(self.testBoard.paths[0].moving.pop(), testUnit)
+		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
 
 
 	"""ENGINE TESTS"""
@@ -222,13 +222,8 @@ class TestGame(unittest.TestCase):
 		self.testEngine.add_player(1)
 		self.testEngine.get_player(1).resources = 0
 		self.testEngine.supply()
-		self.assertEquals(self.testEngine.get_player(1).resources, constants.BASE_RESOURCES + constants.UPGRADE_INCREASE*self.testEngine.get_player(1).allowedUpgrade)
+		self.assertEquals(self.testEngine.get_player(1).resources, mm18.game.constants.BASE_RESOURCES + mm18.game.constants.UPGRADE_INCREASE*self.testEngine.get_player(1).allowedUpgrade)
 		
-
-	
-	def testget_player(self):
-		self.testEngine.add_player(1)
-		self.assertEquals(self.testEngine.get_player(1).name, 1)
 
 	def testboard_get(self):
 		self.testEngine.add_player(1)
@@ -244,7 +239,7 @@ class TestGame(unittest.TestCase):
 		self.testEngine.add_player(4)
 		self.assertEquals(len(self.testEngine.get_player_ids()),4)
 
-	def testget_player(self, player_id):
+	def testget_player(self):
 		self.testEngine.add_player(1)
 		self.assertTrue(self.testEngine.get_player(1) != None)
 

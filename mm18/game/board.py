@@ -46,7 +46,9 @@ class Board:
 			elif x is 0:
 				self.startPos[constants.WEST] = (x,y)
 
-		self.paths = self.findPaths()
+		pathList = self.findPaths()
+		self.paths = {direction: Path(pathList[direction]) \
+			for direction in constants.DIRECTIONS}
 		
 
 	## Reads in json for the board layout from a file and sorts it into two lists
@@ -103,12 +105,20 @@ class Board:
 		
 		if northStack:
 			paths.append(self.findPathsRecurse([northStack],paths))
+		else:
+			paths.append(None)
 		if eastStack:
 			paths.append(self.findPathsRecurse([eastStack],paths))
+		else:
+			paths.append(None)
 		if southStack:
 			paths.append(self.findPathsRecurse([southStack],paths))
+		else:
+			paths.append(None)
 		if westStack:
 			paths.append(self.findPathsRecurse([westStack],paths))
+		else:
+			paths.append(None)
 
 		return paths
 	
@@ -230,8 +240,9 @@ class Board:
 	#  @param q Which entrance the unit needs to go to
 	def queueUnit(self, unit, q):
 		if q in self.paths:
-			self.paths[q].start(unit)
-			return True
+			if self.paths[q].moving is not None:
+				self.paths[q].start(unit)
+				return True
 		return False
 
 	## Return a generator of pairs of unit and position on the board,
