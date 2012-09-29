@@ -132,21 +132,47 @@ class Engine():
 
 	""" This should return the tower that's been specialized """
 	def tower_specialize(self, tower_id, owner_id, spec):
-		tower = tower_get(tower_id, owner_id)
-		if(tower == None):
+		retTower = tower_get(tower_id, owner_id)
+		if(retTower == None):
 			return None
 
-		player = player_get(owner_id)
-		tower.specialise(spec, player)
+		player = get_player(owner_id)
+
+		if(player == None):
+			return None
+
+		retTower.specialise(spec, player)
 		return tower		
-		pass
 
 	""" This should return the tower that's been specified """
 	def tower_upgrade(self, tower_id, player_id):
-		pass
+		retTower = tower_get(tower_id, owner_id)
+		if(retTower == None):
+			return None
+
+		player = get_player(owner_id)
+
+		if(player == None):
+			return None
+
+		retTower.specialise(spec, player)
+		return tower
 
 	# Unit Class Controls
 
 	""" This should return the object of the unit """
-	def unit_create(self, owner_id, level, spec, target_id, path):
-		pass
+	def unit_create(self, owner_id, level, spec, target_id, direction):
+		player = player_get(owner_id)
+
+		if(player == None):
+			return None
+
+		board = board_get(owner_id)
+
+		if(board == None):
+			return None
+
+		retUnit = player.purchaseUnit(level, spec, player, direction)
+		board.queueUnit(unit, direction)
+				
+		return retUnit
