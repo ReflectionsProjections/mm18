@@ -5,6 +5,7 @@ import time
 import constants
 from board import Board
 from player import Player
+from units import Unit
 
 class Engine():
 
@@ -132,21 +133,47 @@ class Engine():
 
 	""" This should return the tower that's been specialized """
 	def tower_specialize(self, tower_id, owner_id, spec):
-		tower = tower_get(tower_id, owner_id)
-		if(tower == None):
+		retTower = tower_get(tower_id, owner_id)
+		if(retTower == None):
 			return None
 
-		player = player_get(owner_id)
-		tower.specialise(spec, player)
+		player = get_player(owner_id)
+
+		if(player == None):
+			return None
+
+		retTower.specialise(spec, player)
 		return tower		
-		pass
 
 	""" This should return the tower that's been specified """
 	def tower_upgrade(self, tower_id, player_id):
-		pass
+		retTower = tower_get(tower_id, owner_id)
+		if(retTower == None):
+			return None
+
+		player = get_player(owner_id)
+
+		if(player == None):
+			return None
+
+		retTower.specialise(spec, player)
+		return tower
 
 	# Unit Class Controls
 
 	""" This should return the object of the unit """
-	def unit_create(self, owner_id, level, spec, target_id, path):
-		pass
+	def unit_create(self, owner_id, level, spec, target_id, direction):
+		player = self.get_player(owner_id)
+
+		if(player == None):
+			return None
+
+		board = self.board_get(target_id)
+
+		if(board == None):
+			return None
+
+		retUnit = Unit.purchaseUnit(level, spec, player)
+		board.queueUnit(retUnit, direction)
+				
+		return retUnit
