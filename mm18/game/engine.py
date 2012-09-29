@@ -148,6 +148,15 @@ class Engine():
 	""" This should return the tower that's been specified """
 	def tower_upgrade(self, tower_id, owner_id):
 		retTower = self.tower_get(tower_id, owner_id)
+		board = self.board_get(owner_id)
+		towers = board.getTowers()
+		coords = None
+
+		for elem in towers:
+			if towers[elem] == tower_id:
+				elem = coords
+				
+
 		if(retTower == None):
 			return None
 
@@ -157,6 +166,7 @@ class Engine():
 			return None
 
 		retTower.upgradeTower(player)
+		player.refreshTower(coords, retTower)
 		return retTower
 
 	# Unit Class Controls
@@ -174,6 +184,9 @@ class Engine():
 			return None
 
 		retUnit = Unit.purchaseUnit(level, spec, player)
-		board.queueUnit(retUnit, direction)
 
-		return retUnit
+		if retUnit != None:
+			if(board.queueUnit(retUnit, direction)):
+				return retUnit
+
+		return None

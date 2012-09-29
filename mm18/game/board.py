@@ -178,6 +178,7 @@ class Board:
 	def addItem(self, item, position):
 		if self.validPosition(position) and self.getItem(position) == None and position not in self.base and position not in self.path:
 			self.tower[position] = item
+			self.addToHitList(item, position)
 			return True
 		else:
 			return False
@@ -194,25 +195,32 @@ class Board:
 	#  @param position A tuple containing object position
 	def removeItem(self, position):
 		if self.getItem(position) != None:
+			self.removeFromHitlist(self.tower[position])
 			del self.tower[position]
+			
 
 	## Adds a tower to all the appropriate places of the hitList
 	#  @param self The board
 	#  @param tower The tower to add to the hitList
 	def addToHitList(self, tower, position):
 		tX, tY = position
+
 		tXLower = tX - constants.TOWER_RANGE[tower.upgrade]
 		if tXLower < 0:
 			tXLower = 0
+
 		tXUpper = tX + constants.TOWER_RANGE[tower.upgrade]
 		if tXUpper >= constants.BOARD_SIDE:
 			txUpper = constants.BOARD_SIDE - 1
+
 		tYLower = tY - constants.TOWER_RANGE[tower.upgrade]
 		if tYLower < 0:
 			tYLower = 0
+
 		tYUpper = tY + constants.TOWER_RANGE[tower.upgrade]
 		if tYUpper >= constants.BOARD_SIDE:
 			tYUpper = constants.BOARD_SIDE - 1
+		
 		for elem in self.path:
 			elemX, elemY = elem
 			if elemX >= tXLower and elemX <= tXUpper:
@@ -232,6 +240,8 @@ class Board:
 	def fireTowers(self):
 		used = set()
 		for unit, pos in self.units():
+			x, y = pos
+			print "Unit is in %i, %i" % (x, y)
 			for tower in self.hitlist[pos]:
 				if unit.health <= 0:
 					break
@@ -252,13 +262,14 @@ class Board:
 	## Return a generator of pairs of unit and position on the board,
 	#  in order of increasing distance from the base
 	def units(self):
-		paths = [self.paths[q] for q in
-				 [constants.NORTH,constants.EAST,constants.SOUTH,constants.WEST]]
-		return ((unit,pos) for front in itertools.izip()
-	                     for (unit,pos) in front
-						 if unit is not None and unit.health > 0)
 
+		units = []
+		
+		for path in self.paths:
+			for x in range (len(path.path)-1, -1, -1):
+				units.append((path.path[x], path.moving[x]))
 
+		return units
 	## Advance the board state.
 	#  Incoming units move forward, ones reaching the base do damage
 	# @return: damage to be dealt to the player
