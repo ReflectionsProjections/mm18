@@ -13,6 +13,7 @@ pyglet.resource.reindex()
 
 tex_terrain = pyglet.resource.image('genericGrass.png')
 tex_path = pyglet.resource.image('genericPath.png')
+tex_tower = pyglet.resource.image('genericTower.png')
 
 class Visualizer:
 
@@ -55,6 +56,12 @@ class Visualizer:
 
 	def drawTower(self, tower, coords):
 		(x, y) = coords
+		tex_tower.blit(
+			x=TILE_SIZE * x,
+			y=TILE_SIZE * y,
+			width=TILE_SIZE,
+			height=TILE_SIZE,
+		)
 
 	def run(self):
 		pyglet.app.run()
