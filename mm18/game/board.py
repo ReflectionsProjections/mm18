@@ -132,7 +132,6 @@ class Board:
 	def findPathsRecurse(self, pathStack, paths):
 		pathEnds = True
 		x,y = pathStack[-1]
-		
 		north = (x, y+1)
 		if north not in pathStack and north in self.path:
 			pathEnds = False
@@ -169,6 +168,15 @@ class Board:
 	# TODO: Error handling for invalid positions
 	def validPosition(self, position):
 		x,y=position
+		
+		for house in self.base:
+			if house==(x,y):
+				return 0
+
+		for road in self.path:
+			if road==(x,y):
+				return 0
+
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
 
 	## Adds an object to the board provided nothing is already in the location.
