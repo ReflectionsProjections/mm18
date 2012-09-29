@@ -14,6 +14,7 @@ class TestGame(unittest.TestCase):
 		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
 		self.testPlayer = Player("testName", self.testBoard)
 		self.testTower = Tower(self.testPlayer)
+		self.testEngine = Engine()
 
 	def testResourcesIs(self):
 		self.testPlayer.resources = mm18.game.constants.BASE_RESOURCES
@@ -213,7 +214,15 @@ class TestGame(unittest.TestCase):
 		self.assertTrue(testTest)
 """
 
+	"""ENGINE TESTS"""
+# =============================================================================
 
+	def testAddPlayer(self):
+		self.assertEquals(0, len(self.testEngine.get_player_ids()))
+		self.testEngine.add_player(self.testPlayer)
+		self.assertEquals(1, len(self.testEngine.get_player_ids()))
+
+	
 """Uncomment & delete this line for concise test output
 if __name__ == "__main__":
 	unittest.main()
