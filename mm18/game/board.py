@@ -47,11 +47,13 @@ class Board:
 				self.startPos[constants.WEST] = (x,y)
 
 		pathList = self.findPaths()
+		self.paths={}
 		# The Path class takes paths starting at the base, so reverse
 		for path in pathList:
-			path.reverse()
-		self.paths = {direction: Path(pathList[direction]) \
-			for direction in constants.DIRECTIONS}
+			if path is not None:
+				path.reverse()
+		for direction in constants.DIRECTIONS:
+			self.paths[direction]=Path(pathList[direction])
 		
 
 	## Reads in json for the board layout from a file and sorts it into two lists
@@ -107,19 +109,19 @@ class Board:
 		westStack = self.startPos[constants.WEST]
 		
 		if northStack:
-			paths.append(self.findPathsRecurse([northStack],paths))
+			self.findPathsRecurse([northStack], paths)
 		else:
 			paths.append(None)
 		if eastStack:
-			paths.append(self.findPathsRecurse([eastStack],paths))
+			self.findPathsRecurse([eastStack], paths)
 		else:
 			paths.append(None)
 		if southStack:
-			paths.append(self.findPathsRecurse([southStack],paths))
+			self.findPathsRecurse([southStack], paths)
 		else:
 			paths.append(None)
 		if westStack:
-			paths.append(self.findPathsRecurse([westStack],paths))
+			self.findPathsRecurse([westStack], paths)
 		else:
 			paths.append(None)
 
@@ -131,7 +133,6 @@ class Board:
 	def findPathsRecurse(self, pathStack, paths):
 		pathEnds = True
 		x,y = pathStack[-1]
-		
 		north = (x, y+1)
 		if north not in pathStack and north in self.path:
 			pathEnds = False
@@ -168,6 +169,18 @@ class Board:
 	# TODO: Error handling for invalid positions
 	def validPosition(self, position):
 		x,y=position
+		
+		for house in self.base:
+			if house==(x,y):
+				return 0
+
+		for road in self.path:
+			if road==(x,y):
+				return 0
+
+		if position in self.tower:
+			return 0
+
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
 
 	## Adds an object to the board provided nothing is already in the location.
@@ -260,12 +273,14 @@ class Board:
 
 	## Advance the board state.
 	#  Incoming units move forward, ones reaching the base do damage
-	# TODO: check if next to base before exploding, dead units die
+	# @return: damage to be dealt to the player
 	def moveUnits(self):
+		damage=0
 		for path in self.paths.itervalues():
 			unit = path.advance()
-		#	if unit is not None and unit.health > 0:
-		#		self.owner.damage(unit.finalDamage())
+			if unit is not None and unit.health > 0:
+				damage+=unit.finalDamage()
+		return damage
 
 	## Return the tower list
 	def getTowers(self):

@@ -65,6 +65,14 @@ class TestGame(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			self.testBoard.validPosition(5)
 
+	def testInvalidPosition4(self):
+		self.assertFalse(self.testBoard.validPosition((1,1)))
+
+	def testInvalidPosition5(self):
+		tower= Tower(self.testPlayer, 0)
+		self.testBoard.addItem(tower, (2,2))
+		self.assertFalse(self.testBoard.validPosition((2,2)))
+
 	def testValidPosition(self):
 		self.assertTrue(self.testBoard.validPosition((0,0)))
 
@@ -94,6 +102,15 @@ class TestGame(unittest.TestCase):
 		self.testBoard.addItem(tower, (0, 0))
 		self.testBoard.addToHitList(tower, (0,0))
 		print self.testBoard.hitList
+
+	def testValidMovement(self):
+		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
+		paths=self.testBoard.findPaths()
+		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
+		self.testBoard.moveUnits()
+		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
+
+
 
 	"""PATH TESTS"""
 # =============================================================================
@@ -126,6 +143,8 @@ class TestGame(unittest.TestCase):
 		 self.assertEquals(p.advance(), 'D')
 		 self.assertEquals(list(p.entries()),
 						   [(None, 1), (None, 3), (None, 2)])
+
+
 
 	"""Unit Tests"""
 	#Not enough resources
@@ -207,15 +226,7 @@ class TestGame(unittest.TestCase):
 		self.testPlayer.sellTower((1,0))
 		self.assertFalse(self.testPlayer.resources==0)
 
-	def testValidMovement(self):
-		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
-		paths=self.testBoard.findPaths()
-		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
-		self.testBoard.moveUnits()
-		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
-
-
-"""ENGINE TESTS"""
+	"""ENGINE TESTS"""
 # =============================================================================
 	def testAddPlayer(self):
 		self.assertEquals(0, len(self.testEngine.get_player_ids()))
@@ -252,5 +263,5 @@ class TestGame(unittest.TestCase):
 if __name__ == "__main__":
 	unittest.main()
 """
-"""suite = unittest.TestLoader().loadTestsFromTestCase(TestGame)
-unittest.TextTestRunner(verbosity=2).run(suite)"""
+suite = unittest.TestLoader().loadTestsFromTestCase(TestGame)
+unittest.TextTestRunner(verbosity=2).run(suite)

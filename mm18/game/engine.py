@@ -70,7 +70,7 @@ class Engine():
 	def moveUnits(self):
 		for player in self.players.itervalues():
 			if not player.isDead():
-				player.board.moveUnits()
+				player.moveUnits()
 
 	def towerResponses(self):
 		for player in self.players.itervalues():
