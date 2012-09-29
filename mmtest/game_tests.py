@@ -5,15 +5,16 @@ from mm18.game.units import Unit
 from mm18.game.board import Board
 from mm18.game.player import Player
 from mm18.game.path import Path
+from mm18.game.engine import Engine
 
 """Tests for the game code go here"""
 class TestGame(unittest.TestCase):
 
 	def setUp(self):
 		unittest.TestCase.setUp(self)
-		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4)])
+		self.testBoard = Board([(0,1),(1,1)], [(0,2),(1,2),(1,3),(0,4),(0,5),  (1,5), (2,5), (3,5)])
 		self.testPlayer = Player("testName", self.testBoard)
-		self.testTower = Tower(self.testPlayer)
+		self.testTower = Tower(self.testPlayer, 0)
 		self.testEngine = Engine()
 
 	def testResourcesIs(self):
@@ -89,7 +90,7 @@ class TestGame(unittest.TestCase):
 			self.testBoard.tower[(0,0)]
 
 	def testAddHitList(self):
-		tower = Tower(self.testPlayer)
+		tower = Tower(self.testPlayer, 1)
 		self.testBoard.addItem(tower, (0, 0))
 		self.testBoard.addToHitList(tower, (0,0))
 		print self.testBoard.hitList
@@ -200,20 +201,14 @@ class TestGame(unittest.TestCase):
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
 
-	"""
+
 	def testValidMovement(self):
-		testUnit=Unit.purchaseUnit(1,0,self.testPlayer,1)
-		self.assertTrue(self.testBoard.queueUnit(testUnit, testUnit.pathID))
+		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
+		paths=self.testBoard.findPaths()
+		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
 		self.testBoard.moveUnits()
-		testTest=False
-		for unit in self.testBoard.paths[1].moving:
-			#if unit==testUnit and pos==(0,2):
-				#testTest=True
-			self.assertEquals(unit, testUnit)
-			self.assertEquals(pos, (0,2))
-			testTest=True
-		self.assertTrue(testTest)
-	"""
+		self.assertEquals(self.testBoard.paths[0].moving.pop(), testUnit)
+
 
 	"""ENGINE TESTS"""
 # =============================================================================

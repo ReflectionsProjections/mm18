@@ -39,13 +39,13 @@ class Tower:
 	#  Currently using 0 for no specialisation and 1, -1 for the different ones.
 	#  @param spec Either 1, 0 or -1.  Indicates a specialisation.
 	#  @param player The player specializing the tower
-	def specialise(self, spec, player):
+	def specialise(self, spec):
 		if self.upgrade == 1 and spec >= -1 and spec <= 1 and \
 				spec != self.specialisation and \
-				player.purchaseCheck(constants.TOWER_SPECIALIZE_COST[self.upgrade]):
-			player.purchase(constants.TOWER_SPECIALIZE_COST[self.upgrade])
+				self.owner.purchaseCheck(constants.TOWER_SPECIALIZE_COST[self.upgrade]):
+			self.owner.purchase(constants.TOWER_SPECIALIZE_COST[self.upgrade])
 			self.cost = constants.TOWER_SPECIALIZE_COST[self.upgrade]
-			self.specialisation += specialisation
+			self.specialisation += spec
 			return True #special changes, resources decrease
 		else:
 			return False #Sommat fucked up or not enough resources
