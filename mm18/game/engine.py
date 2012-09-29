@@ -12,8 +12,7 @@ class Engine():
 
 		#generate players and boards
 		self.players = {}
-		self.numDead = 0
-		self.curTick = 0
+		self.currTick = 0
 		self.running = True
 
 		#this is an id that will be used for giving towers
@@ -32,19 +31,25 @@ class Engine():
 		while self.running:
 			startTime = time.time()
 			self.advance()
+			self.check_running()
 			timePassed = time.time() - startTime
 			if timePassed < constants.TICK_TIME:
 				time.sleep(constants.TICK_TIME - timePassed)
 
 	def advance(self):
-		self.curTick = self.curTick + 1
-		if self.curTick % constants.SUPPLY_TIME == 0:
+		self.currTick = self.currTick + 1
+		if self.currTick % constants.SUPPLY_TIME == 0:
 			self.supply()
 		self.moveUnits()
-		self.countDead()
 		self.towerResponses()
-		if self.numDead == 3:
-			endGame()
+
+	def check_running(self):
+		alive = sum(1 for player in self.players.itervalues() \
+				if not player.isDead())
+		if alive <= 1:
+			self.endGame()
+		if self.currTick > constants.MAX_RUNTIME:
+			self.endGame()
 
 	def supply(self):
 		maxTier = max(player.allowedUpgrade for player in self.players.itervalues())
@@ -56,12 +61,6 @@ class Engine():
 		for player in self.players.itervalues():
 			if not player.isDead():
 				player.board.moveUnits()
-
-	def countDead(self):
-		count = sum(1 for player in self.players.itervalues() if player.isDead())
-		if count > self.numDead:
-			self.numDead = count
-		return count
 
 	def towerResponses(self):
 		for player in self.players.itervalues():
