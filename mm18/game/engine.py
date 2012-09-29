@@ -27,23 +27,23 @@ class Engine():
 		player = Player(id, board)
 		self.players[id] = player
 		return player
-	
+
 	def run(self):
 		while self.running:
 			startTime = time.time()
-			advance()
+			self.advance()
 			timePassed = time.time() - startTime
 			if timePassed < constants.TICK_TIME:
 				time.sleep(constants.TICK_TIME - timePassed)
 
 	def advance(self):
 		self.curTick = self.curTick + 1
-		if self.curTick%constants.SUPPLY_TIME == 0:
+		if self.curTick % constants.SUPPLY_TIME == 0:
 			self.supply()
 		self.moveUnits()
 		self.countDead()
 		self.towerResponses()
-		if self.numDead == 3 :
+		if self.numDead == 3:
 			endGame()
 
 	def supply(self):
