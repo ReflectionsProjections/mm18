@@ -79,7 +79,7 @@ class Player:
 		"""
 		tower = player.board.getItem(position)
 		if tower is not None:
-			self.resources += tower.cost * TOWER_SELL_SCALAR
+			self.resources += tower.cost * constants.TOWER_SELL_SCALAR
 			self.board.removeItem(position)
 
 # GETTERS / SETTERS
