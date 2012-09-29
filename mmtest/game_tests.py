@@ -200,7 +200,13 @@ class TestGame(unittest.TestCase):
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
 
-"""	def testValidMovement(self):
+	def testValidSell(self):
+		testTower = self.testPlayer.purchaseTower((1,0))
+		self.testPlayer.resources = 0
+		self.testPlayer.sellTower((1,0))
+		self.assertFalse(self.testPlayer.resources==0)
+
+	"""def testValidMovement(self):
 		testUnit=Unit.purchaseUnit(1,0,self.testPlayer,1)
 		self.assertTrue(self.testBoard.queueUnit(testUnit, testUnit.pathID))
 		self.testBoard.moveUnits()
@@ -212,7 +218,7 @@ class TestGame(unittest.TestCase):
 			self.assertEquals(pos, (0,2))
 			testTest=True;
 		self.assertTrue(testTest)
-"""
+	"""
 
 	"""ENGINE TESTS"""
 # =============================================================================
