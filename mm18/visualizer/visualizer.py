@@ -4,6 +4,7 @@ from pyglet.gl import *
 
 from mm18.game import constants
 from mm18.game.board import Board
+from mm18.game.replayer import Replayer
 
 TILE_SIZE = 32
 
@@ -18,9 +19,11 @@ tex_unit = pyglet.resource.image('genericUnit.png')
 
 class Visualizer:
 
-	def __init__(self, game):
-		self.game = game
-		self.player_id = next(game.players.iterkeys())
+	def __init__(self, actions):
+		self.replayer = Replayer(actions)
+		self.replayer.setup_game()
+		self.game = self.replayer.game
+		self.player_id = next(self.game.players.iterkeys())
 		self.window = pyglet.window.Window(
 			width=TILE_SIZE * constants.BOARD_SIDE,
 			height=TILE_SIZE * constants.BOARD_SIDE,
@@ -32,7 +35,7 @@ class Visualizer:
 	def update(self, dt=0):
 		# parse and perform commands from log
 		# advance the game controller
-		self.game.advance()
+		self.replayer.play_tick()
 
 	def draw(self):
 		self.window.clear()

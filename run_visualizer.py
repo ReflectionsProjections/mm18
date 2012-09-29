@@ -1,13 +1,8 @@
 #! /usr/bin/env python
 
 from mm18.visualizer.visualizer import Visualizer
-from mm18.game.engine import Engine
-from mm18.game.units import Unit
-from mm18.game import constants
 
-game = Engine()
-game.add_player('p1')
-game.tower_create('p1', (0, 2))
-game.unit_create('p1', 1, 0, 'p1', constants.NORTH)
-viz = Visualizer(game)
+with open('mm18/mocks/game_log.json') as f:
+	lines = f.readlines()
+viz = Visualizer(iter(lines))
 viz.run()
