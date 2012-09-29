@@ -20,12 +20,18 @@ class Engine():
 		#a unique identifier
 		self.currID = 0
 
+	def log_action(self, action_type, **kwargs):
+		pass
+
 	# Game controls
 
 	def add_player(self, id):
 		board = Board.jsonLoad('board1.json')
 		player = Player(id, board)
 		self.players[id] = player
+
+		self.log_action('add_player', id=id)
+
 		return player
 
 	def run(self):
@@ -43,6 +49,8 @@ class Engine():
 			self.supply()
 		self.moveUnits()
 		self.towerResponses()
+
+		self.log_action('advance', tick=self.currTick)
 
 	def check_running(self):
 		alive = sum(1 for player in self.players.itervalues() \
@@ -96,7 +104,11 @@ class Engine():
 
 	""" This should return the tower object that's created """
 	def tower_create(self, owner_id, coords, level=1, spec=0):
-		return self.get_player(owner_id).purchaseTower(coords, self.generateID())
+		tower = self.get_player(owner_id).purchaseTower(coords, self.generateID())
+
+		self.log_action('tower_create', owner_id=owner_id, coords=list(coords))
+
+		return tower
 
 	""" This should return the tower that's been specified"""
 	def tower_get(self, tower_id, owner_id):
@@ -128,7 +140,9 @@ class Engine():
 			return retPlayer
 
 		player.sellTower(tower.position)
-		
+
+		self.log_action('tower_sell', tower_id=tower_id, owner_id=owner_id)
+
 		return retPlayer		
 
 	""" This should return the tower that's been specialized """
@@ -143,6 +157,10 @@ class Engine():
 			return None
 
 		retTower.specialise(spec, player)
+
+		self.log_action('tower_specialize', tower_id=tower_id,
+			owner_id=owner_id, spec=spec)
+
 		return tower		
 
 	""" This should return the tower that's been specified """
@@ -157,6 +175,9 @@ class Engine():
 			return None
 
 		retTower.specialise(spec, player)
+
+		self.log_action('tower_upgrade', tower_id=tower_id, player_id=player_id)
+
 		return tower
 
 	# Unit Class Controls
@@ -175,5 +196,8 @@ class Engine():
 
 		retUnit = Unit.purchaseUnit(level, spec, player)
 		board.queueUnit(retUnit, direction)
-				
+
+		self.log_action('unit_create', owner_id=owner_id, level=level,
+			spec=spec, target_id=target_id, direction=direction)
+
 		return retUnit
