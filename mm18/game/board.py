@@ -107,19 +107,19 @@ class Board:
 		westStack = self.startPos[constants.WEST]
 		
 		if northStack:
-			paths.append(self.findPathsRecurse([northStack],paths))
+			self.findPathsRecurse([northStack], paths)
 		else:
 			paths.append(None)
 		if eastStack:
-			paths.append(self.findPathsRecurse([eastStack],paths))
+			self.findPathsRecurse([eastStack], paths)
 		else:
 			paths.append(None)
 		if southStack:
-			paths.append(self.findPathsRecurse([southStack],paths))
+			self.findPathsRecurse([southStack], paths)
 		else:
 			paths.append(None)
 		if westStack:
-			paths.append(self.findPathsRecurse([westStack],paths))
+			self.findPathsRecurse([westStack], paths)
 		else:
 			paths.append(None)
 
