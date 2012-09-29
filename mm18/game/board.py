@@ -255,3 +255,6 @@ class Board:
 		#	if unit is not None and unit.health > 0:
 		#		self.owner.damage(unit.finalDamage())
 
+	## Return the tower list
+	def getTowers(self):
+		return tower

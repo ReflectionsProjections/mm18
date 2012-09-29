@@ -100,22 +100,54 @@ class Engine():
 
 	""" This should return the tower object that's created """
 	def tower_create(self, owner_id, coords, level=1, spec=0):
-		return self.get_player(owner_id).purchaseTower(coords)
+		return self.get_player(owner_id).purchaseTower(coords, generateID())
 
-	""" This should return the upgraded tower """
-	def tower_upgrade(self, tower_id, owner_id):
-		pass
+	""" This should return the tower that's been specified"""
+	def tower_get(self, tower_id, owner_id):
+		player = self.get_player(owner_id)
+		if(player == None):
+			return None
+
+		board = player.boardIs()
+		towers = board.getTowers()
+
+		retTower = None
+
+		for elem in towers:
+			if elem.getID == tower_id:
+				retTower = elem
+				break
+
+		
+		return retTower
 
 	""" This should return the player object relating to owner_id """
 	def tower_sell(self, tower_id, owner_id):
-		pass
+		retPlayer = get_player(owner_id)
+		if retPlayer == None:
+			return retPlayer
+
+		tower = get_tower(tower_id, owner_id)
+		if tower == None:
+			return retPlayer
+
+		player.sellTower(tower.position)
+		
+		return retPlayer		
 
 	""" This should return the tower that's been specialized """
 	def tower_specialize(self, tower_id, owner_id, spec):
+		tower = tower_get(tower_id, owner_id)
+		if(tower == None):
+			return None
+
+		player = player_get(owner_id)
+		tower.specialise(spec, player)
+		return tower		
 		pass
 
 	""" This should return the tower that's been specified """
-	def tower_get(self, tower_id, player_id):
+	def tower_upgrade(self, tower_id, player_id):
 		pass
 
 	# Unit Class Controls
