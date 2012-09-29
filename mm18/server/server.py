@@ -151,6 +151,7 @@ class MMHandler(BaseHTTPRequestHandler):
 			# Spin waiting for the server to fill up. This releases the
 			# run lock and waits for the game to start
 			global_client_manager.game_condition.wait()
+			global_client_manager.game_condition.release()
 
 		# TODO: Game has started, add any info given in start
 		self.respond(200, reply)
