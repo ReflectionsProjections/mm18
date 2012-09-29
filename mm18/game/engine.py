@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import json
 import time
 
 import constants
@@ -21,7 +22,10 @@ class Engine():
 		self.currID = 0
 
 	def log_action(self, action_type, **kwargs):
-		pass
+		entry = dict(kwargs)
+		entry['action'] = action_type
+		action = json.dumps(entry)
+		print action
 
 	# Game controls
 
