@@ -30,7 +30,7 @@ class MMHandler(BaseHTTPRequestHandler):
 		self.end_headers()
 		self.wfile.write(output)
 
-	def match_path(self, method):
+	def match_path(self):
 		"""Tries to match a path with every url in urlpatterns.
 
 		Searches through the urlpatterns to find a URL matching the given path.
@@ -39,18 +39,25 @@ class MMHandler(BaseHTTPRequestHandler):
 		corresponding function in urlpatterns from urls.py, so expect side
 		effects from the game controller.  It also handles serializtion of JSON
 		and will send a 400 error if given invalid JSON.  Wil send a 404 if no
-		matching URL is found and a 405 if a URL is found but with the wrong
-		method.
-
-		method -- string containing the HTTP request method
+		matching URL is found.
 		"""
-
-		invalid_method = False
 
 		# Special case connection. Shut up I know it's ugly.
 		connect_match = re.match(r'/connect', self.path)
 		if connect_match:
 			self._connect_client()
+			return
+
+		# Get the data from the method
+		try:
+			data = self._process_POST_data()
+		except ValueError:
+			# Invalid JSON
+			self.send_error(400)
+			return
+
+		# Every call but connect requires authorization
+		if not self._validate_client(data):
 			return
 
 		for url in urlpatterns:
@@ -59,35 +66,13 @@ class MMHandler(BaseHTTPRequestHandler):
 			# check if match is found
 			if match:
 
-				# if method is same, process
-				if method == url[1]:
-					invalid_method = False
-
-					try:
-						data = self._process_POST_data(method)
-					except ValueError:
-						# Invalid JSON
-						self.send_error(400)
-						return
-
-					# url[2] is the function referenced in the url to call
-					# It is called with the group dictionary from the regex
-					# and the unrolled JSON data as keyworded arguments
-					# A two-tuple is returned, which is unrolled and passed as
-					# arguments to respond
-					self.respond(*url[2](match.groupdict(), **data))
-
-					return
-
-				else:
-					# Bad method, but valid URL, used for sending 405s
-					invalid_method = True
-
-		# Error Handling Below
-		# URL found, but not for that method, sending 405 error
-		if invalid_method:
-			self.send_error(405)
-			return
+				# url[2] is the function referenced in the url to call
+				# It is called with the group dictionary from the regex
+				# and the unrolled JSON data as keyworded arguments
+				# A two-tuple is returned, which is unrolled and passed as
+				# arguments to respond
+				self.respond(*url[2](match.groupdict(), **data))
+				return
 
 		# no url match found, send 404
 		self.send_error(404)
@@ -98,16 +83,17 @@ class MMHandler(BaseHTTPRequestHandler):
 		
 		On GET request, parse URLs and map them to the API calls."""
 
-		self.match_path("GET")
+		self.send_error(405)
+		return
 
 	def do_POST(self):
 		"""Handle all POST requests.
 		
 		On POST request, parse URLs and map them to the API calls."""
 
-		self.match_path("POST")
+		self.match_path()
 
-	def _process_POST_data(self, method):
+	def _process_POST_data(self):
 		"""Processes the POST data from a request. Private method.
 
 		Reads in a request and returns a dictionary based on whether or not the
@@ -116,18 +102,12 @@ class MMHandler(BaseHTTPRequestHandler):
 		
 		Throws ValueError on invalid JSON.
 
-		Returns POST data in a dictionary, or empty dictionary on GET.
+		Returns POST data in a dictionary.
 		"""
 
-		if method == 'POST':
-			# POST data should be catured
-			length = int(self.headers['Content-Length'])
-			input = self.rfile.read(length)
-			data = json.loads(input)
-
-		else:
-			# GET method, so empty dictionary
-			data = {}
+		length = int(self.headers['Content-Length'])
+		input = self.rfile.read(length)
+		data = json.loads(input)
 
 		return data
 
@@ -171,6 +151,7 @@ class MMHandler(BaseHTTPRequestHandler):
 			# Spin waiting for the server to fill up. This releases the
 			# run lock and waits for the game to start
 			global_client_manager.game_condition.wait()
+			global_client_manager.game_condition.release()
 
 		# TODO: Game has started, add any info given in start
 		self.respond(200, reply)
@@ -182,11 +163,14 @@ class MMHandler(BaseHTTPRequestHandler):
 		Kicks anyone out who doesn't meet the bouncer's minimum requirements.
 		"""
 
+		client_id = json['id']
+		token = json['auth']
 		if global_client_manager.auth.authorize_client(client_id, token):
-			return
+			return True
 		else:
 			# Bad call to client, bail us out
 			self.respond(401, {'error': 'Bad id or auth code'})
+			return False
 
 	def _start_game(self):
 		init_game(global_client_manager)

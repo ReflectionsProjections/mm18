@@ -166,7 +166,6 @@ class Board:
 	## Check whether the position of the object being inserted is a valid placement on the board.
 	#  Will contain error handling for invalid positions.
 	#  @param position Tuple containing object position
-	# TODO: Error handling for invalid positions
 	def validPosition(self, position):
 		x,y=position
 		
