@@ -201,6 +201,11 @@ class TestGame(unittest.TestCase):
 		self.testTower.fire(testUnit)
 		self.assertEqual(testUnit.health, 0)
 
+	def testValidSell(self):
+		testTower = self.testPlayer.purchaseTower((1,0))
+		self.testPlayer.resources = 0
+		self.testPlayer.sellTower((1,0))
+		self.assertFalse(self.testPlayer.resources==0)
 
 	def testValidMovement(self):
 		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
