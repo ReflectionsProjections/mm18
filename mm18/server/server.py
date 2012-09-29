@@ -77,7 +77,7 @@ class MMHandler(BaseHTTPRequestHandler):
 					# arguments to respond
 					self.respond(*url[2](match.groupdict(), **data))
 
-					break
+					return
 
 				else:
 					# Bad method, but valid URL, used for sending 405s
