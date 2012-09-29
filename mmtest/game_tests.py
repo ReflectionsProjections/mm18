@@ -210,9 +210,9 @@ class TestGame(unittest.TestCase):
 	def testValidMovement(self):
 		testUnit=Unit.purchaseUnit(1,0,self.testPlayer)
 		paths=self.testBoard.findPaths()
-		self.assertTrue(self.testBoard.queueUnit(testUnit, 0))
+		self.assertTrue(self.testBoard.queueUnit(testUnit, 3))
 		self.testBoard.moveUnits()
-		self.assertEquals(self.testBoard.paths[0].moving.pop(), testUnit)
+		self.assertEquals(self.testBoard.paths[3].moving.pop(), testUnit)
 
 	"""ENGINE TESTS"""
 # =============================================================================
