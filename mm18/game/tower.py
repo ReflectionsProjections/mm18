@@ -15,11 +15,12 @@ class Tower:
 	## Creates a new Tower.
 	#  All towers start with 0 upgrades, no specialisation and no position.
 	#  @param player The player who owns the tower
-	def __init__ (self, player):
+	def __init__ (self, player, ID):
 		self.upgrade = 1
 		self.specialisation = 0
 		self.cost = constants.TOWER_BASE_COST
 		self.owner = player
+		self.ID = ID
 
 	## Upgrades the tower.
 	#  @param player The player upgrading the tower
@@ -49,3 +50,6 @@ class Tower:
 		unit.damage(constants.TOWER_UPGRADE_MULTIPLIER[self.upgrade]
                     * constants.BASE_TOWER_DAMAGE,
 					self.specialisation)
+
+	def getID(self):
+		return ID
