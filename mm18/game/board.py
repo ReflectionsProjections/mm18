@@ -250,10 +250,8 @@ class Board:
 	#  @param self The board
 	def fireTowers(self):
 		used = set()
-		for unit, pos in self.units():
-			x, y = pos
-			print "Unit is in %i, %i" % (x, y)
-			for tower in self.hitlist[pos]:
+		for pos, unit in self.units():
+			for tower in self.hitList[pos]:
 				if unit.health <= 0:
 					break
 				if tower not in used:
@@ -276,9 +274,11 @@ class Board:
 
 		units = []
 		
-		for path in self.paths:
+		for direction in constants.DIRECTIONS:
+			path= self.paths[direction]
 			for x in range (len(path.path)-1, -1, -1):
-				units.append((path.path[x], path.moving[x]))
+				if(path.moving[x] != None):
+					units.append((path.path[x], path.moving[x]))
 
 		return units
 	## Advance the board state.
