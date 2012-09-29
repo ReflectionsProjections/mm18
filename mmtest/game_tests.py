@@ -246,10 +246,6 @@ class TestGame(unittest.TestCase):
 		self.testEngine.advance()
 		self.p2board= self.testEngine.board_get(2)
 		self.testUnit=self.p2board.paths[1].moving[-1];
-		print self.p2board.paths[0].moving
-		print self.p2board.paths[1].moving
-		print self.p2board.paths[2].moving
-		print self.p2board.paths[3].moving
 		self.testEngine.advance()
 		self.assertFalse(self.testUnit==None)
 		self.assertEquals(self.p2board.paths[1].moving[-2], self.testUnit)
