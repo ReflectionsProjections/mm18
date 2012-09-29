@@ -22,6 +22,9 @@ class MMHandler(BaseHTTPRequestHandler):
 		"""
 
 		self.send_response(int(status_code))
+		# API defines status as being a part of the JSON going out
+		if 'status' not in data:
+			data['status'] = status_code
 		output = json.dumps(data)
 		self.send_header("Content-type", "application/json")
 		self.end_headers()

@@ -35,13 +35,6 @@ class Board:
 		self.tower = {}
 		self.hitList = defaultdict(list)
 
-		self.unitList= {}
-		self.paths = {constants.NORTH:Path([]),
-		              constants.EAST:Path([]),
-		              constants.SOUTH:Path([]),
-		              constants.WEST:Path([])}
-		
-
 		self.startPos = 4*[None]
 		for x,y in self.path:
 			if y is 0:
@@ -52,6 +45,10 @@ class Board:
 				self.startPos[constants.SOUTH] = (x,y)
 			elif x is 0:
 				self.startPos[constants.WEST] = (x,y)
+
+		pathList = self.findPaths()
+		self.paths = {direction: Path(pathList[direction])
+			for direction in constants.DIRECTIONS}
 
 	## Reads in json for the board layout from a file and sorts it into two lists
 	#  one for base positions and the other for path positions
@@ -255,3 +252,6 @@ class Board:
 		#	if unit is not None and unit.health > 0:
 		#		self.owner.damage(unit.finalDamage())
 
+	## Return the tower list
+	def getTowers(self):
+		return tower

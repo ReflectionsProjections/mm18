@@ -12,8 +12,7 @@ class Engine():
 
 		#generate players and boards
 		self.players = {}
-		self.numDead = 0
-		self.curTick = 0
+		self.currTick = 0
 		self.running = True
 
 		#this is an id that will be used for giving towers
@@ -27,28 +26,30 @@ class Engine():
 		player = Player(id, board)
 		self.players[id] = player
 		return player
-	
+
 	def run(self):
 		while self.running:
 			startTime = time.time()
-			advance()
+			self.advance()
+			self.check_running()
 			timePassed = time.time() - startTime
 			if timePassed < constants.TICK_TIME:
 				time.sleep(constants.TICK_TIME - timePassed)
 
 	def advance(self):
-		self.curTick += 1;
-		#if self.curTick >= 300000000: #game timeout
-		#	endGame()
-		#if self.curTick >= 1000000:
-		#	self.curTick = self.curTick%1000000	
-		if self.curTick%constants.SUPPLY_TIME == 0:
+		self.currTick = self.currTick + 1
+		if self.currTick % constants.SUPPLY_TIME == 0:
 			self.supply()
 		self.moveUnits()
-		self.countDead()
 		self.towerResponses()
-		if self.numDead == 3 :
-			endGame()
+
+	def check_running(self):
+		alive = sum(1 for player in self.players.itervalues() \
+				if not player.isDead())
+		if alive <= 1:
+			self.endGame()
+		if self.currTick > constants.MAX_RUNTIME:
+			self.endGame()
 
 	def supply(self):
 		maxTier = max(player.allowedUpgrade for player in self.players.itervalues())
@@ -60,12 +61,6 @@ class Engine():
 		for player in self.players.itervalues():
 			if not player.isDead():
 				player.board.moveUnits()
-
-	def countDead(self):
-		count = sum(1 for player in self.players.itervalues() if player.isDead())
-		if count > self.numDead:
-			self.numDead = count
-		return count
 
 	def towerResponses(self):
 		for player in self.players.itervalues():
@@ -100,22 +95,54 @@ class Engine():
 
 	""" This should return the tower object that's created """
 	def tower_create(self, owner_id, coords, level=1, spec=0):
-		return self.get_player(owner_id).purchaseTower(coords)
+		return self.get_player(owner_id).purchaseTower(coords, self.generateID())
 
-	""" This should return the upgraded tower """
-	def tower_upgrade(self, tower_id, owner_id):
-		pass
+	""" This should return the tower that's been specified"""
+	def tower_get(self, tower_id, owner_id):
+		player = self.get_player(owner_id)
+		if(player == None):
+			return None
+
+		board = player.boardIs()
+		towers = board.getTowers()
+
+		retTower = None
+
+		for elem in towers:
+			if elem.getID == tower_id:
+				retTower = elem
+				break
+
+		
+		return retTower
 
 	""" This should return the player object relating to owner_id """
 	def tower_sell(self, tower_id, owner_id):
-		pass
+		retPlayer = get_player(owner_id)
+		if retPlayer == None:
+			return retPlayer
+
+		tower = get_tower(tower_id, owner_id)
+		if tower == None:
+			return retPlayer
+
+		player.sellTower(tower.position)
+		
+		return retPlayer		
 
 	""" This should return the tower that's been specialized """
 	def tower_specialize(self, tower_id, owner_id, spec):
+		tower = tower_get(tower_id, owner_id)
+		if(tower == None):
+			return None
+
+		player = player_get(owner_id)
+		tower.specialise(spec, player)
+		return tower		
 		pass
 
 	""" This should return the tower that's been specified """
-	def tower_get(self, tower_id, player_id):
+	def tower_upgrade(self, tower_id, player_id):
 		pass
 
 	# Unit Class Controls
