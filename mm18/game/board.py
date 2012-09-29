@@ -47,11 +47,13 @@ class Board:
 				self.startPos[constants.WEST] = (x,y)
 
 		pathList = self.findPaths()
+		self.paths={}
 		# The Path class takes paths starting at the base, so reverse
 		for path in pathList:
-			path.reverse()
-		self.paths = {direction: Path(pathList[direction]) \
-			for direction in constants.DIRECTIONS}
+			if path is not None:
+				path.reverse()
+		for direction in constants.DIRECTIONS:
+			self.paths[direction]=Path(pathList[direction])
 		
 
 	## Reads in json for the board layout from a file and sorts it into two lists
@@ -131,7 +133,6 @@ class Board:
 	def findPathsRecurse(self, pathStack, paths):
 		pathEnds = True
 		x,y = pathStack[-1]
-		
 		north = (x, y+1)
 		if north not in pathStack and north in self.path:
 			pathEnds = False
@@ -165,9 +166,20 @@ class Board:
 	## Check whether the position of the object being inserted is a valid placement on the board.
 	#  Will contain error handling for invalid positions.
 	#  @param position Tuple containing object position
-	# TODO: Error handling for invalid positions
 	def validPosition(self, position):
 		x,y=position
+		
+		for house in self.base:
+			if house==(x,y):
+				return 0
+
+		for road in self.path:
+			if road==(x,y):
+				return 0
+
+		if position in self.tower:
+			return 0
+
 		return x >= 0 and y >=0 and x < constants.BOARD_SIDE and y < constants.BOARD_SIDE
 
 	## Adds an object to the board provided nothing is already in the location.
@@ -177,6 +189,7 @@ class Board:
 	def addItem(self, item, position):
 		if self.validPosition(position) and self.getItem(position) == None and position not in self.base and position not in self.path:
 			self.tower[position] = item
+			self.addToHitList(item, position)
 			return True
 		else:
 			return False
@@ -193,25 +206,32 @@ class Board:
 	#  @param position A tuple containing object position
 	def removeItem(self, position):
 		if self.getItem(position) != None:
+			self.removeFromHitlist(self.tower[position])
 			del self.tower[position]
+			
 
 	## Adds a tower to all the appropriate places of the hitList
 	#  @param self The board
 	#  @param tower The tower to add to the hitList
 	def addToHitList(self, tower, position):
 		tX, tY = position
+
 		tXLower = tX - constants.TOWER_RANGE[tower.upgrade]
 		if tXLower < 0:
 			tXLower = 0
+
 		tXUpper = tX + constants.TOWER_RANGE[tower.upgrade]
 		if tXUpper >= constants.BOARD_SIDE:
 			txUpper = constants.BOARD_SIDE - 1
+
 		tYLower = tY - constants.TOWER_RANGE[tower.upgrade]
 		if tYLower < 0:
 			tYLower = 0
+
 		tYUpper = tY + constants.TOWER_RANGE[tower.upgrade]
 		if tYUpper >= constants.BOARD_SIDE:
 			tYUpper = constants.BOARD_SIDE - 1
+		
 		for elem in self.path:
 			elemX, elemY = elem
 			if elemX >= tXLower and elemX <= tXUpper:
@@ -230,8 +250,8 @@ class Board:
 	#  @param self The board
 	def fireTowers(self):
 		used = set()
-		for unit, pos in self.units():
-			for tower in self.hitlist[pos]:
+		for pos, unit in self.units():
+			for tower in self.hitList[pos]:
 				if unit.health <= 0:
 					break
 				if tower not in used:
@@ -251,21 +271,26 @@ class Board:
 	## Return a generator of pairs of unit and position on the board,
 	#  in order of increasing distance from the base
 	def units(self):
-		paths = [self.paths[q] for q in
-				 [constants.NORTH,constants.EAST,constants.SOUTH,constants.WEST]]
-		return ((unit,pos) for front in itertools.izip()
-	                     for (unit,pos) in front
-						 if unit is not None and unit.health > 0)
 
+		units = []
+		
+		for direction in constants.DIRECTIONS:
+			path= self.paths[direction]
+			for x in range (len(path.path)-1, -1, -1):
+				if(path.moving[x] != None):
+					units.append((path.path[x], path.moving[x]))
 
+		return units
 	## Advance the board state.
 	#  Incoming units move forward, ones reaching the base do damage
-	# TODO: check if next to base before exploding, dead units die
+	# @return: damage to be dealt to the player
 	def moveUnits(self):
+		damage=0
 		for path in self.paths.itervalues():
 			unit = path.advance()
-		#	if unit is not None and unit.health > 0:
-		#		self.owner.damage(unit.finalDamage())
+			if unit is not None and unit.health > 0:
+				damage+=unit.finalDamage()
+		return damage
 
 	## Return the tower list
 	def getTowers(self):

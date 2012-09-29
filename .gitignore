@@ -12,3 +12,8 @@ venv
 
 # Vim swap
 *.swp
+
+
+#### Java Test Client
+*.class
+bin/*

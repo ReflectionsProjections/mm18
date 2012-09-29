@@ -6,10 +6,6 @@ from mm18.game.engine import Engine
 # A global variable stores the active game engine
 _engine = None
 
-# Setup functions
-
-def init_game():
-	"""Start up the game"""
 ## Runs the game and facilitates communication between the server, database,
 #  and game logic.
 #
@@ -28,16 +24,36 @@ def init_game():
 #  The engine must be set with the initalizer before any of these functions will
 #  work succesfully.
 
-## Setup functions
-def init_controller(gameEngine):
+# Setup functions
+
+def require_running_game(func):
+	def check_run_and_process(regex, **json):
+		if _engine is None:
+			print "No engine"
+			# Game isn't running, call error handling
+			return respond_for_no_game()
+		else:
+			return func(regex, **json)
+
+	return check_run_and_process
+
+def init_game(client_manager):
 	global _engine
-	_engine = Engine()
+	_engine = Engine.spawn_game(client_manager.clients)
+
+def respond_for_no_game():
+	print "Responding for no game"
+	# Respond when no game is running
+	hmm = (404, {'error': "Game is not yet running"})
+	print hmm
+	return hmm
 
 ## Engine API hooks
 
 ## Get the status of the currently running game.
 #  @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 #  @return a tuple containing the return code and JSON containing "Error message if any" (error) and "List of tuples player ids and their base's health" (players)
+@require_running_game
 def get_game_status(regex, **json):
 
 	"""Get the status of the currently running game
@@ -54,11 +70,11 @@ def get_game_status(regex, **json):
 	for player in ids:
 		playerHealth = _engine.get_player(player).healthIs()
 		currPlayer = (player, playerHealth)
-		playerList = append(currPlayer)
+		playerList.append(currPlayer)
 
 	code = 200;
 
-	jsonret = {"error": error, "players": playerList}
+	jsonret = {"players": playerList}
 
 	return (code, jsonret)
 	
@@ -69,6 +85,7 @@ def get_game_status(regex, **json):
 #  that shouldn't be visible to the player
 #  @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 #  @return a tuple containing the return code and JSON containing "Error message if any" (error), "Request player's base health" (health)
+@require_running_game
 def get_player_status(regex, **json):
 
 	playerid = regex[1]
@@ -93,6 +110,7 @@ def get_player_status(regex, **json):
 ## Get the player's board status
 #  @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token (auth)
 #  @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The list of all towers to be further parsed by the game clients" (towers), and "The list of all units on the board to be further parsed by the game clients" (units)
+@require_running_game
 def board_get(regex, **json):
 
 	playerid = regex[1]
@@ -118,6 +136,7 @@ def board_get(regex, **json):
 ## Upgrade a certain tower, if possible
 #  @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 #  @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The tower that was upgraded (or just the unupgraded one if the update failed)" (tower), and "The player's updated resources" (resources)
+@require_running_game
 def tower_upgrade(regex, **json):
 	"""Upgrade a certain tower, if possible
 
@@ -151,6 +170,7 @@ def tower_upgrade(regex, **json):
 ## Specialize a certain tower, if possible
 #  @param **json Expected to contain "Request player's ID" (id) and "Request palyer's authentication token" (auth)
 #  @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The tower that was upgraded (or just the unupgraded one if the update failed)" (tower), and "The player's updated resources" (resources)
+@require_running_game
 def tower_specialize(regex, **json):
 
 	"""Specialize a certain tower, if possible
@@ -185,6 +205,7 @@ def tower_specialize(regex, **json):
 ## 
 # @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "Your updated resources count" (resources)
+@require_running_game
 def tower_sell(regex, **json):
 
 	"""
@@ -217,6 +238,7 @@ def tower_sell(regex, **json):
 ## 
 # @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "The requested tower (none if it doesn't exist)" (tower)
+@require_running_game
 def tower_get(regex, **json):
 	
 	"""
@@ -237,7 +259,7 @@ def tower_get(regex, **json):
 	code = 200
 	error = ""
 
-	if tower == None : 
+	if tower == None:
 		code = 409
 		error = "Tower not visible or invalid tower ID"
 
@@ -249,6 +271,7 @@ def tower_get(regex, **json):
 ## 
 # @param **json Expected to contain "Request player's ID" (id), "Request player's authentication token" (auth), "A tuple for the new tower's position" (position), "level of the new tower" (level), and "specification of the new tower" (spec)
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The new tower, or none if it failed" (tower), and "The updated player's resources" (resources)
+@require_running_game
 def tower_create(regex, **json):
 	
 	"""
@@ -284,6 +307,7 @@ def tower_create(regex, **json):
 ## 
 # @param **json Expected to contain "Request player's ID" (id), "Request player's authentication token" (auth) and "Player ID of whos board to get (playerid)"
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "The list of towers on the board" (towers)
+@require_running_game
 def tower_list(regex, **json):
 
 	board = _engine.board_get(json["playerid"])
@@ -307,6 +331,7 @@ def tower_list(regex, **json):
 ## 
 # @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "The units on the board (or none if something went wrong)" (units)
+@require_running_game
 def unit_status(regex, **json):
 
 	board = _engine.board_get(json["playerid"])
@@ -330,6 +355,7 @@ def unit_status(regex, **json):
 ## 
 # @param **json Expected to contain "Request player's ID" (id), "Request player's authentication token" (auth), "The unit level" (level), "The unit specialization" (spec), "The target player's id" (target_id), "The path of the enemy board to go on" (path) 
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "The unit (or none if something went wrong)" (unit)
+@require_running_game
 def unit_create(regex, **json):
 	
 	unit = _engine.unit_create(json["id"], json["level"], json["spec"], json["target_id"], json["path"])
@@ -343,4 +369,4 @@ def unit_create(regex, **json):
 
 	jsonret = {"error": error, "unit": unit}
 
-	return (code, jsonret)	
+	return (code, jsonret)

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import time
+import threading
 
 import constants
 from board import Board
@@ -9,8 +10,16 @@ from units import Unit
 
 class Engine():
 
-	def __init__(self):
+	@staticmethod
+	def spawn_game(players):
+		engine = Engine()
+		for player in players:
+			engine.add_player(player)
+		thread = threading.Thread(target=engine.run)
+		thread.start()
+		return engine
 
+	def __init__(self):
 		#generate players and boards
 		self.players = {}
 		self.currTick = 0
@@ -61,7 +70,7 @@ class Engine():
 	def moveUnits(self):
 		for player in self.players.itervalues():
 			if not player.isDead():
-				player.board.moveUnits()
+				player.moveUnits()
 
 	def towerResponses(self):
 		for player in self.players.itervalues():
@@ -148,6 +157,15 @@ class Engine():
 	""" This should return the tower that's been specified """
 	def tower_upgrade(self, tower_id, owner_id):
 		retTower = self.tower_get(tower_id, owner_id)
+		board = self.board_get(owner_id)
+		towers = board.getTowers()
+		coords = None
+
+		for elem in towers:
+			if towers[elem] == tower_id:
+				elem = coords
+				
+
 		if(retTower == None):
 			return None
 
@@ -157,6 +175,7 @@ class Engine():
 			return None
 
 		retTower.upgradeTower(player)
+		player.refreshTower(coords, retTower)
 		return retTower
 
 	# Unit Class Controls
@@ -174,6 +193,9 @@ class Engine():
 			return None
 
 		retUnit = Unit.purchaseUnit(level, spec, player)
-		board.queueUnit(retUnit, direction)
 
-		return retUnit
+		if retUnit != None:
+			if(board.queueUnit(retUnit, direction)):
+				return retUnit
+
+		return None
