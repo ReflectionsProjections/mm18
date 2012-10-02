@@ -10,7 +10,8 @@ from units import Unit
 
 class Engine():
 
-	def __init__(self):
+	def __init__(self, log_file=None):
+		self.log_file = log_file
 
 		#generate players and boards
 		self.players = {}
@@ -22,10 +23,11 @@ class Engine():
 		self.currID = 0
 
 	def log_action(self, action_type, **kwargs):
-		entry = dict(kwargs)
-		entry['action'] = action_type
-		action = json.dumps(entry)
-		print action
+		if self.log_file:
+			entry = dict(kwargs)
+			entry['action'] = action_type
+			action = json.dumps(entry)
+			self.log_file.write(action + '\n')
 
 	# Game controls
 
