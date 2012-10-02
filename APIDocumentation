@@ -1,0 +1,125 @@
+---- API Documentation ----
+
+
+All calls to the API Return a tuple containing the error code and a JSON dictionary, the JSON dictionarycontents are specified in the definitions below.
+
+
+- Game Status -
+URL: /game/status
+
+Get the status of the game.
+
+Returns: A JSON Dictionary containing the following
+	"players": A tuple consisting of a player ID, and their base health (ID, health)
+	"error": Error message, if any
+
+
+
+
+- Get Player -
+URL: /player/(id)
+
+id - The ID of the player
+
+Get the status of a player
+
+Returns: A JSON Dictionary containing the following
+	"player": A tuple containing a player object, and their health (player, health)
+	"error": Error message, if any
+
+
+
+
+
+- Get Board -
+URL: /board/(id)
+
+id - The ID of the player
+
+Get the status of a player's board
+
+Returns: A JSON Dictionary containing the following
+	"towers": A list of tower objects on the board
+	"units": A list of unit objects on the board
+	"error": Error message, if any
+
+
+
+
+- Upgrade Tower -
+URL: /tower/(id)/upgrade
+
+id - The ID of the tower
+
+Upgrade a tower
+
+Returns: A JSON Dictionary containing the following
+	"tower": The tower object to be upgraded
+	"resources": The player's resources
+	"error": Error message, if any
+
+
+
+
+- Specialize Tower -
+URL: /tower/(id)/specialize
+
+id - The ID of the tower
+
+Specialize a tower
+
+Returns: A JSON Dictionary containing the following
+	"tower": The tower object to be specialized
+	"resources": The player's resources
+	"error": Error message, if any
+
+- Sell Tower -
+URL: /tower/(id)/sell
+
+id - The ID of the tower
+
+Sell a tower
+
+Returns: A JSON Dictionary containing the following
+	"resources": The player's resources
+	"error": Error message, if any
+
+
+
+
+- Create Tower -
+URL: /tower/create
+
+Create a tower
+
+Returns: A JSON Dictionary containing the following
+	"tower": The new tower object
+	"error": Error message, if any
+
+
+
+
+- List Towers -
+URL: /tower
+
+List the towers of the players board
+
+Returns: A JSON Dictionary containing the following
+	"towers": A list of tower objects on the board
+	"error": Error message, if any
+
+
+
+
+- Unit Status -
+URL: /unit/(id)
+
+
+- Create Unit -
+URL: /unit/create
+
+Create a Unit
+
+Returns: A JSON Dictionary containing the following
+	"unit": The new unit object
+	"error": Error message, if any

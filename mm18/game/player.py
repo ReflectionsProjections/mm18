@@ -60,7 +60,7 @@ class Player:
 	def damage(self, damage):
 		self.health -= damage
 
-	## Static method for the player to purchase the tower that has been created.
+	## Method for the player to purchase the tower that has been created.
 	#  @param player The player who is purchasing the tower
 	def purchaseTower(self, coords=None, ID=0):
 		if self.purchaseCheck(constants.TOWER_BASE_COST):
