@@ -49,7 +49,7 @@ def respond_for_no_game():
 	return output
 
 def missing_data():
-	output = (405, {'error': "Valid JSON but missing required input keys"})
+	output = (400, {'error': "Valid JSON but missing required input keys"})
 	return output
 
 ## Engine API hooks
