@@ -175,11 +175,11 @@ class TestGame(unittest.TestCase):
 # =============================================================================
 	def testInvalidPurchaseTower(self):
 		self.testPlayer.resources = 0
-		testTower = self.testPlayer.purchaseTower()
+		testTower = self.testPlayer.purchaseTower((1,0))
 		self.assertEquals(testTower, None)
 
 	def testValidPurchaseTower(self):
-		testTower = self.testPlayer.purchaseTower()
+		testTower = self.testPlayer.purchaseTower((1,0))
 		self.assertEquals(self.testPlayer.resources,mm18.game.constants.BASE_RESOURCES - mm18.game.constants.TOWER_BASE_COST)
 		self.assertEquals(testTower.upgrade, 1)
 		self.assertEquals(testTower.specialisation, 0)
@@ -216,7 +216,7 @@ class TestGame(unittest.TestCase):
 
 	def testValidFire(self):
 		testUnit = Unit.purchaseUnit(1,0,self.testPlayer)
-		testTower = self.testPlayer.purchaseTower()
+		testTower = self.testPlayer.purchaseTower((1,0))
 		self.testTower.fire(testUnit)
 		self.assertEquals(testUnit.health, 0)
 
