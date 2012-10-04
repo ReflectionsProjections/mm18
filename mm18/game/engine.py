@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import json
 import time
 import threading
 
@@ -19,7 +20,9 @@ class Engine():
 		thread.start()
 		return engine
 
-	def __init__(self):
+	def __init__(self, log_file=None):
+		self.log_file = log_file
+
 		#generate players and boards
 		self.players = {}
 		self.currTick = 0
@@ -29,12 +32,22 @@ class Engine():
 		#a unique identifier
 		self.currID = 0
 
+	def log_action(self, action_type, **kwargs):
+		if self.log_file:
+			entry = dict(kwargs)
+			entry['action'] = action_type
+			action = json.dumps(entry)
+			self.log_file.write(action + '\n')
+
 	# Game controls
 
 	def add_player(self, id):
 		board = Board.jsonLoad('board1.json')
 		player = Player(id, board)
 		self.players[id] = player
+
+		self.log_action('add_player', id=id)
+
 		return player
 
 	def run(self):
@@ -52,6 +65,8 @@ class Engine():
 			self.supply()
 		self.moveUnits()
 		self.towerResponses()
+
+		self.log_action('advance', tick=self.currTick)
 
 	def check_running(self):
 		alive = sum(1 for player in self.players.itervalues() \
@@ -105,7 +120,11 @@ class Engine():
 
 	""" This should return the tower object that's created """
 	def tower_create(self, owner_id, coords, level=1, spec=0):
-		return self.get_player(owner_id).purchaseTower(coords, self.generateID())
+		tower = self.get_player(owner_id).purchaseTower(coords, self.generateID())
+
+		self.log_action('tower_create', owner_id=owner_id, coords=list(coords))
+
+		return tower
 
 	""" This should return the tower that's been specified"""
 	def tower_get(self, tower_id, owner_id):
@@ -137,7 +156,9 @@ class Engine():
 			return retPlayer
 
 		player.sellTower(tower.position)
-		
+
+		self.log_action('tower_sell', tower_id=tower_id, owner_id=owner_id)
+
 		return retPlayer		
 
 	""" This should return the tower that's been specialized """
@@ -152,6 +173,10 @@ class Engine():
 			return None
 
 		retTower.specialise(spec, player)
+
+		self.log_action('tower_specialize', tower_id=tower_id,
+			owner_id=owner_id, spec=spec)
+
 		return retTower		
 
 	""" This should return the tower that's been specified """
@@ -176,6 +201,9 @@ class Engine():
 
 		retTower.upgradeTower(player)
 		player.refreshTower(coords, retTower)
+
+		self.log_action('tower_upgrade', tower_id=tower_id, owner_id=owner_id)
+
 		return retTower
 
 	# Unit Class Controls
@@ -193,6 +221,9 @@ class Engine():
 			return None
 
 		retUnit = Unit.purchaseUnit(level, spec, player)
+
+		self.log_action('unit_create', owner_id=owner_id, level=level,
+			spec=spec, target_id=target_id, direction=direction)
 
 		if retUnit != None:
 			if(board.queueUnit(retUnit, direction)):
