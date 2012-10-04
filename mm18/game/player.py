@@ -64,10 +64,10 @@ class Player:
 	#  @param player The player who is purchasing the tower
 	def purchaseTower(self, coords=None, ID=0):
 		if self.purchaseCheck(constants.TOWER_BASE_COST):
-			self.purchase(constants.TOWER_BASE_COST)
 			t = Tower(self, ID)
 			if coords:
 				if self.board.addItem(t, coords):
+					self.purchase(constants.TOWER_BASE_COST)
 					return t
 		
 		return None

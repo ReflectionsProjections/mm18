@@ -1,7 +1,12 @@
 ---- API Documentation ----
 
+All calls are made with a POST request to the URL listed for that function.
 
 All calls to the API Return a tuple containing the error code and a JSON dictionary, the JSON dictionarycontents are specified in the definitions below.
+
+All calls except connect require a JSON dictionary containing at least two values:
+	"id": The player ID (this is returned by connect, and should never be changed)
+	"auth": The player authentication token (this is returnned by connect, and should never be changed)
 
 
 - Game Status -
