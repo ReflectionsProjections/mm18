@@ -60,27 +60,32 @@ class Player:
 	def damage(self, damage):
 		self.health -= damage
 
-	## Static method for the player to purchase the tower that has been created.
+	## Method for the player to purchase the tower that has been created.
 	#  @param player The player who is purchasing the tower
 	def purchaseTower(self, coords=None, ID=0):
 		if self.purchaseCheck(constants.TOWER_BASE_COST):
-			self.purchase(constants.TOWER_BASE_COST)
 			t = Tower(self, ID)
 			if coords:
-				self.board.addItem(t, coords)
-			return t
-		else:
-			return None
+				if self.board.addItem(t, coords):
+					self.purchase(constants.TOWER_BASE_COST)
+					return t
+		
+		return None
 
 	## Sells the tower
 	def sellTower(self, position):
 		"""
 		Sells the tower
 		"""
-		tower = player.board.getItem(position)
+		tower = self.board.getItem(position)
 		if tower is not None:
 			self.resources += tower.cost * constants.TOWER_SELL_SCALAR
 			self.board.removeItem(position)
+
+
+	def refreshTower(self, position, tower):
+		self.board.removeItem(position)
+		self.board.addItem(tower, position)
 
 # GETTERS / SETTERS
 # =============================================================================
@@ -114,3 +119,8 @@ class Player:
 	#  @param ammount Number of resources to add
 	def addResources(self, ammount):
 		self.resources += ammount
+	
+	## Move units, take damage
+	def moveUnits(self):
+		self.damage(self.board.moveUnits())
+		

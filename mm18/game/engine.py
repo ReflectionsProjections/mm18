@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 
+import json
 import time
+import threading
 
 import constants
 from board import Board
@@ -9,7 +11,17 @@ from units import Unit
 
 class Engine():
 
-	def __init__(self):
+	@staticmethod
+	def spawn_game(players):
+		engine = Engine()
+		for player in players:
+			engine.add_player(player)
+		thread = threading.Thread(target=engine.run)
+		thread.start()
+		return engine
+
+	def __init__(self, log_file=None):
+		self.log_file = log_file
 
 		#generate players and boards
 		self.players = {}
@@ -20,12 +32,22 @@ class Engine():
 		#a unique identifier
 		self.currID = 0
 
+	def log_action(self, action_type, **kwargs):
+		if self.log_file:
+			entry = dict(kwargs)
+			entry['action'] = action_type
+			action = json.dumps(entry)
+			self.log_file.write(action + '\n')
+
 	# Game controls
 
 	def add_player(self, id):
 		board = Board.jsonLoad('board1.json')
 		player = Player(id, board)
 		self.players[id] = player
+
+		self.log_action('add_player', id=id)
+
 		return player
 
 	def run(self):
@@ -44,6 +66,8 @@ class Engine():
 		self.moveUnits()
 		self.towerResponses()
 
+		self.log_action('advance', tick=self.currTick)
+
 	def check_running(self):
 		alive = sum(1 for player in self.players.itervalues() \
 				if not player.isDead())
@@ -61,7 +85,7 @@ class Engine():
 	def moveUnits(self):
 		for player in self.players.itervalues():
 			if not player.isDead():
-				player.board.moveUnits()
+				player.moveUnits()
 
 	def towerResponses(self):
 		for player in self.players.itervalues():
@@ -96,7 +120,11 @@ class Engine():
 
 	""" This should return the tower object that's created """
 	def tower_create(self, owner_id, coords, level=1, spec=0):
-		return self.get_player(owner_id).purchaseTower(coords, self.generateID())
+		tower = self.get_player(owner_id).purchaseTower(coords, self.generateID())
+
+		self.log_action('tower_create', owner_id=owner_id, coords=list(coords))
+
+		return tower
 
 	""" This should return the tower that's been specified"""
 	def tower_get(self, tower_id, owner_id):
@@ -110,8 +138,8 @@ class Engine():
 		retTower = None
 
 		for elem in towers:
-			if elem.getID == tower_id:
-				retTower = elem
+			if towers[elem].getID() == tower_id:
+				retTower = towers[elem]
 				break
 
 		
@@ -119,45 +147,64 @@ class Engine():
 
 	""" This should return the player object relating to owner_id """
 	def tower_sell(self, tower_id, owner_id):
-		retPlayer = get_player(owner_id)
+		retPlayer = self.get_player(owner_id)
 		if retPlayer == None:
 			return retPlayer
 
-		tower = get_tower(tower_id, owner_id)
+		tower = self.tower_get(tower_id, owner_id)
 		if tower == None:
 			return retPlayer
 
 		player.sellTower(tower.position)
-		
+
+		self.log_action('tower_sell', tower_id=tower_id, owner_id=owner_id)
+
 		return retPlayer		
 
 	""" This should return the tower that's been specialized """
 	def tower_specialize(self, tower_id, owner_id, spec):
-		retTower = tower_get(tower_id, owner_id)
+		retTower = self.tower_get(tower_id, owner_id)
 		if(retTower == None):
 			return None
 
-		player = get_player(owner_id)
+		player = self.get_player(owner_id)
 
 		if(player == None):
 			return None
 
 		retTower.specialise(spec, player)
-		return tower		
+
+		self.log_action('tower_specialize', tower_id=tower_id,
+			owner_id=owner_id, spec=spec)
+
+		return retTower		
 
 	""" This should return the tower that's been specified """
-	def tower_upgrade(self, tower_id, player_id):
-		retTower = tower_get(tower_id, owner_id)
+	def tower_upgrade(self, tower_id, owner_id):
+		retTower = self.tower_get(tower_id, owner_id)
+		board = self.board_get(owner_id)
+		towers = board.getTowers()
+		coords = None
+
+		for elem in towers:
+			if towers[elem] == tower_id:
+				elem = coords
+				
+
 		if(retTower == None):
 			return None
 
-		player = get_player(owner_id)
+		player = self.get_player(owner_id)
 
 		if(player == None):
 			return None
 
-		retTower.specialise(spec, player)
-		return tower
+		retTower.upgradeTower(player)
+		player.refreshTower(coords, retTower)
+
+		self.log_action('tower_upgrade', tower_id=tower_id, owner_id=owner_id)
+
+		return retTower
 
 	# Unit Class Controls
 
@@ -174,6 +221,12 @@ class Engine():
 			return None
 
 		retUnit = Unit.purchaseUnit(level, spec, player)
-		board.queueUnit(retUnit, direction)
-				
-		return retUnit
+
+		self.log_action('unit_create', owner_id=owner_id, level=level,
+			spec=spec, target_id=target_id, direction=direction)
+
+		if retUnit != None:
+			if(board.queueUnit(retUnit, direction)):
+				return retUnit
+
+		return None
