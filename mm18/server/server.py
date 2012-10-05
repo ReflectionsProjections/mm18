@@ -3,11 +3,13 @@ from SocketServer import ThreadingMixIn
 
 import re
 import json
+import time
 
 from urls import urlpatterns
 from client_manager import MMClientManager
-from mm18.game.game_controller import init_game
+from mm18.game.game_controller import init_game, game_running
 
+server_instance = None
 global_client_manager = MMClientManager()
 game_log = ""
 
@@ -64,6 +66,14 @@ class MMHandler(BaseHTTPRequestHandler):
 
 		# Every call but connect requires authorization
 		if not self._validate_client(data):
+			return
+
+		# Check that the game is running
+		if not game_running():
+			print "Game done"
+			output = {'error': 'Game has ended'}
+			self.respond(404, output)
+			self._spin_down()
 			return
 
 		for url in urlpatterns:
@@ -171,8 +181,14 @@ class MMHandler(BaseHTTPRequestHandler):
 		Kicks anyone out who doesn't meet the bouncer's minimum requirements.
 		"""
 
-		client_id = json['id']
-		token = json['auth']
+		try:
+			client_id = json['id']
+			token = json['auth']
+		except:
+			status = {'error': 'Valid JSON but missing required input keys'}
+			self.respond(400, status)
+			return False
+
 		if global_client_manager.auth.authorize_client(client_id, token):
 			return True
 		else:
@@ -182,6 +198,16 @@ class MMHandler(BaseHTTPRequestHandler):
 
 	def _start_game(self):
 		init_game(global_client_manager, game_log)
+
+	def _spin_down(self):
+		# So let's wait for five seconds, then shut down the server
+		time.sleep(5)
+		if server_instance is not None:
+			server_instance.shutdown()
+		else:
+			# Don't know what server we're on, we're pretty fucked
+			print "The server should have shut down now, but it wasn't set up"
+			print "You'll probably need to type 'killall python' to fix this"
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""

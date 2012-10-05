@@ -32,6 +32,9 @@ def require_running_game(func):
 			print "No engine"
 			# Game isn't running, call error handling
 			return respond_for_no_game()
+		elif not is_running():
+			print "Game not running"
+			return respond_for_done_game()
 		else:
 			try:
 				return func(regex, **json)
@@ -48,9 +51,19 @@ def respond_for_no_game():
 	output = (404, {'error': "Game is not yet running"})
 	return output
 
+def respond_for_done_game():
+	output = (404, {'error': "Game has ended"})
+	return output
+
 def missing_data():
 	output = (400, {'error': "Valid JSON but missing required input keys"})
 	return output
+
+def game_running():
+	if _engine:
+		return _engine.running
+	else:
+		return False
 
 ## Engine API hooks
 

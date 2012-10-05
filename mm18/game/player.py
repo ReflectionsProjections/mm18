@@ -120,6 +120,16 @@ class Player:
 	def addResources(self, ammount):
 		self.resources += ammount
 	
+	## Advance the Player by playing a tick
+	#  @return a dict summarizing all events that occurred
+	#          during the tick on this Player's Board
+	def advance(self):
+		summary = {}
+		self.moveUnits()
+		if not self.isDead():
+			summary['attacks'] = self.board.fireTowers()
+		return summary
+
 	## Move units, take damage
 	def moveUnits(self):
 		self.damage(self.board.moveUnits())
