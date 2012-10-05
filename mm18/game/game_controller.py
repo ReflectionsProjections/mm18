@@ -72,7 +72,7 @@ def get_game_status(regex, **json):
 	ids = _engine.get_player_ids()
 	playerList = []
 	for player_id in ids:
-		playerHealth = _engine.get_player(player).healthIs()
+		playerHealth = _engine.get_player(player_id).healthIs()
 		currPlayer = (player_id, playerHealth)
 		playerList.append(currPlayer)
 
