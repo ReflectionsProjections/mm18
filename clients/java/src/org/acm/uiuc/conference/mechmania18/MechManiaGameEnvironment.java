@@ -13,7 +13,6 @@ package org.acm.uiuc.conference.mechmania18;
 
 public class MechManiaGameEnvironment {
 	private String hostname = "";
-	private int port = 80;
 	
 	public String getHostname() {
 		return hostname;
@@ -23,17 +22,8 @@ public class MechManiaGameEnvironment {
 		this.hostname = hostname;
 	}
 
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-	
-	public MechManiaGameEnvironment(String hostname, int port) {
+	public MechManiaGameEnvironment(String hostname) {
 		this.hostname = hostname;
-		this.port = port;
 	}
 	
 }

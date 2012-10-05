@@ -1,5 +1,11 @@
 <project>
+	<property name="lib.dir" value="lib" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
 	<target name="build-mm">
-		<javac srcdir="src/" destdir="bin/" />
+		<javac srcdir="src/" destdir="bin/" classpathref="classpath" />
 	</target>
 </project>
