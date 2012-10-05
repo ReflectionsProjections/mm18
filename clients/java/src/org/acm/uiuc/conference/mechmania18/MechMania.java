@@ -18,7 +18,7 @@ public class MechMania {
 	 */
 	public void start (MechManiaGameEnvironment environment) {
 		// Inititalize HTTP component
-		MechManiaHTTP http = new MechManiaHTTP(environment.getHostname(), environment.getPort());
+		MechManiaHTTP http = new MechManiaHTTP(environment.getHostname());
 		
 		// Join server
 		if (!joinServer(http)) {
