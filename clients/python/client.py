@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import json
 import requests
 import logging
 import Colorer
@@ -32,7 +33,7 @@ class Client(object):
         and health is that player's current health.
         """
         payload = {'id': self.player_id, 'auth': self.auth}
-        r = requests.post(self.endpoint, data=payload)
+        r = requests.post(self.endpoint + '/game/status', data=json.dumps(payload))
         return r.json
 
 if __name__ == "__main__":
