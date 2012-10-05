@@ -32,7 +32,7 @@ def require_running_game(func):
 			print "No engine"
 			# Game isn't running, call error handling
 			return respond_for_no_game()
-		elif not is_running():
+		elif not game_running():
 			print "Game not running"
 			return respond_for_done_game()
 		else:
