@@ -40,9 +40,9 @@ def require_running_game(func):
 
 	return check_run_and_process
 
-def init_game(client_manager):
+def init_game(client_manager, game_log):
 	global _engine
-	_engine = Engine.spawn_game(client_manager.clients)
+	_engine = Engine.spawn_game(client_manager.clients, game_log)
 
 def respond_for_no_game():
 	output = (404, {'error': "Game is not yet running"})

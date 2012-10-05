@@ -12,8 +12,11 @@ from units import Unit
 class Engine():
 
 	@staticmethod
-	def spawn_game(players):
-		engine = Engine()
+	def spawn_game(players, game_log):
+		log = None
+		if game_log != None and game_log != "":
+			log = open(game_log)
+		engine = Engine(log)
 		for player in players:
 			engine.add_player(player)
 		thread = threading.Thread(target=engine.run)

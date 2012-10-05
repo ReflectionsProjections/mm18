@@ -9,6 +9,7 @@ from client_manager import MMClientManager
 from mm18.game.game_controller import init_game
 
 global_client_manager = MMClientManager()
+game_log = ""
 
 class MMHandler(BaseHTTPRequestHandler):
 	"""HTTP request handler for Mechmania"""
@@ -180,7 +181,7 @@ class MMHandler(BaseHTTPRequestHandler):
 			return False
 
 	def _start_game(self):
-		init_game(global_client_manager)
+		init_game(global_client_manager, game_log)
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""A basic threaded HTTP server."""
