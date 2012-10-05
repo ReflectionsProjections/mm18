@@ -25,6 +25,10 @@ class MMHandler(BaseHTTPRequestHandler):
 		# API defines status as being a part of the JSON going out
 		if 'status' not in data:
 			data['status'] = status_code
+		if int(status_code) == 404:
+			# Clear out any error that wasn't an empty string, and set one
+			# in case one wasn't already set
+			data['error'] = ''
 		output = json.dumps(data)
 		self.send_header("Content-type", "application/json")
 		self.end_headers()
