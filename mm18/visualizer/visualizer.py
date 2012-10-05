@@ -12,11 +12,11 @@ resources_path = os.path.join(os.path.dirname(__file__), 'resources')
 pyglet.resource.path.append(resources_path)
 pyglet.resource.reindex()
 
-tex_terrain = pyglet.resource.image('genericGrass.png')
-tex_path = pyglet.resource.image('genericPath.png')
-tex_base = pyglet.resource.image('genericBase.png')
-tex_tower = pyglet.resource.image('genericTower.png')
-tex_unit = pyglet.resource.image('genericUnit.png')
+tex_terrain = pyglet.resource.image('grass.png')
+tex_path = pyglet.resource.image('path.png')
+tex_base = pyglet.resource.image('base.png')
+tex_tower = pyglet.resource.image('tower.png')
+tex_unit = pyglet.resource.image('unit.png')
 
 class Visualizer:
 
@@ -32,6 +32,8 @@ class Visualizer:
 		self.window.set_handler('on_draw', self.draw)
 		pyglet.clock.schedule_interval(self.update, 1)
 		glClearColor(1, 1, 1, 1)
+		glEnable(GL_BLEND)
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 	def update(self, dt=0):
 		# parse and perform commands from log
