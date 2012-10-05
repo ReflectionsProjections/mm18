@@ -71,9 +71,9 @@ def get_game_status(regex, **json):
 	"""
 	ids = _engine.get_player_ids()
 	playerList = []
-	for player in ids:
+	for player_id in ids:
 		playerHealth = _engine.get_player(player).healthIs()
-		currPlayer = (player, playerHealth)
+		currPlayer = (player_id, playerHealth)
 		playerList.append(currPlayer)
 
 	code = 200;
@@ -81,9 +81,6 @@ def get_game_status(regex, **json):
 	jsonret = {"players": playerList}
 
 	return (code, jsonret)
-	
-	
-	
 
 ## Get the status of the player, don't return anything
 #  that shouldn't be visible to the player
