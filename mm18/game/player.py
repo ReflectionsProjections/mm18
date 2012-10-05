@@ -127,7 +127,9 @@ class Player:
 		summary = {}
 		self.moveUnits()
 		if not self.isDead():
-			summary['attacks'] = self.board.fireTowers()
+			attacks, deaths = self.board.fireTowers()
+			summary['attacks'] = attacks
+			summary['deaths'] = deaths
 		return summary
 
 	## Move units, take damage
