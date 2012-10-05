@@ -103,8 +103,6 @@ def get_player_status(regex, **json):
 		if(playerRequested == playerID):
 			playerResources = player.resourcesIs()
 			playerLevel = player.allowedUpgradeIs()
-	
-
 
 	code = 200
 	error = ""
@@ -114,7 +112,7 @@ def get_player_status(regex, **json):
 		error = "Invalid player ID"
 
 	jsonret = {"error": error, "health" : playerHealth,
-			 "resources" : playerResources, "level" : playerLevel}
+			"resources" : playerResources, "level" : playerLevel}
 
 	return (code, jsonret)
 	
@@ -431,7 +429,7 @@ def unit_status(regex, **json):
 def unit_create(regex, **json):
 	
 	unit = _engine.unit_create(json["id"], json["level"], json["spec"],
-			 json["target_id"], json["path"])
+			json["target_id"], json["path"])
 	
 	code = 200
 	error = ""
@@ -452,6 +450,6 @@ def unit_create(regex, **json):
 		unitPath = json["path"]
 
 	jsonret = {"error": error, "unitID": unitID, "unitLevel": unitLevel,
-		 "unitTargetID": unitTargetID, "unitSpec": unitSpec, "unitPath": unitPath}
+			"unitTargetID": unitTargetID, "unitSpec": unitSpec, "unitPath": unitPath}
 
 	return (code, jsonret)
