@@ -1,0 +1,5 @@
+<project>
+	<target name="build-mm">
+		<javac srcdir="src/" destdir="bin/" />
+	</target>
+</project>
