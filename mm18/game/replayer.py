@@ -8,23 +8,31 @@ class Replayer:
 		self.game = Engine()
 
 	def next_action(self):
-		return next(self.actions, None)
+		line = next(self.actions, None)
+		if line:
+			return json.loads(line)
+		else:
+			return None
 
 	def setup_game(self):
-		settingUp = True
-		while settingUp:
+		while True:
 			action = self.next_action()
-			settingUp = action and self.play_action(action) != 'start'
+			if not action or action['action'] == 'start':
+				break;
+			self.play_action(action)
 
 	def play_tick(self):
-		tickPlaying = True
-		while tickPlaying:
+		while True:
 			action = self.next_action()
-			tickPlaying = action and self.play_action(action) != 'advance'
+			if not action:
+				return None
+			elif action['action'] == 'advance':
+				return self.game.advance()
+			self.play_action(action)
+		return None
 
-	def play_action(self, action):
+	def play_action(self, entry):
 		"""Play an action and returns its type."""
-		entry = json.loads(action)
 		actionType = entry.pop('action')
 
 		if actionType == 'start':
