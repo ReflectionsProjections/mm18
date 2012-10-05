@@ -246,9 +246,17 @@ class Board:
 			for i in self.hitList[elem]:
 				i.remove(tower)
 	
+	def getTowerPosition(self, tower_id):
+		for pos, tower in self.tower.iteritems():
+			if tower.ID == tower_id:
+				return pos
+		return None
+
 	## Goes through the paths, and if there is an enemy unit, attack it.
 	#  @param self The board
+	#  @return a list of dicts describing the attacks made by towers
 	def fireTowers(self):
+		attacks = []
 		used = set()
 		for pos, unit in self.units():
 			for tower in self.hitList[pos]:
@@ -257,6 +265,13 @@ class Board:
 				if tower not in used:
 					used.add(tower)
 					tower.fire(unit)
+					attacks.append({
+						'tower': tower,
+						'tower_pos': self.getTowerPosition(tower.ID),
+						'unit': unit,
+						'unit_pos': pos
+					})
+		return attacks
 
 	## Queue's the unit at the entrance of the path it is supposed to take.
 	#  @param unit The unit being placed

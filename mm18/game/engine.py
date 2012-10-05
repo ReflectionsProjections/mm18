@@ -68,10 +68,17 @@ class Engine():
 		self.currTick = self.currTick + 1
 		if self.currTick % constants.SUPPLY_TIME == 0:
 			self.supply()
-		self.moveUnits()
-		self.towerResponses()
+
+		# Create a dict that will contain a summary of all events
+		# that occurr in the tick on each Player's Board
+		summary = {}
+		for player in self.players.itervalues():
+			if not player.isDead():
+				summary[player.name] = player.advance()
 
 		self.log_action('advance', tick=self.currTick)
+
+		return summary
 
 	def check_running(self):
 		alive = sum(1 for player in self.players.itervalues() \
@@ -86,16 +93,6 @@ class Engine():
 		resources = constants.BASE_RESOURCES + constants.UPGRADE_INCREASE * maxTier
 		for player in self.players.itervalues():
 			player.addResources(resources)
-
-	def moveUnits(self):
-		for player in self.players.itervalues():
-			if not player.isDead():
-				player.moveUnits()
-
-	def towerResponses(self):
-		for player in self.players.itervalues():
-			if not player.isDead():
-				player.board.fireTowers()
 
 	def endGame(self):
 		self.running = False
