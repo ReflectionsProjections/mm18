@@ -62,6 +62,8 @@ class Engine():
 			if timePassed < constants.TICK_TIME:
 				time.sleep(constants.TICK_TIME - timePassed)
 
+		print "Game complete"
+
 	def advance(self):
 		self.currTick = self.currTick + 1
 		if self.currTick % constants.SUPPLY_TIME == 0:
