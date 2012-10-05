@@ -18,6 +18,7 @@ def start_server(server_addr, server_port, game_log):
 	server.game_log = game_log
 	serve = server.ThreadedHTTPServer((server_addr, server_port), server.MMHandler)
 	serve.allow_reuse_address = True
+	server.server_instance = serve
 	thread = threading.Thread(target=serve.serve_forever)
 	thread.start()
 
