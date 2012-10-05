@@ -257,6 +257,7 @@ class Board:
 	#  @return a list of dicts describing the attacks made by towers
 	def fireTowers(self):
 		attacks = []
+		deaths = []
 		used = set()
 		for pos, unit in self.units():
 			for tower in self.hitList[pos]:
@@ -271,7 +272,12 @@ class Board:
 						'unit': unit,
 						'unit_pos': pos
 					})
-		return attacks
+					if unit.health <= 0:
+						deaths.append({
+							'unit': unit,
+							'unit_pos': pos
+						})
+		return attacks, deaths
 
 	## Queue's the unit at the entrance of the path it is supposed to take.
 	#  @param unit The unit being placed

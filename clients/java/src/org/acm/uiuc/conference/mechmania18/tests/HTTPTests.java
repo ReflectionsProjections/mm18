@@ -22,8 +22,8 @@ public class HTTPTests {
 	
 	@Before
 	public void initialize() {
-		zippopotamus = new MechManiaHTTP("zippopotam.us", 80);
-		google = new MechManiaHTTP("google.com", 80);
+		zippopotamus = new MechManiaHTTP("zippopotam.us:80");
+		google = new MechManiaHTTP("google.com:80");
 		zippopotamusresponse = zippopotamus.makeRequest("/us/61801");
 	}
 	

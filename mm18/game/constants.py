@@ -42,7 +42,7 @@ def specialisation_mulitplier(attack, defense):
 """PLAYER"""
 BASE_RESOURCES = 15
 UPGRADE_INCREASE = 10
-BASE_HEALTH = 1
+BASE_HEALTH = 100
 HEALTH_DECREASE = 1
 
 """BOARD"""
