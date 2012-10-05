@@ -16,11 +16,9 @@ public class MechManiaHTTP {
 	private final static int HTTP_MAX_TIMEOUT_MILLISECONDS = 120000;  // 0 = Infinite, but we don't want to wait forever
 	
 	private String hostname;
-	private int port;
 	
-	public MechManiaHTTP(String hostname, int port) {
+	public MechManiaHTTP(String hostname) {
 		this.hostname = hostname;
-		this.port = port;
 	}
 	
 	/**
@@ -51,7 +49,7 @@ public class MechManiaHTTP {
 		int responseCode = -1;
 		
 		try {
-			url = new URL("http://" + hostname + ":" + port + resource);
+			url = new URL("http://" + hostname + resource);
 			urlconn = ((HttpURLConnection)url.openConnection());
 			
 			urlconn.setReadTimeout(HTTP_MAX_TIMEOUT_MILLISECONDS);

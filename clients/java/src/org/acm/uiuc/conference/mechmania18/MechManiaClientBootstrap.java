@@ -6,7 +6,7 @@ public class MechManiaClientBootstrap {
 	// * IP Address of Server
 	// * Port Number of Server
 	// * Client Key
-	private static final int EXPECTED_ARGUMENT_COUNT = 2;
+	private static final int EXPECTED_ARGUMENT_COUNT = 1;
 	
 	/**
 	 * @param args String array of arguments passed in from command line
@@ -24,8 +24,7 @@ public class MechManiaClientBootstrap {
 		long startupTime = System.currentTimeMillis();
 		
 		MechManiaGameEnvironment environment = new MechManiaGameEnvironment(
-				args[0],  // IP address/hostname of server
-				Integer.parseInt(args[1])  // port number of server
+				args[0]  // IP address/hostname of server
 				);
 		
 		MechMania mm18 = new MechMania();
