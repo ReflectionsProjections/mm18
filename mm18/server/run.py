@@ -16,6 +16,7 @@ def Main(**kwargs):
 	serve = server.ThreadedHTTPServer(('localhost', 6969), server.MMHandler)
 	# This prevents errors where the socket is still bound
 	serve.allow_reuse_address = True
+	server.server_instance = serve
 	print "Server starting on port 6969"
 	serve.serve_forever()
 
