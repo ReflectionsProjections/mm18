@@ -89,11 +89,22 @@ def get_game_status(regex, **json):
 @require_running_game
 def get_player_status(regex, **json):
 
-	playerid = regex[1]
-	player = _engine.get_player(playerid)
+	playerID = json["id"]
+	playerRequested = regex[1]
+
+	player = _engine.get_player(playerRequested)
+
 	playerHealth = -1
+	playerResources = -1
+	playerLevel = -1
+
 	if(player != None):
 		playerHealth = player.healthIs()
+		if(playerRequested == playerID):
+			playerResources = player.resourcesIs()
+			playerLevel = player.allowedUpgradeIs()
+	
+
 
 	code = 200
 	error = ""
@@ -102,10 +113,10 @@ def get_player_status(regex, **json):
 		code = 409
 		error = "Invalid player ID"
 
-	playerTuple = (player, playerHealth)
-	jsonret = {"error": error, "player" : playerTuple}
+	jsonret = {"error": error, "health" : playerHealth,
+			 "resources" : playerResources, "level" : playerLevel}
 
-	return (code, playerTuple)
+	return (code, jsonret)
 	
 
 ## Get the player's board status
@@ -118,20 +129,33 @@ def board_get(regex, **json):
 
 	board = _engine.board_get(playerid)
 	
-	towers = None
-	units = None
+	towers = []
+	units = []
 	
 	code = 409
 	board = "Invalid player ID"
 
 	if board != None :
-		towers = board.tower
-		units = board.unitList
+		unitsDict = board.unitList
+
+		for elem in board.tower:
+			towerCoords = elem
+			towerID = board.tower[elem].ID
+			towerTuple = (towerID, towerCoords)
+			towers.append(towerTuple)
+
+		for elem in board.unitList:
+			unit, unitCoord = elem
+			unitTuple = (unit.owner, unitCoord, unit.level, 
+					unit.specialisation, unit.health)
+			units.append(unitTuple)
+
 		code = 200
 		error = ""
 
 	jsonret = {"error": error, "towers": towers, "units": units}
-		
+	
+
 	return (code, jsonret)
 
 ## Upgrade a certain tower, if possible
@@ -158,12 +182,21 @@ def tower_upgrade(regex, **json):
 	code = 200
 	error = ""
 	resources = player.resourcesIs()
-
+	
 	if(tower == None):
+		towerID = -1
+		towerSpec = -1
+		towerUpgrade = -1
 		code = 409
 		error = "Insufficient funds"
+	else:
+		towerID = tower.ID
+		towerSpec = tower.specialisation
+		towerUpgrade = tower.upgrade
 
-	jsonret = {"error": error, "tower": tower, "resources": resources}
+	jsonret = {"error": error, "towerID": towerID, 
+		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
+			"resources": resources}
 
 	return (code, jsonret)
 
@@ -193,12 +226,23 @@ def tower_specialize(regex, **json):
 	code = 200
 	error = ""
 	resources = player.resourcesIs()
+	
 
-	if tower == None :
+	if(tower == None):
+		towerID = -1
+		towerSpec = -1
+		towerUpgrade = -1
 		code = 409
 		error = "Insufficient funds"
+	else:
+		towerID = tower.ID
+		towerSpec = tower.specialisation
+		towerUpgrade = tower.upgrade
 
-	jsonret = {"error": error, "tower": tower, "resources": resources}
+
+	jsonret = {"error": error, "towerID": towerID, 
+		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
+			"resources": resources}
 
 	return (code, jsonret)
 
@@ -220,13 +264,19 @@ def tower_sell(regex, **json):
 		resources - Your updated resource count
 
 	"""
-
-	playerAfter = _engine.tower_sell(regex[1], json["id"])
+	playerID = regex[1]
+	playerAuth = json["id"]
+	notOwner = 0
+	if(playerID == playerAuth):
+		playerAfter = _engine.tower_sell(regex[1], json["id"])
+	else:
+		error = "You are not the owner of this tower"
+		notOwner = 1
 
 	code = 200
 	error = ""
 
-	if json["id"].resourcesIs() == playerAfter.resourcesIs() :
+	if notOwner == 0 and json["id"].resourcesIs() == playerAfter.resourcesIs() :
 		code = 409
 		error = "Invalid tower"
 
@@ -259,12 +309,23 @@ def tower_get(regex, **json):
 	
 	code = 200
 	error = ""
+	towerID = -1
+	towerSpec = -1
+	towerUpgrade = -1
 
 	if tower == None:
 		code = 409
 		error = "Tower not visible or invalid tower ID"
+	else:
+		towerID = tower.ID
+		towerSpec = tower.specialisation
+		towerUpgrade = tower.upgrade
 
-	jsonret = {"error": error, "tower": tower}
+
+	jsonret = {"error": error, "towerID": towerID, 
+		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
+			"resources": resources}
+
 
 	return (code, jsonret)
 
@@ -290,19 +351,29 @@ def tower_create(regex, **json):
 		resources - The updated player's resources
 	"""
 
-	tower = _engine.tower_get(json["id"], json["position"], json["level"], json["spec"])
-
+	tower = _engine.tower_create(json["id"], json["position"], json["level"], json["spec"])
+	
 	code = 200
 	error = ""
+	towerID = -1
+	towerSpec = -1
+	towerUpgrade = -1
 
 	if tower == None:
 		code = 409
-		error = "Invalid tower attributes (position, level, or specification)"
-	
-	jsonret = {"error": error, "tower": tower}
+		error = "Tower not visible or invalid tower ID"
+	else:
+		towerID = tower.ID
+		towerSpec = tower.specialisation
+		towerUpgrade = tower.upgrade
+
+
+	jsonret = {"error": error, "towerID": towerID, 
+		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
+			"resources": resources}
+
 
 	return (code, jsonret)
-
 
 
 ## 
@@ -359,15 +430,28 @@ def unit_status(regex, **json):
 @require_running_game
 def unit_create(regex, **json):
 	
-	unit = _engine.unit_create(json["id"], json["level"], json["spec"], json["target_id"], json["path"])
+	unit = _engine.unit_create(json["id"], json["level"], json["spec"],
+			 json["target_id"], json["path"])
 	
 	code = 200
 	error = ""
+	unitID = -1
+	unitLevel = -1
+	unitSpec = -1
+	unitTargetID = -1
+	unitPath = -1
 
 	if(unit == None):
 		code = 409
 		error = "Invalid player ID, or invalid unit specification"
+	else:
+		unitID = json["id"]
+		unitLevel = json["level"]
+		unitTargetID = json["target_id"]
+		unitSpec = json["spec"]
+		unitPath = json["path"]
 
-	jsonret = {"error": error, "unit": unit}
+	jsonret = {"error": error, "unitID": unitID, "unitLevel": unitLevel,
+		 "unitTargetID": unitTargetID, "unitSpec": unitSpec, "unitPath": unitPath}
 
 	return (code, jsonret)
