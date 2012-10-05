@@ -53,7 +53,8 @@ class MMHandler(BaseHTTPRequestHandler):
 			data = self._process_POST_data()
 		except ValueError:
 			# Invalid JSON
-			self.send_error(400)
+			output = {'error': 'Invalid or non-JSON POST data recieved'}
+			self.respond(400, output)
 			return
 
 		# Every call but connect requires authorization
@@ -75,7 +76,8 @@ class MMHandler(BaseHTTPRequestHandler):
 				return
 
 		# no url match found, send 404
-		self.send_error(404)
+		output = {'error': 'API call not found'}
+		self.respond(404, output)
 		return
 
 	def do_GET(self):
@@ -83,7 +85,8 @@ class MMHandler(BaseHTTPRequestHandler):
 		
 		On GET request, parse URLs and map them to the API calls."""
 
-		self.send_error(405)
+		output = {'error': 'GET request received but not expected'}
+		self.respond(405, output)
 		return
 
 	def do_POST(self):
