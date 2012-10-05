@@ -18,10 +18,8 @@ urlpatterns = [
 	(r'/tower/(?P<id>\d+)/sell', 'POST', tower_sell),
 	(r'/tower/(?P<id>\d+)', 'POST', tower_get),
 	(r'/tower/create', 'POST', tower_create),
-	(r'/tower', 'POST', tower_list),
 
 	# Unit API
-	(r'/unit/(?P<id>\d+)', 'POST', unit_status),
 	(r'/unit/create', 'POST', unit_create),
 
 	# Connection API
