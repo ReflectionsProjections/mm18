@@ -31,13 +31,14 @@ public class MechMania {
 		while (stillPlaying) {
 			updateStatus(http);
 			attack(http, (int)Math.floor(Math.random() * 4)+1);
+			buildTower(http, (int)Math.floor(Math.random() * 16), (int)Math.floor(Math.random() * 16), 0, 0);
 		}
 		
 		return;
 	}
 	
 	/**
-	 * Requests game status information from 
+	 * Requests game status information from the server...
 	 * 
 	 * @param http
 	 */
@@ -51,12 +52,32 @@ public class MechMania {
 			e.printStackTrace();
 		}
 		
-		
-		
-		// Handle updating map information, player information, etc.
+		// Update the recorded information about each player (health, etc.)
 		
 		return;
 	}
+
+	/**
+	 * Requests the status of a particular player
+	 *
+	 * @param http The configured MechMania HTTP object
+	 * @param playerId The player ID to look up 
+	 */
+	private void updatePlayerStatus(MechManiaHTTP http, int playerId) {
+		HTTPResponse response = null;
+		
+		try {
+			response = http.makeRequest("/player/" + playerId, new JSONObject("{\"id\":" + myteam + "," + 
+					"\"auth\":\"" + gameKey + "\"}"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		// Update the recorded information about the player (health, etc.)
+		
+		return;
+	}
+
 
 	/**
 	 * Attempts to send a join message to the game server 
@@ -80,6 +101,44 @@ public class MechMania {
 		
 		return (response.getStatusCode() == 200);
 	}
+
+	/**
+	 * Attempts to build a new tower in a specified location
+	 * 
+	 * @param http The MechManiaHTTP object initialized with game server settings
+	 * @param x The grid x coordinate of the desired tower
+	 * @param y The grid y coordinate of the desired tower
+	 * @param level The desired level of tower to construct
+	 * @param specialization The desired specialization class of the tower
+	 * @return True on successful tower build
+	 */
+	private boolean buildTower(MechManiaHTTP http, int towerx, int towery, int level, int specialization) {
+		if (towerx < 0 || towerx > 15 || towery < 0 || towery > 15 || Math.abs(specialization) > 1) {
+			return false;
+		}
+
+		HTTPResponse response = null;
+		try {
+			response = http.makeRequest("/tower/create",
+				new JSONObject("{\"id\":" + myteam + "," + "\"auth\":\"" + gameKey + "\"," + 
+				"\"position\":[" + towerx + "," + towery + "]," + 
+				"\"level\":" + level + "," +
+				"\"spec\":" + specialization + "}")
+			);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		switch (response.getStatusCode()) {
+		case 200:
+			// Handle updating map with new tower
+			return true;
+		case -1:
+		default:
+			return false;
+		}
+
+	}
+
 	
 	/**
 	 * Attempts to send an attack command to the game server (and units to an enemy, etc. etc.)
@@ -95,9 +154,11 @@ public class MechMania {
 		
 		HTTPResponse response = null;
 		try {
-			response = http.makeRequest("/unit/create", new JSONObject("{\"id\":" + myteam + "," + 
+			response = http.makeRequest("/unit/create",
+				new JSONObject("{\"id\":" + myteam + "," + 
 					"\"auth\":\"" + gameKey + "\"," + "\"path\":0," +
-					"\"level\":1," + "\"target_id\":" + myteam + ",\"spec\":0}"));
+					"\"level\":1," + "\"target_id\":" + myteam + ",\"spec\":0}")
+			);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
