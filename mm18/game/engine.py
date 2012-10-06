@@ -45,7 +45,7 @@ class Engine():
 	# Game controls
 
 	def add_player(self, id):
-		board = Board.jsonLoad('board1.json')
+		board = Board.jsonLoad('board2.json')
 		player = Player(id, board)
 		self.players[id] = player
 
