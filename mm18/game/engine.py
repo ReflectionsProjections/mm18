@@ -121,7 +121,7 @@ class Engine():
 	# Tower Class Controls
 
 	""" This should return the tower object that's created """
-	def tower_create(self, owner_id, coords, level=1, spec=0):
+	def tower_create(self, owner_id, coords):
 		tower = self.get_player(owner_id).purchaseTower(coords, self.generateID())
 
 		self.log_action('tower_create', owner_id=owner_id, coords=list(coords))
