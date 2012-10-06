@@ -146,19 +146,22 @@ class Engine():
 		return tower
 
 	""" This should return the tower that's been specified"""
-	def tower_get(self, tower_id):
-		for player in players.values():
+	def tower_get(self, tower_id, owner_id=None):
+		# If an owner id is given, only search that Player's Towers
+		if owner_id:
+			players = [self.get_player(owner_id)]
+		else:
+			players = self.players.values()
+
+		for player in players:
 			board = player.boardIs()
 			towers = board.getTowers()
 
-			retTower = None
+			for tower in towers.itervalues():
+				if tower.getID() == tower_id:
+					return tower
 
-			for elem in towers:
-				if towers[elem].getID() == tower_id:
-					retTower = towers[elem]
-					break
-
-		return retTower
+		return None
 
 	""" This should return the player object relating to owner_id """
 	def tower_sell(self, tower_id, owner_id):

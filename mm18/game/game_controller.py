@@ -256,7 +256,7 @@ def tower_sell(regex, **json):
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "The requested tower (none if it doesn't exist)" (tower)
 @require_running_game
 def tower_get(regex, **json):
-	tower = _engine.tower_get(int(regex["id"]), json["id"])
+	tower = _engine.tower_get(int(regex["id"]))
 	
 	code = 200
 	error = ""
