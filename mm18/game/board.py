@@ -243,8 +243,7 @@ class Board:
 	#  @param tower The tower to be removed
 	def removeFromHitList(self, tower):
 		for elem, i in self.hitList.iteritems():
-			for i in self.hitList[elem]:
-				i.remove(tower)
+			self.hitList[elem].remove(tower)
 	
 	def getTowerPosition(self, tower_id):
 		for pos, tower in self.tower.iteritems():
