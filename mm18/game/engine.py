@@ -54,6 +54,7 @@ class Engine():
 		return player
 
 	def run(self):
+		turns=0
 		while self.running:
 			startTime = time.time()
 			self.advance()
@@ -61,6 +62,9 @@ class Engine():
 			timePassed = time.time() - startTime
 			if timePassed < constants.TICK_TIME:
 				time.sleep(constants.TICK_TIME - timePassed)
+			turns=turns+1
+			if turns > constants.MAX_RUNTIME:
+				self.endGame()
 
 		print "Game complete"
 
@@ -95,7 +99,13 @@ class Engine():
 			player.addResources(resources)
 
 	def endGame(self):
-		self.running = False
+		self.running=False
+		highScore=0
+		for player in self.players.itervalues():
+			if (player.resources+1)*player.health <= highScore:
+				player.damage(constants.BASE_HEALTH)
+			else:
+				highScore=(player.resources+1)*player.health
 
 	def generateID(self):
 		retID = self.currID
