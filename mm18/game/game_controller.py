@@ -233,24 +233,21 @@ def tower_specialize(regex, **json):
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "Your updated resources count" (resources)
 @require_running_game
 def tower_sell(regex, **json):
-	playerID = int(regex["id"])
-	playerAuth = json["id"]
-	notOwner = 0
-	if(playerID == playerAuth):
-		playerAfter = _engine.tower_sell(regex[1], json["id"])
-	else:
-		error = "You are not the owner of this tower"
-		notOwner = 1
-
+	playerID = json["id"]
+	towerID = int(regex["id"])
 	code = 200
 	error = ""
+	resources = -1
 
-	if notOwner == 0 and json["id"].resourcesIs() == playerAfter.resourcesIs() :
+	# if the tower exists, sell it
+	if _engine.tower_get(towerID, playerID) is not None:
+		player = _engine.tower_sell(towerID, playerID)
+		resources = player.resourcesIs()
+	else:
 		code = 409
 		error = "Invalid tower"
 
-
-	jsonret = {"error": error, "resources": afterPlayer.resourcesIs()}
+	jsonret = {"error": error, "resources": resources}
 
 	return (code, jsonret)
 

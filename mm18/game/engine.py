@@ -157,7 +157,7 @@ class Engine():
 		if tower == None:
 			return retPlayer
 
-		player.sellTower(tower.position)
+		retPlayer.sellTower(retPlayer.board.getTowerPosition(tower_id))
 
 		self.log_action('tower_sell', tower_id=tower_id, owner_id=owner_id)
 
