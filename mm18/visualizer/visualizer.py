@@ -8,6 +8,8 @@ from mm18.game.replayer import Replayer
 
 TILE_SIZE = 32
 TICKS_PER_SECOND = 4
+BOARD_ROWS = 2
+BOARD_COLS = 2
 
 resources_path = os.path.join(os.path.dirname(__file__), 'resources')
 pyglet.resource.path.append(resources_path)
@@ -26,15 +28,12 @@ class Visualizer:
 		self.replayer = Replayer(actions)
 		self.replayer.setup_game()
 		self.game = self.replayer.game
-		if player_id:
-			self.player_id = player_id
-		else:
-			self.player_id = next(self.game.players.iterkeys())
+		self.player_ids = self.game.get_player_ids()
 		self.tick_summary = None
 
 		self.window = pyglet.window.Window(
-			width=TILE_SIZE * constants.BOARD_SIDE,
-			height=TILE_SIZE * constants.BOARD_SIDE,
+			width=BOARD_COLS * TILE_SIZE * constants.BOARD_SIDE,
+			height=BOARD_ROWS * TILE_SIZE * constants.BOARD_SIDE,
 		)
 		self.window.set_handler('on_draw', self.draw)
 		self.window.set_caption(self.player_id)
@@ -52,7 +51,20 @@ class Visualizer:
 
 	def draw(self):
 		self.window.clear()
-		self.drawPlayer(self.player_id)
+
+		width = TILE_SIZE * constants.BOARD_SIDE
+		height = TILE_SIZE * constants.BOARD_SIDE
+		pos = 0
+		for player_id in self.player_ids:
+			player = self.game.get_player(player_id)
+			if not player.isDead():
+				glMatrixMode(GL_MODELVIEW)
+				glLoadIdentity()
+				x = pos % BOARD_COLS
+				y = pos / BOARD_COLS
+				glTranslatef(width * x, height * y, 0)
+				self.drawPlayer(player_id)
+			pos += 1
 
 	def drawPlayer(self, player_id):
 		player_summary = None
