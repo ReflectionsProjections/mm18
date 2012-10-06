@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from mm18.game.engine import Engine
+from mm18.game import constants
 ## @file game_controller.py
 
 # A global variable stores the active game engine
