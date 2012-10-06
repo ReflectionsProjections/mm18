@@ -52,6 +52,8 @@ class Visualizer:
 		if player_summary:
 			for death in player_summary['deaths']:
 				self.drawDeadUnit(death['unit'], death['unit_pos'])
+			for attack in player_summary['attacks']:
+				self.drawAttack(attack)
 
 
 	def drawBoard(self, board):
@@ -117,6 +119,17 @@ class Visualizer:
 			width=TILE_SIZE,
 			height=TILE_SIZE,
 		)
+
+	def drawAttack(self, attack):
+		(xt, yt) = attack['tower_pos']
+		(xu, yu) = attack['unit_pos']
+		glColor3f(1, 0, 0)
+		pyglet.graphics.draw(2, GL_LINES, ('v2f', (
+			TILE_SIZE * (xt + .5), TILE_SIZE * (yt + .5),
+			TILE_SIZE * (xu + .5), TILE_SIZE * (yu + .5)
+		)))
+		# If we don't set the color back to white, the screen turns red
+		glColor3f(1, 1, 1)
 
 	def run(self):
 		pyglet.app.run()
