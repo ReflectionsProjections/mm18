@@ -198,11 +198,11 @@ def tower_upgrade(regex, **json):
 
 
 ## Specialize a certain tower, if possible
-#  @param **json Expected to contain "Request player's ID" (id) and "Request palyer's authentication token" (auth)
+#  @param **json Expected to contain "Request player's ID" (id) and "Request palyer's authentication token" (auth), and the tower's specialization (spec)
 #  @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The tower that was upgraded (or just the unupgraded one if the update failed)" (tower), and "The player's updated resources" (resources)
 @require_running_game
 def tower_specialize(regex, **json):
-	tower = _engine.tower_specialize(int(regex["id"]), json["id"])
+	tower = _engine.tower_specialize(int(regex["id"]), json["id"], json["spec"])
 	player = _engine.get_player(json["id"])
 	code = 200
 	error = ""

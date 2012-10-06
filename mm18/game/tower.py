@@ -16,7 +16,7 @@ class Tower:
 	#  All towers start with 0 upgrades, no specialisation and no position.
 	#  @param player The player who owns the tower
 	def __init__ (self, player, ID):
-		self.upgrade = 1
+		self.upgrade = 0
 		self.specialisation = 0
 		self.cost = constants.TOWER_BASE_COST
 		self.owner = player
@@ -40,7 +40,7 @@ class Tower:
 	#  @param spec Either 1, 0 or -1.  Indicates a specialisation.
 	#  @param player The player specializing the tower
 	def specialise(self, spec):
-		if self.upgrade == 1 and spec >= -1 and spec <= 1 and \
+		if self.upgrade >= 1 and spec >= -1 and spec <= 1 and \
 				spec != self.specialisation and \
 				self.owner.purchaseCheck(constants.TOWER_SPECIALIZE_COST[self.upgrade]):
 			self.owner.purchase(constants.TOWER_SPECIALIZE_COST[self.upgrade])

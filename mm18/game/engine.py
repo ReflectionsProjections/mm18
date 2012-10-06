@@ -174,7 +174,7 @@ class Engine():
 		if(player == None):
 			return None
 
-		retTower.specialise(spec, player)
+		retTower.specialise(spec)
 
 		self.log_action('tower_specialize', tower_id=tower_id,
 			owner_id=owner_id, spec=spec)

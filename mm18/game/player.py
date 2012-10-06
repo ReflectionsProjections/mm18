@@ -34,7 +34,7 @@ class Player:
 
 	## Increases the allowed upgrade level of the player.
 	def increaseUpgrade(self):
-		if self.sentUnits >= constants.UPGRADE_INCREASE*(self.allowedUpgrade+1):
+		if self.sentUnits >= constants.UPGRADE_INCREASE*(self.allowedUpgrade+1) and self.allowedUpgrade <= 3:
 			self.allowedUpgrade += 1
 			return True
 		else:
