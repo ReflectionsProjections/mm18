@@ -189,9 +189,8 @@ class Engine():
 		coords = None
 
 		for elem in towers:
-			if towers[elem] == tower_id:
-				elem = coords
-				
+			if towers[elem].ID == tower_id:
+				coords = elem
 
 		if(retTower == None):
 			return None
