@@ -17,6 +17,7 @@ tex_path = pyglet.resource.image('path.png')
 tex_base = pyglet.resource.image('base.png')
 tex_tower = pyglet.resource.image('tower.png')
 tex_unit = pyglet.resource.image('unit.png')
+tex_explosion = pyglet.resource.image('explosion.png')
 
 class Visualizer:
 
@@ -25,6 +26,7 @@ class Visualizer:
 		self.replayer.setup_game()
 		self.game = self.replayer.game
 		self.player_id = next(self.game.players.iterkeys())
+		self.tick_summary = None
 		self.window = pyglet.window.Window(
 			width=TILE_SIZE * constants.BOARD_SIDE,
 			height=TILE_SIZE * constants.BOARD_SIDE,
@@ -38,11 +40,18 @@ class Visualizer:
 	def update(self, dt=0):
 		# parse and perform commands from log
 		# advance the game controller
-		self.replayer.play_tick()
+		self.tick_summary = self.replayer.play_tick()
 
 	def draw(self):
 		self.window.clear()
 		self.drawBoard(self.game.board_get(self.player_id))
+		player_summary = None
+		if self.tick_summary:
+			player_summary = self.tick_summary.get(self.player_id)
+		if player_summary:
+			for death in player_summary['deaths']:
+				self.drawDeadUnit(death['unit'], death['unit_pos'])
+
 
 	def drawBoard(self, board):
 		tiles = ((x, y) for x in range(board.width) for y in range(board.height))
@@ -87,12 +96,21 @@ class Visualizer:
 
 	def drawUnits(self, path):
 		for unit, coords in path.entries():
-			if unit:
+			if unit and unit.health > 0:
 				self.drawUnit(unit, coords)
 
 	def drawUnit(self, unit, coords):
 		(x, y) = coords
 		tex_unit.blit(
+			x=TILE_SIZE * x,
+			y=TILE_SIZE * y,
+			width=TILE_SIZE,
+			height=TILE_SIZE,
+		)
+
+	def drawDeadUnit(self, unit, coords):
+		(x, y) = coords
+		tex_explosion.blit(
 			x=TILE_SIZE * x,
 			y=TILE_SIZE * y,
 			width=TILE_SIZE,
