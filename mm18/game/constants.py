@@ -5,7 +5,7 @@
 TICK_TIME = .01
 # Maximum amount of ticks for the game to run for
 # Currently set to 10 minutes
-MAX_RUNTIME = 10 * 60 * 1000
+MAX_RUNTIME = 10 * 60 * 100
 
 """TOWERS"""
 BASE_TOWER_DAMAGE = 1
