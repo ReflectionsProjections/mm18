@@ -7,6 +7,7 @@ from mm18.game.board import Board
 from mm18.game.replayer import Replayer
 
 TILE_SIZE = 32
+PADDING = TILE_SIZE
 TICKS_PER_SECOND = 4
 BOARD_ROWS = 2
 BOARD_COLS = 2
@@ -35,8 +36,8 @@ class Visualizer:
 		self.tick_summary = None
 
 		self.window = pyglet.window.Window(
-			width=BOARD_COLS * TILE_SIZE * constants.BOARD_SIDE,
-			height=BOARD_ROWS * TILE_SIZE * constants.BOARD_SIDE,
+			width=BOARD_COLS * TILE_SIZE * constants.BOARD_SIDE + PADDING,
+			height=BOARD_ROWS * (TILE_SIZE * constants.BOARD_SIDE + PADDING),
 		)
 		self.window.set_handler('on_draw', self.draw)
 		pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SECOND)
@@ -54,8 +55,8 @@ class Visualizer:
 	def draw(self):
 		self.window.clear()
 
-		width = TILE_SIZE * constants.BOARD_SIDE
-		height = TILE_SIZE * constants.BOARD_SIDE
+		width = TILE_SIZE * constants.BOARD_SIDE + PADDING
+		height = TILE_SIZE * constants.BOARD_SIDE + PADDING
 		pos = 0
 		for player_id in self.player_ids:
 			player = self.game.get_player(player_id)
@@ -66,6 +67,7 @@ class Visualizer:
 				y = pos / BOARD_COLS
 				glTranslatef(width * x, height * y, 0)
 				self.drawPlayer(player_id)
+				self.drawLabel(player)
 			pos += 1
 
 	def drawPlayer(self, player_id):
@@ -154,6 +156,24 @@ class Visualizer:
 		)))
 		# If we don't set the color back to white, the screen turns red
 		glColor3f(1, 1, 1)
+
+	def drawLabel(self, player):
+		text = 'Team: %s, Level: %d, Health: %d, Resources: %d' % (
+			player.name,
+			player.allowedUpgrade,
+			player.health,
+			player.resources
+		)
+		margin = 6
+		label = pyglet.text.Label(
+			text=text,
+			color=(0, 0, 0, 255),
+			x=margin,
+			y=TILE_SIZE * constants.BOARD_SIDE + margin,
+			width=TILE_SIZE * constants.BOARD_SIDE - margin,
+			height=PADDING,
+		)
+		label.draw()
 
 	def run(self):
 		pyglet.app.run()
