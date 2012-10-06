@@ -32,6 +32,7 @@ class MMHandler(BaseHTTPRequestHandler):
 			# Clear out any error that wasn't an empty string, and set one
 			# in case one wasn't already set
 			data['error'] = ''
+		print data
 		output = json.dumps(data)
 		self.send_header("Content-type", "application/json")
 		self.end_headers()

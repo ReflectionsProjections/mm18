@@ -2,7 +2,7 @@
 
 """Timing Constants"""
 # Time each tick takes, in seconds
-TICK_TIME = .001
+TICK_TIME = .01
 # Maximum amount of ticks for the game to run for
 # Currently set to 10 minutes
 MAX_RUNTIME = 10 * 60 * 1000
@@ -13,7 +13,7 @@ BASE_TOWER_DAMAGE = 1
 MAX_UPGRADE = 3
 TOWER_SELL_SCALAR = 1
 TOWER_BASE_COST = 1
-TOWER_RANGE = {0:1, 1:1, 2:2}
+TOWER_RANGE = {0:1, 1:1, 2:2, 3:2}
 TOWER_UPGRADE_MULTIPLIER = {0:1, 1:1.5, 2:2.5, 3:3.5}
 TOWER_UPGRADE_COST = {1:1, 2:2, 3:3}
 TOWER_SPECIALIZE_COST = {1:1, 2:2, 3:3}
