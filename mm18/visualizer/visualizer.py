@@ -51,18 +51,15 @@ class Visualizer:
 
 	def draw(self):
 		self.window.clear()
-		self.drawBoard(self.game.board_get(self.player_id))
+		self.drawPlayer(self.player_id)
+
+	def drawPlayer(self, player_id):
 		player_summary = None
 		if self.tick_summary:
-			player_summary = self.tick_summary.get(self.player_id)
-		if player_summary:
-			for death in player_summary['deaths']:
-				self.drawDeadUnit(death['unit'], death['unit_pos'])
-			for attack in player_summary['attacks']:
-				self.drawAttack(attack)
+			player_summary = self.tick_summary.get(player_id)
+		self.drawBoard(self.game.board_get(player_id), player_summary)
 
-
-	def drawBoard(self, board):
+	def drawBoard(self, board, player_summary=None):
 		tiles = ((x, y) for x in range(board.width) for y in range(board.height))
 		for (x, y) in tiles:
 			tex = tex_path if (x, y) in board.path else tex_terrain
@@ -76,6 +73,12 @@ class Visualizer:
 		self.drawTowers(board.tower)
 		for path in board.paths.itervalues():
 			self.drawUnits(path)
+		if player_summary and player_summary.get('deaths'):
+			for death in player_summary['deaths']:
+				self.drawDeadUnit(death['unit'], death['unit_pos'])
+		if player_summary and player_summary.get('attacks'):
+			for attack in player_summary['attacks']:
+				self.drawAttack(attack)
 
 	def drawBases(self, bases):
 		for coords in bases:
