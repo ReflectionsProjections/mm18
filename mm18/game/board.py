@@ -296,7 +296,7 @@ class Board:
 		
 		for direction in constants.DIRECTIONS:
 			path= self.paths[direction]
-			for x in range (len(path.path)-1, -1, -1):
+			for x in range (0, len(path.path)):
 				if(path.moving[x] != None):
 					units.append((path.path[x], path.moving[x]))
 
