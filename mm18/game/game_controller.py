@@ -348,5 +348,5 @@ def unit_create(regex, **json):
 	return (code, jsonret)
 
 @require_running_game
-def constant_get(regex, **json):
+def constants_get(regex, **json):
 	return (200, CONSTANTS_DICT)
