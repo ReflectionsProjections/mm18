@@ -34,11 +34,14 @@ class Player:
 
 	## Increases the allowed upgrade level of the player.
 	def increaseUpgrade(self):
-		if self.sentUnits >= constants.UPGRADE_INCREASE*(self.allowedUpgrade+1) and self.allowedUpgrade <= 3:
+		if self.allowedUpgrade >= constants.MAX_UPGRADE:
+			return False
+		sentThreshold = constants.UPGRADE_INCREASE * (self.allowedUpgrade + 1)
+		if self.sentUnits < sentThreshold:
+			return False
+		else:
 			self.allowedUpgrade += 1
 			return True
-		else:
-			return False
 			
 	## Purchase method to make purchases.
 	#  @param cost The cost of the purchase
