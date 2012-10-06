@@ -39,7 +39,6 @@ class Visualizer:
 			height=BOARD_ROWS * TILE_SIZE * constants.BOARD_SIDE,
 		)
 		self.window.set_handler('on_draw', self.draw)
-		self.window.set_caption(self.player_id)
 		pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SECOND)
 		glClearColor(1, 1, 1, 1)
 		glEnable(GL_BLEND)
