@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from mm18.game.engine import Engine
+from mm18.game.constants import CONSTANTS_DICT
 ## @file game_controller.py
 
 # A global variable stores the active game engine
@@ -103,7 +104,7 @@ def get_game_status(regex, **json):
 def get_player_status(regex, **json):
 
 	playerID = json["id"]
-	playerRequested = regex[1]
+	playerRequested = int(regex["id"])
 
 	player = _engine.get_player(playerRequested)
 
@@ -119,7 +120,7 @@ def get_player_status(regex, **json):
 
 	code = 200
 	error = ""
-	
+
 	if player == None :
 		code = 409
 		error = "Invalid player ID"
@@ -128,7 +129,6 @@ def get_player_status(regex, **json):
 			"resources" : playerResources, "level" : playerLevel}
 
 	return (code, jsonret)
-	
 
 ## Get the player's board status
 #  @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token (auth)
@@ -136,18 +136,19 @@ def get_player_status(regex, **json):
 @require_running_game
 def board_get(regex, **json):
 
-	playerid = regex[1]
+	playerid = int(regex["id"])
 
 	board = _engine.board_get(playerid)
 	
 	towers = []
 	units = []
+	paths = []
 	
 	code = 409
-	board = "Invalid player ID"
+	error = "Invalid player ID"
 
 	if board != None :
-		unitsDict = board.unitList
+		unitsList = board.units()
 
 		for elem in board.tower:
 			towerCoords = elem
@@ -155,8 +156,8 @@ def board_get(regex, **json):
 			towerTuple = (towerID, towerCoords)
 			towers.append(towerTuple)
 
-		for elem in board.unitList:
-			unit, unitCoord = elem
+		for elem in unitsList:
+			unitCoord, unit = elem
 			unitTuple = (unit.owner, unitCoord, unit.level, 
 					unit.specialisation, unit.health)
 			units.append(unitTuple)
@@ -164,9 +165,7 @@ def board_get(regex, **json):
 		code = 200
 		error = ""
 
-	jsonret = {"error": error, "towers": towers, "units": units}
-	
-
+	jsonret = {"error": error, "towers": towers, "units": units, "paths": board.path}
 	return (code, jsonret)
 
 ## Upgrade a certain tower, if possible
@@ -174,7 +173,7 @@ def board_get(regex, **json):
 #  @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The tower that was upgraded (or just the unupgraded one if the update failed)" (tower), and "The player's updated resources" (resources)
 @require_running_game
 def tower_upgrade(regex, **json):
-	tower = _engine.tower_upgrade(regex[1], json["id"])
+	tower = _engine.tower_upgrade(int(regex["id"]), json["id"])
 	player = _engine.get_player(json["id"])
 	code = 200
 	error = ""
@@ -191,8 +190,8 @@ def tower_upgrade(regex, **json):
 		towerSpec = tower.specialisation
 		towerUpgrade = tower.upgrade
 
-	jsonret = {"error": error, "towerID": towerID, 
-		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
+	jsonret = {"error": error, "towerID": towerID,
+		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade,
 			"resources": resources}
 
 	return (code, jsonret)
@@ -203,7 +202,7 @@ def tower_upgrade(regex, **json):
 #  @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The tower that was upgraded (or just the unupgraded one if the update failed)" (tower), and "The player's updated resources" (resources)
 @require_running_game
 def tower_specialize(regex, **json):
-	tower = _engine.tower_specialize(regex[1], json["id"])
+	tower = _engine.tower_specialize(int(regex["id"]), json["id"])
 	player = _engine.get_player(json["id"])
 	code = 200
 	error = ""
@@ -234,7 +233,7 @@ def tower_specialize(regex, **json):
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "Your updated resources count" (resources)
 @require_running_game
 def tower_sell(regex, **json):
-	playerID = regex[1]
+	playerID = int(regex["id"])
 	playerAuth = json["id"]
 	notOwner = 0
 	if(playerID == playerAuth):
@@ -254,14 +253,13 @@ def tower_sell(regex, **json):
 	jsonret = {"error": error, "resources": afterPlayer.resourcesIs()}
 
 	return (code, jsonret)
-	
 
 ## 
 # @param **json Expected to contain "Request player's ID" (id) and "Request player's authentication token" (auth)
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error) and "The requested tower (none if it doesn't exist)" (tower)
 @require_running_game
 def tower_get(regex, **json):
-	tower = tower_get(regex[1], json["id"])
+	tower = _engine.tower_get(int(regex["id"]), json["id"])
 	
 	code = 200
 	error = ""
@@ -277,6 +275,8 @@ def tower_get(regex, **json):
 		towerSpec = tower.specialisation
 		towerUpgrade = tower.upgrade
 
+	player = _engine.get_player(json["id"])
+	resources = player.resourcesIs()
 
 	jsonret = {"error": error, "towerID": towerID, 
 		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
@@ -291,8 +291,8 @@ def tower_get(regex, **json):
 # @return  a tuple containing the return code and JSON containing "Error message if any" (error), "The new tower, or none if it failed" (tower), and "The updated player's resources" (resources)
 @require_running_game
 def tower_create(regex, **json):
-	tower = _engine.tower_create(json["id"], json["position"], json["level"], json["spec"])
-	
+	tower = _engine.tower_create(json["id"], tuple(json["position"]))
+
 	code = 200
 	error = ""
 	towerID = -1
@@ -307,11 +307,12 @@ def tower_create(regex, **json):
 		towerSpec = tower.specialisation
 		towerUpgrade = tower.upgrade
 
+	player = _engine.get_player(json["id"])
+	resources = player.resourcesIs()
 
-	jsonret = {"error": error, "towerID": towerID, 
-		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
+	jsonret = {"error": error, "towerID": towerID,
+		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade,
 			"resources": resources}
-
 
 	return (code, jsonret)
 
@@ -346,3 +347,7 @@ def unit_create(regex, **json):
 			"playerTargetID": unitTargetID, "unitSpec": unitSpec, "unitPath": unitPath}
 
 	return (code, jsonret)
+
+@require_running_game
+def constants_get(regex, **json):
+	return (200, CONSTANTS_DICT)
