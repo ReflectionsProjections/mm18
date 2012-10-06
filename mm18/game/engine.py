@@ -51,6 +51,8 @@ class Engine():
 
 	def add_player(self, id):
 		board = Board.jsonLoad('board2.json')
+		# Force the id to be a string
+		id = str(id)
 		player = Player(id, board)
 		self.players[id] = player
 
@@ -125,7 +127,7 @@ class Engine():
 
 	""" This should return a player object """
 	def get_player(self, player_id):
-		return self.players.get(player_id)
+		return self.players.get(str(player_id))
 
 	# Board Class Controls
 

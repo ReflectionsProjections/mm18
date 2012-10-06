@@ -39,9 +39,6 @@ class Replayer:
 			pass
 		elif actionType == 'advance':
 			self.game.advance()
-		elif actionType == 'add_player':
-			# Ensure the id is a string
-			self.game.add_player(id=str(entry['id']))
 		elif actionType == 'tower_create':
 			self.game.tower_create(
 				owner_id=entry['owner_id'],
