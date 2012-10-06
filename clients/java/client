@@ -1,3 +1,5 @@
 #!/bin/bash
 
-java -classpath ./lib:./bin org.acm.uiuc.conference.mechmania18.MechManiaClientBootstrap $1
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+java -classpath $DIR/lib:$DIR/bin org.acm.uiuc.conference.mechmania18.MechManiaClientBootstrap $1
