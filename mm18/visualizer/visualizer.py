@@ -49,7 +49,7 @@ class Visualizer:
 		# advance the game controller
 		self.tick_summary = self.replayer.play_tick()
 		if self.tick_summary == None:
-			pyglet.app.exit()
+			pyglet.clock.unschedule(self.update)
 
 	def draw(self):
 		self.window.clear()
