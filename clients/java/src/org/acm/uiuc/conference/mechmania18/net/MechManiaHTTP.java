@@ -7,9 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 
-import org.acm.uiuc.conference.mechmania18.accessory.GameOverException;
+import org.acm.uiuc.conference.mechmania18.GameOverException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +30,10 @@ public class MechManiaHTTP {
 	 */
 	public HTTPResponse makeRequest(String resource) throws GameOverException {
 		try {
-			return makeRequest(resource, new JSONObject("{\"empty\":\"empty\"}"));
+			JSONObject empty = new JSONObject();
+			empty.append("empty", "empty");
+			
+			return makeRequest(resource, empty);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -56,14 +60,17 @@ public class MechManiaHTTP {
 			urlconn.setReadTimeout(HTTP_MAX_TIMEOUT_MILLISECONDS);
 			urlconn.setConnectTimeout(HTTP_MAX_TIMEOUT_MILLISECONDS);
 			
+			String encodedParams = parameters.toString();
+			
 			urlconn.setRequestMethod("POST"); // All requests require POST
+			urlconn.setRequestProperty("Content-Length", ""+encodedParams.length());
 			urlconn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			
 			if (parameters.length() > 0) {  // POST-style request with JSON payload
 				urlconn.setDoOutput(true);
 				DataOutputStream dataOutputStream = new DataOutputStream(urlconn.getOutputStream());
 				
-				dataOutputStream.writeBytes(parameters.toString());
+				dataOutputStream.writeBytes(encodedParams);
 				
 				dataOutputStream.flush();
 				dataOutputStream.close();
@@ -73,6 +80,8 @@ public class MechManiaHTTP {
 			
 			jsonFromRequest = new JSONObject(readJsonStream(urlconn.getInputStream()));
 			System.out.println(jsonFromRequest.toString());
+		} catch (SocketException e) {
+			// Do nothing, this probably came up because the server's lame
 		} catch (MalformedURLException e) {
 			e.printStackTrace();  // MUE extends IOE, but we might as well make sure we know what's thrown
 		} catch (IOException e) {

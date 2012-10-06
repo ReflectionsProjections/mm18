@@ -2,7 +2,7 @@ package org.acm.uiuc.conference.mechmania18.tests;
 
 import junit.framework.Assert;
 
-import org.acm.uiuc.conference.mechmania18.accessory.GameOverException;
+import org.acm.uiuc.conference.mechmania18.GameOverException;
 import org.acm.uiuc.conference.mechmania18.net.*;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,7 +1,8 @@
 package org.acm.uiuc.conference.mechmania18;
 
-import org.acm.uiuc.conference.mechmania18.accessory.GameOverException;
-import org.acm.uiuc.conference.mechmania18.accessory.Player;
+import org.acm.uiuc.conference.mechmania18.map.GameMap;
+import org.acm.uiuc.conference.mechmania18.map.GameMapPiece;
+import org.acm.uiuc.conference.mechmania18.map.Tower;
 import org.acm.uiuc.conference.mechmania18.net.HTTPResponse;
 import org.acm.uiuc.conference.mechmania18.net.MechManiaHTTP;
 import org.json.JSONArray;
@@ -47,6 +48,7 @@ public class MechMania {
 				//updateStatus(http);  // Redundant per updatePlayer
 				for (int i = 0; i < 4; i++) {
 					updatePlayer(http, i);
+					getBoard(http, i);
 				}
 				attack(http, (int)Math.floor(Math.random() * 4)+1, (int)Math.floor(Math.random() * 4), 1, 0);
 				buildTower(http, (int)Math.floor(Math.random() * 16), (int)Math.floor(Math.random() * 16), 0, 0);
@@ -90,11 +92,17 @@ public class MechMania {
 		return;
 	}
 
+	/**
+	 * Builds a basic JSONObject with the authentication tokens we need to pass
+	 * 
+	 * @return JSONObject with authentication tokens pre-added
+	 * @throws JSONException
+	 */
 	private JSONObject buildBaseJSONObject() throws JSONException {
 		JSONObject baseObject = new JSONObject();
 		
-		baseObject.append("id", myteam);
-		baseObject.append("auth", gameKey);
+		baseObject.put("id", myteam);
+		baseObject.put("auth", gameKey);
 		
 		return baseObject;
 	}
@@ -175,9 +183,9 @@ public class MechMania {
 		try {
 			JSONObject reqObj = buildBaseJSONObject();
 			
-			reqObj.append("position", new int[]{towerx, towery});
-			reqObj.append("level", level);
-			reqObj.append("spec", specialization);
+			reqObj.put("position", new int[]{towerx, towery});
+			reqObj.put("level", level);
+			reqObj.put("spec", specialization);
 					
 			response = http.makeRequest("/tower/create", reqObj);
 		} catch (JSONException e) {
@@ -213,10 +221,10 @@ public class MechMania {
 		HTTPResponse response = null;
 		try {
 			JSONObject reqObj = buildBaseJSONObject();
-			reqObj.append("path", path);
-			reqObj.append("target_id", target);
-			reqObj.append("level", level);
-			reqObj.append("spec", specialization);
+			reqObj.put("path", path);
+			reqObj.put("target_id", target);
+			reqObj.put("level", level);
+			reqObj.put("spec", specialization);
 			
 			response = http.makeRequest("/unit/create", reqObj);
 		} catch (JSONException e) {
@@ -231,4 +239,35 @@ public class MechMania {
 		}
 	}
 	
+	/**
+	 * Get the details of a specified player's game board
+	 * 
+	 * @param http The MechManiaHTTP object initialized with game server settings
+	 * @param playerId The player ID to look up 
+	 * @return True on successful request
+	 * @throws GameOverException
+	 */
+	private boolean getBoard(MechManiaHTTP http, int playerId) throws GameOverException {
+		
+		HTTPResponse response = null;
+		try {
+			JSONObject reqObj = buildBaseJSONObject();
+			
+			response = http.makeRequest("/board/" + playerId,reqObj);
+			
+			JSONObject board = response.getResponse();
+			
+			JSONArray towers = board.getJSONArray("towers");
+			JSONArray path = board.getJSONArray("paths");
+			JSONArray units = board.getJSONArray("units");
+			
+			// Meh.
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
 }
