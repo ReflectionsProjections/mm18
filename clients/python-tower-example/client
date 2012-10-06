@@ -66,6 +66,11 @@ class Client(object):
         r = requests.post(self.endpoint + '/tower/' + str(tower_id) + '/specialize', data=json.dumps(payload))
         return json.loads(r.content)
 
+    def sellTower(self, tower_id):
+        payload = {'id': self.player_id, 'auth': self.auth}
+        r = requests.post(self.endpoint + '/tower/' + str(tower_id) + '/sell', data=json.dumps(payload))
+        return json.loads(r.content)
+
     def getMyStatus(self):
         payload = {'id': self.player_id, 'auth': self.auth}
         r = requests.post(self.endpoint + '/player/' + str(self.player_id), data=json.dumps(payload))
@@ -80,13 +85,22 @@ class Client(object):
         for i in range(0, 25):
             self.attack(0, 0, 2, 0)
 
-        # now i should be upgraded
+        # now I should be upgraded in level
         print self.getMyStatus()
 
         # upgrade tower / spec
         self.upgradeTower(tower_id)
         self.specTower(tower_id, -1)
+
+        # now Tower should be upgraded to level 1, with spec -1
         print self.getTower(tower_id)
+
+        # sell the tower
+        self.sellTower(tower_id)
+
+        # now I shouldn't be able to get the tower
+        print self.getTower(tower_id)
+
 
     def tick(self):
         pass
