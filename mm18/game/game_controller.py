@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from mm18.game.engine import Engine
-from mm18.game import constants
+from mm18.game.constants import CONSTANTS_DICT
 ## @file game_controller.py
 
 # A global variable stores the active game engine
@@ -346,3 +346,7 @@ def unit_create(regex, **json):
 			"playerTargetID": unitTargetID, "unitSpec": unitSpec, "unitPath": unitPath}
 
 	return (code, jsonret)
+
+@require_running_game
+def constant_get(regex, **json):
+	return (200, CONSTANTS_DICT)
