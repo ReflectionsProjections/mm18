@@ -19,6 +19,8 @@ class Engine():
 		engine = Engine(log)
 		for player in players:
 			engine.add_player(player)
+		engine.log_start()
+
 		thread = threading.Thread(target=engine.run)
 		thread.start()
 		return engine
@@ -41,6 +43,9 @@ class Engine():
 			entry['action'] = action_type
 			action = json.dumps(entry)
 			self.log_file.write(action + '\n')
+
+	def log_start(self):
+		self.log_action('start', tick=self.currTick)
 
 	# Game controls
 
