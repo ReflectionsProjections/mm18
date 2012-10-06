@@ -27,7 +27,7 @@ class Tower:
 	def upgradeTower(self, player):
 		if self.upgrade == constants.MAX_UPGRADE:
 			return False #fully upgraded
-		elif player.allowedUpgrade > self.upgrade and player.purchaseCheck(constants.TOWER_UPGRADE_COST[self.upgrade + 1]):
+		elif player.allowedUpgrade >= self.upgrade and player.purchaseCheck(constants.TOWER_UPGRADE_COST[self.upgrade + 1]):
 			player.purchase(constants.TOWER_UPGRADE_COST[self.upgrade + 1])
 			self.cost = constants.TOWER_UPGRADE_COST[self.upgrade + 1]
 			self.upgrade += 1

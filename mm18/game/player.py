@@ -25,7 +25,7 @@ class Player:
 		self.resources = constants.BASE_RESOURCES
 		self.health = constants.BASE_HEALTH
 
-		self.allowedUpgrade = 1
+		self.allowedUpgrade = 0
 		self.sentUnits = 0
 
 

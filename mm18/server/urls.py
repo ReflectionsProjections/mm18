@@ -22,6 +22,9 @@ urlpatterns = [
 	# Unit API
 	(r'/unit/create', 'POST', unit_create),
 
+	# Constants API
+	(r'/constants', 'POST', constants_get),
+
 	# Connection API
 	# This exists, but is implemented in server. Leave it here to document.
 	# I'm aware it's not the prettiest of solutions.
