@@ -24,11 +24,14 @@ tex_explosion = pyglet.resource.image('explosion.png')
 
 class Visualizer:
 
-	def __init__(self, actions, player_id=None):
+	def __init__(self, actions, player_ids=None):
 		self.replayer = Replayer(actions)
 		self.replayer.setup_game()
 		self.game = self.replayer.game
-		self.player_ids = self.game.get_player_ids()
+		if player_ids:
+			self.player_ids = player_ids
+		else:
+			self.player_ids = self.game.get_player_ids()
 		self.tick_summary = None
 
 		self.window = pyglet.window.Window(
