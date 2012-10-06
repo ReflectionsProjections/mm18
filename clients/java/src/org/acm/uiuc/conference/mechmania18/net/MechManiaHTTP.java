@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.acm.uiuc.conference.mechmania18.accessory.GameOverException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +27,7 @@ public class MechManiaHTTP {
 	 * @param resource - The path on the HTTP server to the resource to request
 	 * @return An HttpResponse object containing the HTTP status code and returned JSON
 	 */
-	public HTTPResponse makeRequest(String resource) {
+	public HTTPResponse makeRequest(String resource) throws GameOverException {
 		try {
 			return makeRequest(resource, new JSONObject("{\"empty\":\"empty\"}"));
 		} catch (JSONException e) {
@@ -41,7 +42,7 @@ public class MechManiaHTTP {
 	 * @param parameters
 	 * @return An HttpResponse object containing the HTTP status code and returned JSON
 	 */
-	public HTTPResponse makeRequest(String resource, JSONObject parameters) {
+	public HTTPResponse makeRequest(String resource, JSONObject parameters) throws GameOverException {
 		URL url = null;
 		HttpURLConnection urlconn = null;
 		

@@ -2,6 +2,7 @@ package org.acm.uiuc.conference.mechmania18.tests;
 
 import junit.framework.Assert;
 
+import org.acm.uiuc.conference.mechmania18.accessory.GameOverException;
 import org.acm.uiuc.conference.mechmania18.net.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +25,11 @@ public class HTTPTests {
 	public void initialize() {
 		zippopotamus = new MechManiaHTTP("zippopotam.us:80");
 		google = new MechManiaHTTP("google.com:80");
-		zippopotamusresponse = zippopotamus.makeRequest("/us/61801");
+		try {
+			zippopotamusresponse = zippopotamus.makeRequest("/us/61801");
+		} catch (GameOverException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -34,14 +39,24 @@ public class HTTPTests {
 	
 	@Test
 	public void get404NotFound() {
-		HTTPResponse response = google.makeRequest("/obvious404.bad");
+		HTTPResponse response = null;
+		try {
+			response = google.makeRequest("/obvious404.bad");
+		} catch (GameOverException e) {
+			e.printStackTrace();
+		}
 		
 		Assert.assertEquals(404, response.getStatusCode());
 	}
 	
 	@Test
 	public void getInvalidJSON() {
-		HTTPResponse response = google.makeRequest("/");
+		HTTPResponse response = null;
+		try {
+			response = google.makeRequest("/");
+		} catch (GameOverException e) {
+			e.printStackTrace();
+		}
 		
 		Assert.assertNull(response.getResponse());
 	}
