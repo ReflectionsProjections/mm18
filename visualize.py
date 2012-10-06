@@ -9,7 +9,6 @@ def main():
 	parser = argparse.ArgumentParser(
 		description='Visualizes MechMania 18 games.')
 	parser.add_argument('LOG', type=argparse.FileType('r'),
-		nargs='?', default='mm18/mocks/game_log.json',
 		help='Log file to replay game from')
 	parser.add_argument('PLAYER', nargs='?', default=None,
 		help='Player whose Board should be shown')
