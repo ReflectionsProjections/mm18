@@ -48,11 +48,9 @@ public class MechManiaClientBootstrap {
 		System.out.println("MechMania 18 Java Client");
 		System.out.println("Command Line Usage");
 		System.out.println();
-		System.out.println("JAVA ... <host_addr> <port_num> <clientkey>");
+		System.out.println("JAVA ... <host>");
 		System.out.println();
-		System.out.println("<host_addr> Hostname or IP address of game server to connect to");
-		System.out.println("<port_num>  Port number of game server to connect to");
-		System.out.println("<clientkey> Access key given to authorize connection to game server");
+		System.out.println("<host> Hostname or IP address of game server to connect to (and port number)");
 		System.out.println();
 	}
 

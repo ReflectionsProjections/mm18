@@ -1,13 +1,17 @@
 package org.acm.uiuc.conference.mechmania18;
 
+import org.acm.uiuc.conference.mechmania18.accessory.GameOverException;
+import org.acm.uiuc.conference.mechmania18.accessory.Player;
 import org.acm.uiuc.conference.mechmania18.net.HTTPResponse;
 import org.acm.uiuc.conference.mechmania18.net.MechManiaHTTP;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MechMania {
 	private String gameKey;
 	private int myteam;
+	private Player[] players;
 
 	/**
 	 * MechMania dispatch
@@ -20,18 +24,36 @@ public class MechMania {
 		// Inititalize HTTP component
 		MechManiaHTTP http = new MechManiaHTTP(environment.getHostname());
 		
+		// Initialize the players array
+		players = new Player[4];
+		for (int i = 0; i < 4; i++) {
+			players[i] = new Player(-1,-1,-1);
+		}
+		
 		// Join server
-		if (!joinServer(http)) {
-			System.out.println("Failed to join server");
+		try {
+			if (!joinServer(http)) {
+				System.out.println("Failed to join server");
+				return;
+			}
+		} catch (GameOverException e1) {
 			return;
 		}
 		
 		// Main loop - core game logic should go here or be called from here
 		boolean stillPlaying = true;
 		while (stillPlaying) {
-			updateStatus(http);
-			attack(http, (int)Math.floor(Math.random() * 4)+1);
-			buildTower(http, (int)Math.floor(Math.random() * 16), (int)Math.floor(Math.random() * 16), 0, 0);
+			try {
+				//updateStatus(http);  // Redundant per updatePlayer
+				for (int i = 0; i < 4; i++) {
+					updatePlayer(http, i);
+				}
+				attack(http, (int)Math.floor(Math.random() * 4)+1, (int)Math.floor(Math.random() * 4), 1, 0);
+				buildTower(http, (int)Math.floor(Math.random() * 16), (int)Math.floor(Math.random() * 16), 0, 0);
+			}
+			catch (GameOverException e) {
+				return;
+			}
 		}
 		
 		return;
@@ -42,19 +64,39 @@ public class MechMania {
 	 * 
 	 * @param http
 	 */
-	private void updateStatus(MechManiaHTTP http) {
+	private void updateStatus(MechManiaHTTP http) throws GameOverException {
 		HTTPResponse response = null;
 		
 		try {
-			response = http.makeRequest("/game/status", new JSONObject("{\"id\":" + myteam + "," + 
-					"\"auth\":\"" + gameKey + "\"}"));
+			JSONObject reqObj = buildBaseJSONObject();
+			
+			response = http.makeRequest("/game/status", reqObj);
+			
+			JSONArray playerJson = response.getResponse().getJSONArray("players");
+			
+			for (int i = 0; i < 4; i++) {
+				JSONArray healthJson = playerJson.getJSONArray(i);
+				
+				players[healthJson.getInt(0)].setHealth(healthJson.getInt(1));
+			}
+			
+			
 		} catch (JSONException e) {
+			return;
+		} catch (GameOverException e) {
 			e.printStackTrace();
 		}
 		
-		// Update the recorded information about each player (health, etc.)
-		
 		return;
+	}
+
+	private JSONObject buildBaseJSONObject() throws JSONException {
+		JSONObject baseObject = new JSONObject();
+		
+		baseObject.append("id", myteam);
+		baseObject.append("auth", gameKey);
+		
+		return baseObject;
 	}
 
 	/**
@@ -63,13 +105,25 @@ public class MechMania {
 	 * @param http The configured MechMania HTTP object
 	 * @param playerId The player ID to look up 
 	 */
-	private void updatePlayerStatus(MechManiaHTTP http, int playerId) {
+	private void updatePlayer(MechManiaHTTP http, int playerId) throws GameOverException {
 		HTTPResponse response = null;
 		
 		try {
-			response = http.makeRequest("/player/" + playerId, new JSONObject("{\"id\":" + myteam + "," + 
-					"\"auth\":\"" + gameKey + "\"}"));
+			JSONObject reqObj = buildBaseJSONObject();
+			
+			response = http.makeRequest("/player/" + playerId, reqObj);
+			
+			JSONObject data = response.getResponse();
+			players[playerId].setHealth(data.getInt("health"));
+			
+			if (playerId == myteam) {
+				// We likely got some extra information in our results, so let's use it
+				players[playerId].setResources(data.getInt("resources"));
+				players[playerId].setLevel(data.getInt("level"));
+			}
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (GameOverException e) {
 			e.printStackTrace();
 		}
 		
@@ -85,7 +139,7 @@ public class MechMania {
 	 * @param http The MechManiaHTTP object initialized with game server settings
 	 * @return True on successful join attempt
 	 */
-	private boolean joinServer(MechManiaHTTP http) {
+	private boolean joinServer(MechManiaHTTP http) throws GameOverException {
 		System.out.println("Making join request, this may take a while!");
 		HTTPResponse response = http.makeRequest("/connect");
 		
@@ -112,19 +166,20 @@ public class MechMania {
 	 * @param specialization The desired specialization class of the tower
 	 * @return True on successful tower build
 	 */
-	private boolean buildTower(MechManiaHTTP http, int towerx, int towery, int level, int specialization) {
+	private boolean buildTower(MechManiaHTTP http, int towerx, int towery, int level, int specialization) throws GameOverException {
 		if (towerx < 0 || towerx > 15 || towery < 0 || towery > 15 || Math.abs(specialization) > 1) {
 			return false;
 		}
 
 		HTTPResponse response = null;
 		try {
-			response = http.makeRequest("/tower/create",
-				new JSONObject("{\"id\":" + myteam + "," + "\"auth\":\"" + gameKey + "\"," + 
-				"\"position\":[" + towerx + "," + towery + "]," + 
-				"\"level\":" + level + "," +
-				"\"spec\":" + specialization + "}")
-			);
+			JSONObject reqObj = buildBaseJSONObject();
+			
+			reqObj.append("position", new int[]{towerx, towery});
+			reqObj.append("level", level);
+			reqObj.append("spec", specialization);
+					
+			response = http.makeRequest("/tower/create", reqObj);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -145,20 +200,25 @@ public class MechMania {
 	 * 
 	 * @param http The MechManiaHTTP object initialized with game server settings
 	 * @param target The integer ID of the player being targeted
+	 * @param path The path to use
+	 * @param level The level of unit to send
+	 * @param specialization The specialization of the unit to send
 	 * @return True on successful unit deployment
 	 */
-	private boolean attack(MechManiaHTTP http, int target) {
-		if (target < 1 || target > 4 || target == myteam) {
+	private boolean attack(MechManiaHTTP http, int target, int path, int level, int specialization) throws GameOverException {
+		if (target < 1 || target > 4 || target == myteam || Math.abs(specialization) > 1) {
 			return false;
 		}
 		
 		HTTPResponse response = null;
 		try {
-			response = http.makeRequest("/unit/create",
-				new JSONObject("{\"id\":" + myteam + "," + 
-					"\"auth\":\"" + gameKey + "\"," + "\"path\":0," +
-					"\"level\":1," + "\"target_id\":" + myteam + ",\"spec\":0}")
-			);
+			JSONObject reqObj = buildBaseJSONObject();
+			reqObj.append("path", path);
+			reqObj.append("target_id", target);
+			reqObj.append("level", level);
+			reqObj.append("spec", specialization);
+			
+			response = http.makeRequest("/unit/create", reqObj);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
