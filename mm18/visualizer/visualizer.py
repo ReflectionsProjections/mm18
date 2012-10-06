@@ -7,6 +7,7 @@ from mm18.game.board import Board
 from mm18.game.replayer import Replayer
 
 TILE_SIZE = 32
+TICKS_PER_SECOND = 4
 
 resources_path = os.path.join(os.path.dirname(__file__), 'resources')
 pyglet.resource.path.append(resources_path)
@@ -32,7 +33,7 @@ class Visualizer:
 			height=TILE_SIZE * constants.BOARD_SIDE,
 		)
 		self.window.set_handler('on_draw', self.draw)
-		pyglet.clock.schedule_interval(self.update, 1)
+		pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SECOND)
 		glClearColor(1, 1, 1, 1)
 		glEnable(GL_BLEND)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
