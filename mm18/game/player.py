@@ -135,4 +135,3 @@ class Player:
 	## Move units, take damage
 	def moveUnits(self):
 		self.damage(self.board.moveUnits())
-		

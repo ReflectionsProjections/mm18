@@ -144,22 +144,18 @@ class Engine():
 		return tower
 
 	""" This should return the tower that's been specified"""
-	def tower_get(self, tower_id, owner_id):
-		player = self.get_player(owner_id)
-		if(player == None):
-			return None
+	def tower_get(self, tower_id):
+		for player in players.values():
+			board = player.boardIs()
+			towers = board.getTowers()
 
-		board = player.boardIs()
-		towers = board.getTowers()
+			retTower = None
 
-		retTower = None
+			for elem in towers:
+				if towers[elem].getID() == tower_id:
+					retTower = towers[elem]
+					break
 
-		for elem in towers:
-			if towers[elem].getID() == tower_id:
-				retTower = towers[elem]
-				break
-
-		
 		return retTower
 
 	""" This should return the player object relating to owner_id """
@@ -176,7 +172,7 @@ class Engine():
 
 		self.log_action('tower_sell', tower_id=tower_id, owner_id=owner_id)
 
-		return retPlayer		
+		return retPlayer
 
 	""" This should return the tower that's been specialized """
 	def tower_specialize(self, tower_id, owner_id, spec):
@@ -194,7 +190,7 @@ class Engine():
 		self.log_action('tower_specialize', tower_id=tower_id,
 			owner_id=owner_id, spec=spec)
 
-		return retTower		
+		return retTower
 
 	""" This should return the tower that's been specified """
 	def tower_upgrade(self, tower_id, owner_id):

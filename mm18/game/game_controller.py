@@ -272,12 +272,8 @@ def tower_get(regex, **json):
 		towerSpec = tower.specialisation
 		towerUpgrade = tower.upgrade
 
-	player = _engine.get_player(json["id"])
-	resources = player.resourcesIs()
-
-	jsonret = {"error": error, "towerID": towerID, 
-		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade, 
-			"resources": resources}
+	jsonret = {"error": error, "towerID": towerID,
+		"towerSpec": towerSpec, "towerUpgrade": towerUpgrade}
 
 
 	return (code, jsonret)
