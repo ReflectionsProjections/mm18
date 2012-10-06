@@ -42,6 +42,8 @@ class Visualizer:
 		# parse and perform commands from log
 		# advance the game controller
 		self.tick_summary = self.replayer.play_tick()
+		if self.tick_summary == None:
+			pyglet.app.exit()
 
 	def draw(self):
 		self.window.clear()
