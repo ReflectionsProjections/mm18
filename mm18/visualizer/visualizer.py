@@ -160,7 +160,7 @@ class Visualizer:
 		glColor3f(1, 1, 1)
 
 	def drawLabel(self, player):
-		text = 'Team: %s, Level: %d, Health: %d, Resources: %d' % (
+		text = 'Team: %s, Level: %d, Health: %.2f, Resources: %d' % (
 			player.name,
 			player.allowedUpgrade,
 			player.health,
