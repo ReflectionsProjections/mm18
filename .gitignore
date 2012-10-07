@@ -13,6 +13,9 @@ venv
 # Vim swap
 *.swp
 
+#Stage for arena
+stage
+
 
 #### Java Test Client
 *.class

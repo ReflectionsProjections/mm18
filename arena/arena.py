@@ -7,6 +7,7 @@ import sys
 import time
 import threading
 import subprocess
+import os
 import os.path
 
 from mm18.server import server
@@ -67,7 +68,12 @@ def run_clients(teams, address):
 		print "Starting client for team", team
 		# We tell the server the name to give the player
 		server.global_client_manager.set_next_team(int(team))
-		subprocess.Popen([path, address])
+		outpath = team + "/out.txt"
+		outfile = open(outpath, "w+")
+		errpath = team + "/err.txt"
+		errfile = open(errpath, "w+")
+		team_cwd = os.getcwd() + '/' + str(team)
+		subprocess.Popen([path, address], stdout=outfile, stderr=errfile, cwd=team_cwd)
 		# Wait for the server to connect before continuing
 		cycles = 0
 		while True:
