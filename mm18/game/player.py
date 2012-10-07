@@ -128,7 +128,7 @@ class Player:
 	#          during the tick on this Player's Board
 	def advance(self):
 		summary = {}
-		self.moveUnits()
+		summary['damages'] = self.moveUnits()
 		if not self.isDead():
 			attacks, deaths = self.board.fireTowers()
 			summary['attacks'] = attacks
@@ -137,4 +137,8 @@ class Player:
 
 	## Move units, take damage
 	def moveUnits(self):
-		self.damage(self.board.moveUnits())
+		damage_units = self.board.moveUnits()
+		damage = sum(damage_unit['unit'].finalDamage() \
+			for damage_unit in damage_units)
+		self.damage(damage)
+		return damage_units

@@ -19,6 +19,8 @@ pyglet.resource.reindex()
 tex_terrain = pyglet.resource.image('grass.png')
 tex_path = pyglet.resource.image('path.png')
 tex_base = pyglet.resource.image('base.png')
+tex_base_mid = pyglet.resource.image('base_mid.png')
+tex_base_low = pyglet.resource.image('base_low.png')
 tex_tower = pyglet.resource.image('tower.png')
 tex_unit = pyglet.resource.image('unit.png')
 tex_explosion = pyglet.resource.image('explosion.png')
@@ -68,17 +70,13 @@ class Visualizer:
 				x = pos % BOARD_COLS
 				y = pos / BOARD_COLS
 				glTranslatef(width * x, height * y, 0)
-				self.drawPlayer(player_id)
+				self.drawPlayer(player)
 				self.drawLabel(player)
 			pos += 1
 
-	def drawPlayer(self, player_id):
-		player_summary = None
-		if self.tick_summary:
-			player_summary = self.tick_summary.get(player_id)
-		self.drawBoard(self.game.board_get(player_id), player_summary)
-
-	def drawBoard(self, board, player_summary=None):
+	def drawPlayer(self, player):
+		# Draw features of the Board
+		board = player.board
 		tiles = ((x, y) for x in range(board.width) for y in range(board.height))
 		for (x, y) in tiles:
 			tex = tex_path if (x, y) in board.path else tex_terrain
@@ -88,24 +86,38 @@ class Visualizer:
 				width=TILE_SIZE,
 				height=TILE_SIZE,
 			)
-		self.drawBases(board.base)
+		self.drawBases(board.base, player.health)
 		self.drawTowers(board.tower)
 		for path in board.paths.itervalues():
 			self.drawUnits(path)
+
+		# Draw effects from the summary
+		player_summary = None
+		if self.tick_summary:
+			player_summary = self.tick_summary.get(player.name)
 		if player_summary and player_summary.get('deaths'):
 			for death in player_summary['deaths']:
-				self.drawDeadUnit(death['unit'], death['unit_pos'])
+				self.drawExplosion(death['unit_pos'])
 		if player_summary and player_summary.get('attacks'):
 			for attack in player_summary['attacks']:
 				self.drawAttack(attack)
+		if player_summary and player_summary.get('damages'):
+			for damage in player_summary['damages']:
+				self.drawExplosion(damage['base_pos'])
 
-	def drawBases(self, bases):
+	def drawBases(self, bases, health):
 		for coords in bases:
-			self.drawBase(coords)
+			self.drawBase(coords, health)
 
-	def drawBase(self, coords):
+	def drawBase(self, coords, health):
 		(x, y) = coords
-		tex_base.blit(
+		if health <= 33:
+			tex = tex_base_low
+		elif health <= 66:
+			tex = tex_base_mid
+		else:
+			tex = tex_base
+		tex.blit(
 			x=TILE_SIZE * x,
 			y=TILE_SIZE * y,
 			width=TILE_SIZE,
@@ -139,7 +151,7 @@ class Visualizer:
 			height=TILE_SIZE,
 		)
 
-	def drawDeadUnit(self, unit, coords):
+	def drawExplosion(self, coords):
 		(x, y) = coords
 		tex_explosion.blit(
 			x=TILE_SIZE * x,
