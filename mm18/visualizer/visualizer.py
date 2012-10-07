@@ -97,10 +97,13 @@ class Visualizer:
 			player_summary = self.tick_summary.get(player.name)
 		if player_summary and player_summary.get('deaths'):
 			for death in player_summary['deaths']:
-				self.drawDeadUnit(death['unit'], death['unit_pos'])
+				self.drawExplosion(death['unit_pos'])
 		if player_summary and player_summary.get('attacks'):
 			for attack in player_summary['attacks']:
 				self.drawAttack(attack)
+		if player_summary and player_summary.get('damages'):
+			for damage in player_summary['damages']:
+				self.drawExplosion(damage['base_pos'])
 
 	def drawBases(self, bases, health):
 		for coords in bases:
@@ -148,7 +151,7 @@ class Visualizer:
 			height=TILE_SIZE,
 		)
 
-	def drawDeadUnit(self, unit, coords):
+	def drawExplosion(self, coords):
 		(x, y) = coords
 		tex_explosion.blit(
 			x=TILE_SIZE * x,
