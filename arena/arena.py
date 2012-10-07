@@ -11,6 +11,7 @@ import os
 import os.path
 
 from mm18.server import server
+from mm18.game.game_controller import game_running, get_winners
 
 # Component functions
 def update_teams(teams):
@@ -64,16 +65,24 @@ def start_server(server_addr, server_port, game_log):
 
 def run_clients(teams, address):
 	for team in teams:
-		path = "./" + team + "/client"
+		path = "./client"
 		print "Starting client for team", team
-		# We tell the server the name to give the player
-		server.global_client_manager.set_next_team(int(team))
+
+		# Set up our STDOUT, STDERR, and CWD
 		outpath = team + "/out.txt"
 		outfile = open(outpath, "w+")
 		errpath = team + "/err.txt"
 		errfile = open(errpath, "w+")
 		team_cwd = os.getcwd() + '/' + str(team)
-		subprocess.Popen([path, address], stdout=outfile, stderr=errfile, cwd=team_cwd)
+
+		# We tell the server the name to give the player
+		server.global_client_manager.set_next_team(int(team))
+
+		# And open the subproecess
+		os.chdir(str(team))
+		subprocess.Popen([path, address], stdout=outfile, stderr=errfile)
+		os.chdir('../')
+
 		# Wait for the server to connect before continuing
 		cycles = 0
 		while True:
@@ -84,6 +93,15 @@ def run_clients(teams, address):
 				sys.exit(1)
 			cycles += 1
 			time.sleep(1)
+
+def print_game_results():
+	while True:
+		if not game_running():
+			break
+		time.sleep(1)
+	results = get_winners()
+	for place in sorted(results):
+		print "Place", place, "is team", results[place]
 
 # Competition control functions
 def run_competition():
@@ -103,6 +121,9 @@ def main(server_addr, server_port, game_log, teams):
 
 	# Third, run the clients
 	run_clients(teams, full_addr)
+
+	# Finally, wait for the game to end
+	print_game_results()
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1:

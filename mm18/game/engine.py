@@ -33,6 +33,10 @@ class Engine():
 		self.currTick = 0
 		self.running = True
 
+		self.results = {}
+
+		self._marked_players = set()
+
 		#this is an id that will be used for giving towers
 		#a unique identifier
 		self.currID = 0
@@ -71,6 +75,20 @@ class Engine():
 				time.sleep(constants.TICK_TIME - timePassed)
 			turns=turns+1
 			if turns > constants.MAX_RUNTIME:
+				print "Breaking a tie"
+				# Handle a tie
+				alivePlayers = []
+				for player in self.players.itervalues():
+					if not player.isDead():
+						alivePlayers.append(player)
+				scores = [(((player.resources + 1) * (player.health)), player.name) \
+						for player in alivePlayers]
+				print scores
+				scores = sorted(scores)
+				for score in scores:
+					# Going in ascending order, so lower scores first
+					place = 4 - len(self.results)
+					self.results[place] = score[1]
 				self.endGame()
 
 		print "Game complete"
@@ -86,6 +104,12 @@ class Engine():
 		for player in self.players.itervalues():
 			if not player.isDead():
 				summary[player.name] = player.advance()
+			else:
+				if player.name not in self._marked_players:
+					# Mark the player in 4th, 3rd, 2nd, or 1st place
+					place = 4 - len(self.results)
+					self.results[place] = player.name
+					self._marked_players.add(player.name)
 
 		self.log_action('advance', tick=self.currTick)
 
@@ -95,6 +119,11 @@ class Engine():
 		alive = sum(1 for player in self.players.itervalues() \
 				if not player.isDead())
 		if alive <= 1:
+			# Mark the last player, if any, in 1st place
+			if len(self.results) < 4:
+				for player in self.players.itervalues():
+					if not player.isDead():
+						self.results[1] = player.name
 			self.endGame()
 		if self.currTick > constants.MAX_RUNTIME:
 			self.endGame()

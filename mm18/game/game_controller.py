@@ -66,6 +66,9 @@ def game_running():
 	else:
 		return False
 
+def get_winners():
+	return _engine.results
+
 ## Engine API hooks
 
 ## Get the status of the currently running game.
