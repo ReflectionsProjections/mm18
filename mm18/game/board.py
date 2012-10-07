@@ -302,16 +302,29 @@ class Board:
 					units.append((path.path[x], path.moving[x]))
 
 		return units
+
+	def get_adjacent(self, pos, choices):
+		x1, y1 = pos
+		for x2, y2 in choices:
+			# Adjacent if the Manhattan distance is 1
+			if abs(x1 - x2) + abs(y1 - y2) == 1:
+				return (x2, y2)
+		return None
+
 	## Advance the board state.
 	#  Incoming units move forward, ones reaching the base do damage
 	# @return: damage to be dealt to the player
 	def moveUnits(self):
-		damage=0
+		units = []
 		for path in self.paths.itervalues():
 			unit = path.advance()
+			pos = self.get_adjacent(path.path[0], self.base)
 			if unit is not None and unit.health > 0:
-				damage+=unit.finalDamage()
-		return damage
+				units.append({
+					'unit': unit,
+					'base_pos': pos
+				})
+		return units
 
 	## Return the tower list
 	def getTowers(self):
