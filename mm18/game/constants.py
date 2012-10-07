@@ -4,30 +4,30 @@
 # Time each tick takes, in seconds
 TICK_TIME = .01
 # Maximum amount of ticks for the game to run for
-# Currently set to 10 minutes
-MAX_RUNTIME = 10 * 60 * 100
+# Currently set to 2 minutes
+MAX_RUNTIME = 2 * 60 * 100
 
 """TOWERS"""
-BASE_TOWER_DAMAGE = 1
+BASE_TOWER_DAMAGE = .5
 # Maximum upgrade level for towers and units
 MAX_UPGRADE = 3
-TOWER_SELL_SCALAR = 1
-TOWER_BASE_COST = 1
+TOWER_SELL_SCALAR = .75
+TOWER_BASE_COST = 4
 TOWER_RANGE = {0:1, 1:1, 2:2, 3:2}
-TOWER_UPGRADE_MULTIPLIER = {0:1, 1:1.5, 2:2, 3:2.5}
-TOWER_UPGRADE_COST = {0:1, 1:2, 2:3, 3:4}
+TOWER_UPGRADE_MULTIPLIER = {0:1, 1:1.5, 2:1.5, 3:2}
+TOWER_UPGRADE_COST = {0:1, 1:3, 2:7, 3:10}
 TOWER_SPECIALIZE_COST = {1:3, 2:3, 3:3}
 
 """UNITS"""
 UNIT_BASE_COST = 2
-BASE_UNIT_HEALTH = 4
+BASE_UNIT_HEALTH = 6
 BASE_UNIT_DAMAGE = 1
-UNIT_UPGRADE_MULTIPLIER = {0:1, 1:2, 2:3, 3:4}
-UNIT_UPGRADE_COST = {0:1, 1:2, 2:3, 3:4}
+UNIT_UPGRADE_MULTIPLIER = {0:1, 1:2.5, 2:3.5, 3:5}
+UNIT_UPGRADE_COST = {0:1, 1:3, 2:7, 3:10}
 
 """tower/unit specialisation output damage multiplier"""
-SUPER_EFFECTIVE = 1.50
-EFFECTIVE = 1.1
+SUPER_EFFECTIVE = 1.75
+EFFECTIVE = 1.25
 NORMAL = 1
 NOT_EFFECTIVE = 0.5
 
@@ -55,7 +55,7 @@ WEST = 3
 DIRECTIONS = [NORTH, EAST, SOUTH, WEST]
 
 """MODEL"""
-SUPPLY_TIME = 15;
+SUPPLY_TIME = 25;
 
 CONSTANTS_DICT = {
 	"TICK_TIME": TICK_TIME,
