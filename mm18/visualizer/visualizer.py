@@ -9,6 +9,8 @@ from mm18.game.replayer import Replayer
 TILE_SIZE = 32
 PADDING = TILE_SIZE
 TICKS_PER_SECOND = 10
+FRAMES_PER_SECOND = 10
+TICKS_PER_FRAME = TICKS_PER_SECOND / FRAMES_PER_SECOND
 BOARD_ROWS = 2
 BOARD_COLS = 2
 
@@ -52,9 +54,10 @@ class Visualizer:
 	def update(self, dt=0):
 		# parse and perform commands from log
 		# advance the game controller
-		self.tick_summary = self.replayer.play_tick()
-		if self.tick_summary == None:
-			pyglet.clock.unschedule(self.update)
+		for _ in range(TICKS_PER_FRAME):
+			self.tick_summary = self.replayer.play_tick()
+			if self.tick_summary == None:
+				pyglet.clock.unschedule(self.update)
 
 	def draw(self):
 		self.window.clear()
