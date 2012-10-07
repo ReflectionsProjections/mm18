@@ -141,7 +141,8 @@ class Engine():
 	def tower_create(self, owner_id, coords):
 		tower = self.get_player(owner_id).purchaseTower(coords, self.generateID())
 
-		self.log_action('tower_create', owner_id=owner_id, coords=list(coords))
+		if tower:
+			self.log_action('tower_create', owner_id=owner_id, coords=coords)
 
 		return tower
 
