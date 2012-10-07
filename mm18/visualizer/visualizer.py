@@ -8,7 +8,7 @@ from mm18.game.replayer import Replayer
 
 TILE_SIZE = 32
 PADDING = TILE_SIZE
-TICKS_PER_SECOND = 4
+TICKS_PER_SECOND = 10
 BOARD_ROWS = 2
 BOARD_COLS = 2
 
