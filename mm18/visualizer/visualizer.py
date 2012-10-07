@@ -8,7 +8,7 @@ from mm18.game.replayer import Replayer
 
 TILE_SIZE = 32
 PADDING = TILE_SIZE
-TICKS_PER_SECOND = 4
+TICKS_PER_SECOND = 10
 BOARD_ROWS = 2
 BOARD_COLS = 2
 
@@ -35,9 +35,11 @@ class Visualizer:
 			self.player_ids = self.game.get_player_ids()
 		self.tick_summary = None
 
+		cols = BOARD_COLS if len(self.player_ids) > 1 else 1
+		rows = BOARD_ROWS if len(self.player_ids) > 2 else 1
 		self.window = pyglet.window.Window(
-			width=BOARD_COLS * TILE_SIZE * constants.BOARD_SIDE + PADDING,
-			height=BOARD_ROWS * (TILE_SIZE * constants.BOARD_SIDE + PADDING),
+			width=cols * TILE_SIZE * constants.BOARD_SIDE + (cols - 1) * PADDING,
+			height=rows * (TILE_SIZE * constants.BOARD_SIDE + PADDING),
 		)
 		self.window.set_handler('on_draw', self.draw)
 		pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SECOND)

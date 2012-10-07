@@ -216,8 +216,10 @@ class Engine():
 		if(player == None):
 			return None
 
+		board.removeFromHitList(retTower)
 		retTower.upgradeTower(player)
 		player.refreshTower(coords, retTower)
+		board.addToHitList(retTower, coords)
 
 		self.log_action('tower_upgrade', tower_id=tower_id, owner_id=owner_id)
 
