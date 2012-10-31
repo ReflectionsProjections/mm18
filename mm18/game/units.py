@@ -43,4 +43,4 @@ class Unit:
 	def finalDamage(self):
 		return (constants.BASE_UNIT_DAMAGE \
 			*constants.UNIT_UPGRADE_MULTIPLIER[self.level] \
-			*(self.health / constants.BASE_UNIT_HEALTH))
+			*(float(self.health) / constants.BASE_UNIT_HEALTH))
